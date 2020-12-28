@@ -62,14 +62,14 @@
 <!--            android:scaleType="fitCenter"-->
 <!--            android:src="@drawable/ic_application" />-->
 
-        <TextView
+        <!--<TextView
             android:id="@+id/old_text"
             android:layout_width="50dp"
             android:layout_height="20dp"
 
             android:gravity="center"
             android:text="WO家"
-            android:textSize="14sp" />
+            android:textSize="14sp" />-->
 
         <ImageButton
             android:id="@+id/video"
