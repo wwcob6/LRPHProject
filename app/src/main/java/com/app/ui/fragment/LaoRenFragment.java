@@ -138,11 +138,11 @@ public class LaoRenFragment extends BaseFragment implements View.OnClickListener
                 re_background.setBackgroundResource(R.drawable.background1);
             }
         });
-        ImageView application =re_funcation.findViewById(R.id.application);
+//        ImageView application =re_funcation.findViewById(R.id.application);
         ImageView video = re_funcation.findViewById(R.id.video);
         ImageView browse = re_funcation.findViewById(R.id.browse);
         ImageView chat = re_funcation.findViewById(R.id.chat);
-        application.setOnClickListener(this);
+//        application.setOnClickListener(this);
         video.setOnClickListener(this);
         browse.setOnClickListener(this);
         chat.setOnClickListener(this);
@@ -269,11 +269,11 @@ public class LaoRenFragment extends BaseFragment implements View.OnClickListener
             case R.id.chat:
                 IntentUtil.jumpActivity(getActivity(), FriendCallActivity.class);
                 break;
-            case R.id.application:
-/*                String url = "http://pet.qinqingonline.com:9000";
-                IntentUtil.openWebViewActivity(getActivity(), url);*/
+            /*case R.id.application:
+*//*                String url = "http://pet.qinqingonline.com:9000";
+                IntentUtil.openWebViewActivity(getActivity(), url);*//*
                 startActivity(new Intent(getActivity(),WeixinActivity.class));
-                break;
+                break;*/
             case R.id.video:
                 SipInfo.single = false;
                 String devId1 = SipInfo.paddevId;
