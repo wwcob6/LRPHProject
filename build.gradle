@@ -6,6 +6,7 @@ buildscript {
         maven{ url 'https://maven.aliyun.com/repository/public'}
         jcenter()
         google()
+        mavenCentral()
         maven { url 'https://dl.bintray.com/umsdk/release' }
     }
     dependencies {
@@ -29,6 +30,7 @@ allprojects {
         maven { url "https://maven.google.com" }
         maven { url 'https://dl.bintray.com/umsdk/release' }
         google()
+        mavenCentral()
     }
 }
 
