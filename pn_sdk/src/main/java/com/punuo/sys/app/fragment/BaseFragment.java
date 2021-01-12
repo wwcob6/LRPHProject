@@ -12,6 +12,10 @@ import com.punuo.sys.app.activity.BaseActivity;
 import com.punuo.sys.app.view.PNLoadingDialog;
 
 /**
+ * 1、declare a class to be a subclass of Thread
+ * 2、This subclass should override the run method of class Thread.
+ * 3、An instance of the subclass can then be allocated and started.
+ *
  * Created by han.chen.
  * Date on 2019-06-03.
  **/

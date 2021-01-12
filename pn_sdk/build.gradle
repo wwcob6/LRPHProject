@@ -52,7 +52,7 @@ dependencies {
     api files('libs/MobTools-2017.0607.1736.jar')
     api files('libs/easemobchat_2.1.5.jar')
     api 'org.greenrobot:eventbus:3.0.0'
-    api 'com.google.android.gms:play-services-plus:11.0.4'
+    //api 'com.google.android.gms:play-services-plus:11.0.4'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
     api 'com.zhy:okhttputils:2.0.0'
     api 'com.squareup.okhttp3:okhttp:3.4.1'
