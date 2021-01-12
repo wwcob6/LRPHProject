@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
-import com.app.LoadPicture;
 import com.app.R;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
@@ -31,7 +30,6 @@ import java.util.TimerTask;
  */
 public abstract class NineGridLayout extends ViewGroup {
     PopupMenu popup = null;
-    private LoadPicture avatarLoader;
     private static final float DEFUALT_SPACING = 3f;
     private static final int MAX_COUNT = 9;
     protected Context mContext;
@@ -55,7 +53,6 @@ public abstract class NineGridLayout extends ViewGroup {
         String sdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
         String avaPath = sdCard + "/fanxin/Files/Camera/Image/";
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NineGridLayout);
-        avatarLoader = new LoadPicture(context, avaPath);
         mSpacing = typedArray.getDimension(R.styleable.NineGridLayout_sapcing, DEFUALT_SPACING);
         typedArray.recycle();
         init(context);

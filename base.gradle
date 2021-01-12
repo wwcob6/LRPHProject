@@ -5,6 +5,6 @@ ext.sdk = [
         versionName : "2.3.5",
         minSdkVersion          : 21,
         targetSdkVersion       : 26,
-        compileSdkVersion      : 26,
-        buildToolsVersion      : '29.0.3',
+        compileSdkVersion      : 28,
+        buildToolsVersion      : '28.0.3',
 ]

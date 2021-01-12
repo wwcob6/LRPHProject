@@ -21,7 +21,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.app.LoadPicture;
 import com.app.R;
 import com.app.model.MessageEvent;
 import com.app.sip.BodyFactory;
@@ -63,7 +62,6 @@ public class VideoConnect extends BaseActivity implements View.OnClickListener {
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     private static final int UPDATE_FXID = 4;// 结果
     private static final int UPDATE_NICK = 5;// 结果
-    private LoadPicture avatarLoader;
     private CircleImageView CIV_avatar;
 
     String SdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -79,7 +77,6 @@ public class VideoConnect extends BaseActivity implements View.OnClickListener {
 
         setContentView(R.layout.activity_call);
         getWindow().setBackgroundDrawableResource(R.drawable.jtbackground);
-        avatarLoader = new LoadPicture(this, avaPath);
 
 
 //        等待接听音效

@@ -1,4 +1,4 @@
-include ':app', ':wheelpicker', ":pn_sdk"
+include ':app', ':wheelpicker', ':basesdk'
 
 apply from: './base.gradle'
 

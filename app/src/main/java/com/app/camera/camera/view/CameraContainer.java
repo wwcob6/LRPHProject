@@ -569,7 +569,7 @@ public class CameraContainer extends RelativeLayout implements CameraOperation {
             textPaint.setColor(Color.RED);//采用的颜色
             date = new Date(System.currentTimeMillis());
             canvas.drawText(myDateFormat.format(date), 0, 60, textPaint);//绘制上去 字，开始未知x,y采用那只笔绘制
-            canvas.save(Canvas.ALL_SAVE_FLAG);
+            canvas.save();
             canvas.restore();
             return icon;
 
