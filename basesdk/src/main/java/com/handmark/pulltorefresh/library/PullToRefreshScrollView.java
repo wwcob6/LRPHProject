@@ -23,7 +23,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ScrollView;
 
-import com.punuo.sys.app.R;
+import com.punuo.sys.sdk.R;
 
 public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 

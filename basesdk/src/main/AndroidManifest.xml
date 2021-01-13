@@ -1,24 +1,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.punuo.sys.app">
+    package="com.punuo.sys.sdk">
 
     <application>
 
         <activity
-            android:name=".activity.BaseSwipeBackActivity"
+            android:name="com.punuo.sys.sdk.activity.BaseSwipeBackActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.BaseActivity"
+            android:name="com.punuo.sys.sdk.activity.BaseActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.WebViewActivity"
+            android:name="com.punuo.sys.sdk.activity.WebViewActivity"
+            android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <service
-            android:name=".update.AutoUpdateService">
+            android:name="com.punuo.sys.sdk.update.AutoUpdateService">
         </service>
 
-        <activity android:name=".update.UpdateDialogActivity"
+        <activity android:name="com.punuo.sys.sdk.update.UpdateDialogActivity"
             android:screenOrientation="behind"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name="com.punuo.sys.sdk.activity.QRScanActivity"
+            android:theme="@style/Theme.Pn.Translucent"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

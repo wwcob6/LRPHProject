@@ -1,11 +1,11 @@
 package com.handmark.pulltorefresh.library;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.punuo.sys.app.R;
+import com.punuo.sys.sdk.R;
 
 /**
  * Created by han.chen.

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.app">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <application>
+        <activity android:name=".ui.PrivateActivity"/>
+        <activity android:name=".ui.message.WeixinActivity" /> <!-- 全面屏适配 -->
+        <activity
+            android:name=".ui.AddlikeView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CommentView"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.message.SystemNotify"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.VideoDial"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".ui.VideoStartActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".friendCircleMain.adapter.ImagePagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".publish.PublishedActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".friendcircle.PhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UpdateNickActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ChangePasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PhoneCall"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.VideoPlay"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.VideoShow"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ServiceCallSet"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.VideoConnect"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.VideoCallActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".video.H264Sending"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AddressAddActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.FriendCallActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SoftwareInstructActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MessageNotifyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.NumberBind"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.DevBindSuccessActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.RegisterAccountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ForgetPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.VerifyCodeLoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SetNewPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.FamilyCircleActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.MyCouponActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.address.AddressDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.address.AddressManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.CloudAlbumActivity" />
+        <activity android:name=".publish.PublishedActivity1" />
+        <activity android:name=".ui.AlbumActivity" />
+        <activity android:name=".ui.AlbumSecondActivity" />
+
+        <receiver
+            android:name=".receiver.VideoConnectReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.broadcast.CALL_REQUEST" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.VideoStartReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.broadcast.CALL_AGREE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.IncomingCallReceiver" />
+        <receiver android:name=".receiver.NetworkConnectChangedReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.amap.api.location.APSService" />
+        <service android:name=".service.SipService" />
+        <service android:name=".service.NewsService" />
+        <service android:name=".service.FloatWindowService" />
+    </application>
+
+</manifest>

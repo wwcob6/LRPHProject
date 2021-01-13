@@ -25,7 +25,7 @@ import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.punuo.sys.app.R;
+import com.punuo.sys.sdk.R;
 
 public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
 

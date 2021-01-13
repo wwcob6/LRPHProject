@@ -1,7 +1,11 @@
-include ':app', ':wheelpicker', ':basesdk'
-
+include ':module_compat'
+include ':app'
+include ':module_router'
+include ':module_sip'
+include ':module_home'
+include ':wheelpicker'
+include ':basesdk'
 apply from: './base.gradle'
-
 gradle.ext {
     sdk = sdk
 }

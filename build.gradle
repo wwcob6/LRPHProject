@@ -4,13 +4,16 @@
 buildscript {
     repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        jcenter()
         google()
         mavenCentral()
-        maven { url 'https://dl.bintray.com/umsdk/release' }
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath "com.android.tools.build:gradle:$gradle.sdk.gradlePluginVersion"
+        classpath 'com.jakewharton:butterknife-gradle-plugin:10.0.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle.sdk.kotlin_version"
+        classpath "com.mob.sdk:MobSDK:2018.0319.1724"
 
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -21,11 +24,11 @@ buildscript {
 allprojects {
     repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        jcenter()
-        maven { url "https://jitpack.io" }
-        maven { url 'https://dl.bintray.com/umsdk/release' }
         google()
         mavenCentral()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
     }
 }
 

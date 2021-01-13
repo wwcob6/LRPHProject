@@ -7,4 +7,6 @@ ext.sdk = [
         targetSdkVersion       : 26,
         compileSdkVersion      : 28,
         buildToolsVersion      : '28.0.3',
+        gradlePluginVersion     : '3.4.2',
+        kotlin_version          : '1.3.72',
 ]
