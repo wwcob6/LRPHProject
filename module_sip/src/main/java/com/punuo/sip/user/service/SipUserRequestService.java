@@ -2,7 +2,7 @@ package com.punuo.sip.user.service;
 
 import com.alibaba.android.arouter.facade.template.IProvider;
 import com.google.gson.JsonElement;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 
 import org.zoolu.sip.message.Message;
 
@@ -14,5 +14,5 @@ public interface SipUserRequestService extends IProvider {
 
     void handleRequest(Message msg, JsonElement jsonElement);
 
-    void handleTimeOut(BaseSipRequest baseSipRequest);
+    void handleTimeOut(BaseUserSipRequest baseUserSipRequest);
 }

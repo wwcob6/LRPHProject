@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import fr.arnaudguyon.xmltojsonlib.JsonToXml;
 
-public class SipResetRequest extends BaseSipRequest {
+public class SipResetRequest extends BaseUserSipRequest {
     public SipResetRequest(){
         setSipRequestType(SipRequestType.Notify);
     }

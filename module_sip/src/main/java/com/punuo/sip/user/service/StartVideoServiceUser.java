@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sip.H264Config;
 import com.punuo.sip.user.model.VideoData;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +38,7 @@ public class StartVideoServiceUser extends NormalUserRequestService<VideoData> {
     }
 
     @Override
-    public void handleTimeOut(BaseSipRequest baseSipRequest) {
+    public void handleTimeOut(BaseUserSipRequest baseUserSipRequest) {
 
     }
 }

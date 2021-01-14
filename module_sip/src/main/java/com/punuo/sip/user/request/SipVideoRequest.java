@@ -13,7 +13,7 @@ import fr.arnaudguyon.xmltojsonlib.JsonToXml;
  * Created by han.chen.
  * Date on 2019-10-17.
  **/
-public class SipVideoRequest extends BaseSipRequest {
+public class SipVideoRequest extends BaseUserSipRequest {
     private String mDevId;
     public SipVideoRequest(String devId) {
         setSipRequestType(SipRequestType.Notify);

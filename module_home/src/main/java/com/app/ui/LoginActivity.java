@@ -167,7 +167,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
     }
 
     //检查网络是否连接
-    public boolean isNetworkreachable() {
+    public boolean isNetworkReachable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();
         if (info == null) {
@@ -238,7 +238,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         });
         passwordInput.setText(AccountManager.getPassword());
         SipInfo.localSdCard = Environment.getExternalStorageDirectory().getAbsolutePath() + "/faxin/";
-        isNetworkreachable();
+        isNetworkReachable();
     }
 
     // 网络是否连接

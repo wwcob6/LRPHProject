@@ -13,7 +13,7 @@ import fr.arnaudguyon.xmltojsonlib.JsonToXml;
  * Created by han.chen.
  * Date on 2020-01-04.
  **/
-public class SipSendMusicRequest extends BaseSipRequest {
+public class SipSendMusicRequest extends BaseUserSipRequest {
     private String musicUrl;
     private String mDevId;
 

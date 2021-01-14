@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 import com.punuo.sys.sdk.util.BaseHandler;
 
 /**
@@ -48,14 +48,14 @@ public class SipUserServiceManager implements BaseHandler.MessageHandler {
         mBaseHandler.sendMessage(message);
     }
 
-    public void handleTimeOut(String key, BaseSipRequest baseSipRequest) {
+    public void handleTimeOut(String key, BaseUserSipRequest baseUserSipRequest) {
         //回调到主线程
         Message message = new Message();
         message.what = MSG_HANDLER_TIME_OUT;
         Bundle bundle = new Bundle();
         bundle.putString("key", key);
         message.setData(bundle);
-        message.obj = baseSipRequest;
+        message.obj = baseUserSipRequest;
         mBaseHandler.sendMessage(message);
     }
 
@@ -86,7 +86,7 @@ public class SipUserServiceManager implements BaseHandler.MessageHandler {
                     NormalUserRequestService<?> service = (NormalUserRequestService<?>) ARouter.getInstance()
                             .build("/user/" + key).navigation();
                     if (service != null) {
-                        service.handleTimeOut((BaseSipRequest) msg.obj);
+                        service.handleTimeOut((BaseUserSipRequest) msg.obj);
                     }
                 }
                 break;

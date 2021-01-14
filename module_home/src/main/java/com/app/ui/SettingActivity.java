@@ -1,9 +1,9 @@
 package com.app.ui;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,23 +14,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
-import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
 import com.app.ui.address.AddressManagerActivity;
-import com.punuo.sys.sdk.activity.ActivityCollector;
+import com.punuo.sip.dev.SipDevManager;
+import com.punuo.sip.dev.request.SipDevLogoutRequest;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipUserLogoutRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.DataClearUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.app.model.Constant.groupid1;
-import static com.app.sip.SipInfo.sipUser;
 
 
 public class SettingActivity extends BaseSwipeBackActivity {
@@ -85,36 +86,7 @@ public class SettingActivity extends BaseSwipeBackActivity {
         } else if (id == R.id.re_personal) {
             startActivity(new Intent(this, UserInfoActivity.class));
         } else if (id == R.id.logout) {
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setMessage("注销账户?")
-                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sipUser.sendMessage(SipMessageFactory.createNotifyRequest(sipUser, SipInfo.user_to,
-                                    SipInfo.user_from, BodyFactory.createLogoutBody()));
-                            if ((groupid1 != null) && !("".equals(groupid1))) {
-                                SipInfo.sipDev.sendMessage(SipMessageFactory.createNotifyRequest(SipInfo.sipDev, SipInfo.dev_to,
-                                        SipInfo.dev_from, BodyFactory.createLogoutBody()));
-                            }
-//                                if ((groupid1 != null) && !("".equals(groupid1))) {
-//                                    GroupInfo.groupUdpThread.stopThread();
-//                                    GroupInfo.groupKeepAlive.stopThread();
-//                                }
-                            dialog.dismiss();
-                            SipInfo.running = false;
-                            UserInfoManager.clearUserData();
-                            ActivityCollector.finishToFirstView();
-                        }
-                    }).create();
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+            logout();
         } else if (id == R.id.re_psds) {
             startActivity(new Intent(this, ChangePasswordActivity.class));
         } else if (id == R.id.re_address) {
@@ -130,6 +102,31 @@ public class SettingActivity extends BaseSwipeBackActivity {
         } else if (id == R.id.back) {
             scrollToFinishActivity();
         }
+    }
+
+    /**
+     * 退出登陆
+     */
+    private void logout() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage("确认退出登陆?")
+                .setNegativeButton("否", (dialog1, which) -> dialog1.dismiss())
+                .setPositiveButton("是", (dialog12, which) -> {
+                    SipUserManager.getInstance().addRequest(new SipUserLogoutRequest());
+                    if (!TextUtils.isEmpty(AccountManager.getDevId())) {
+                        SipDevManager.getInstance().addRequest(new SipDevLogoutRequest());
+                    }
+                    dialog12.dismiss();
+                    SipInfo.running = false;
+                    UserInfoManager.clearUserData();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("logout", 1);
+                    ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY)
+                            .with(bundle).navigation();
+                }).create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     @Override

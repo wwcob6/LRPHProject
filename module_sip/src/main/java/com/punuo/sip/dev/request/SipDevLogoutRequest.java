@@ -1,21 +1,28 @@
-package com.punuo.sip.user.request;
+package com.punuo.sip.dev.request;
+
+import com.punuo.sip.user.request.SipRequestType;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.arnaudguyon.xmltojsonlib.JsonToXml;
 
-public class SipOnLineRequest extends BaseUserSipRequest {
-    public SipOnLineRequest(){
+/**
+ * Created by han.chen.
+ * Date on 2021/1/14.
+ **/
+public class SipDevLogoutRequest extends BaseDevSipRequest {
+
+    public SipDevLogoutRequest() {
         setSipRequestType(SipRequestType.Notify);
-        setTargetResponse("is_online_response");
+        setHasResponse(false);
     }
 
     @Override
-    public String getBody(){
+    public String getBody() {
         JSONObject body = new JSONObject();
         try {
-            body.put("is_online", "");
+            body.put("logout", "");
         } catch (JSONException e) {
             e.printStackTrace();
         }

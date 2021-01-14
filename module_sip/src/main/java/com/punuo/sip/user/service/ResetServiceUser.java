@@ -4,7 +4,7 @@ package com.punuo.sip.user.service;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sip.user.model.ResetData;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 
 import org.greenrobot.eventbus.EventBus;
 import org.zoolu.sip.message.Message;
@@ -27,7 +27,7 @@ public class ResetServiceUser extends NormalUserRequestService<ResetData> {
     }
 
     @Override
-    public void handleTimeOut(BaseSipRequest baseSipRequest) {
+    public void handleTimeOut(BaseUserSipRequest baseUserSipRequest) {
 
     }
 }

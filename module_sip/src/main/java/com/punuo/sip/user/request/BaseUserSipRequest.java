@@ -16,7 +16,7 @@ import java.util.TimerTask;
  * Created by han.chen.
  * Date on 2019-08-12.
  **/
-public abstract class BaseSipRequest {
+public abstract class BaseUserSipRequest {
     private SipRequestType mSipRequestType;
     private Message mMessage;
     private int mCode;
@@ -25,7 +25,7 @@ public abstract class BaseSipRequest {
     private String mTargetResponse = "";
     private Timer mTimer = new Timer();
 
-    public BaseSipRequest() {
+    public BaseUserSipRequest() {
     }
 
     public void setSipRequestType(SipRequestType sipRequestType) {
@@ -53,7 +53,7 @@ public abstract class BaseSipRequest {
             @Override
             public void run() {
                 Log.d("Sip", mTargetResponse + "请求超时");
-                SipUserServiceManager.getInstance().handleTimeOut(mTargetResponse, BaseSipRequest.this);
+                SipUserServiceManager.getInstance().handleTimeOut(mTargetResponse, BaseUserSipRequest.this);
             }
         }, 3 * 1000);
     }

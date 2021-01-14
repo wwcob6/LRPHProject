@@ -5,7 +5,7 @@ import android.util.Log;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 import com.punuo.sip.user.request.SipUserHeartBeatRequest;
 import com.punuo.sip.user.request.SipRegisterRequest;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
@@ -36,10 +36,10 @@ public class LoginServiceUser extends NormalUserRequestService<LoginResponseUser
     }
 
     @Override
-    public void handleTimeOut(BaseSipRequest baseSipRequest) {
-        if (baseSipRequest instanceof SipRegisterRequest) {
+    public void handleTimeOut(BaseUserSipRequest baseUserSipRequest) {
+        if (baseUserSipRequest instanceof SipRegisterRequest) {
             Log.d(TAG, "注册第二步超时");
-        } else if (baseSipRequest instanceof SipUserHeartBeatRequest) {
+        } else if (baseUserSipRequest instanceof SipUserHeartBeatRequest) {
             Log.d(TAG, "心跳包超时");
         }
         EventBus.getDefault().post(new ReRegisterUserEvent());

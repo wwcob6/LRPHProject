@@ -14,7 +14,7 @@ import fr.arnaudguyon.xmltojsonlib.JsonToXml;
  * Date on 2019-08-12.
  * 注册第二步
  **/
-public class SipRegisterRequest extends BaseSipRequest {
+public class SipRegisterRequest extends BaseUserSipRequest {
     private NegotiateResponse mNegotiateResponse;
     public SipRegisterRequest(NegotiateResponse data) {
         setSipRequestType(SipRequestType.Register);

@@ -9,7 +9,7 @@ import org.zoolu.sip.address.NameAddress;
  * Date on 2019-08-12.
  * sip注册第一步,根据用户名拿到userId
  **/
-public class SipGetUserIdRequest extends BaseSipRequest {
+public class SipGetUserIdRequest extends BaseUserSipRequest {
 
     public SipGetUserIdRequest() {
         setSipRequestType(SipRequestType.Register);

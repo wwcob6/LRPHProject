@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.punuo.sip.SipConfig;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 import com.punuo.sip.user.service.SipUserServiceManager;
 
 import org.zoolu.sip.message.Message;
@@ -39,7 +39,7 @@ public class SipUserManager extends SipProvider {
     private static Context sContext;
     private ExecutorService mExecutorService;
     private static volatile SipUserManager sSipUserManager;
-    private static HashMap<String, BaseSipRequest> mRequestMap;
+    private static HashMap<String, BaseUserSipRequest> mRequestMap;
 
     public static SipUserManager getInstance() {
         if (sContext == null) {
@@ -66,7 +66,7 @@ public class SipUserManager extends SipProvider {
         mExecutorService = Executors.newFixedThreadPool(3);
     }
 
-    public void addRequest(BaseSipRequest sipRequest) {
+    public void addRequest(BaseUserSipRequest sipRequest) {
         if (sipRequest == null) {
             return;
         }
@@ -175,7 +175,7 @@ public class SipUserManager extends SipProvider {
             if (iterator.hasNext()) {
                 Map.Entry<String, JsonElement> next = (Map.Entry<String, JsonElement>) iterator.next();
                 SipUserServiceManager.getInstance().handleRequest(next.getKey(), next.getValue().toString(), message);
-                BaseSipRequest sipRequest = mRequestMap.get(next.getKey());
+                BaseUserSipRequest sipRequest = mRequestMap.get(next.getKey());
                 if (sipRequest != null) {
                     sipRequest.response();
                     mRequestMap.remove(next.getKey());

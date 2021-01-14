@@ -10,7 +10,7 @@ import fr.arnaudguyon.xmltojsonlib.JsonToXml;
  * Date on 2019-08-12.
  * 心跳请求
  **/
-public class SipUserHeartBeatRequest extends BaseSipRequest {
+public class SipUserHeartBeatRequest extends BaseUserSipRequest {
 
     public SipUserHeartBeatRequest() {
         setSipRequestType(SipRequestType.Register);

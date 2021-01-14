@@ -1,7 +1,7 @@
-package com.punuo.sip.user.service;
+package com.punuo.sip.dev.service;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.punuo.sip.user.request.BaseUserSipRequest;
+import com.punuo.sip.dev.request.BaseDevSipRequest;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
 
 import org.zoolu.sip.message.Message;
@@ -10,8 +10,8 @@ import org.zoolu.sip.message.Message;
  * Created by han.chen.
  * Date on 2019-09-23.
  **/
-@Route(path = UserServicePath.PATH_NOTIFY)
-public class NotifyServiceUser extends NormalUserRequestService<Object> {
+@Route(path = DevServicePath.PATH_NOTIFY)
+public class NotifyServiceDev extends NormalDevRequestService<Object> {
 
     @Override
     protected String getBody() {
@@ -29,7 +29,7 @@ public class NotifyServiceUser extends NormalUserRequestService<Object> {
     }
 
     @Override
-    public void handleTimeOut(BaseUserSipRequest baseUserSipRequest) {
+    public void handleTimeOut(BaseDevSipRequest baseSipRequest) {
 
     }
 }

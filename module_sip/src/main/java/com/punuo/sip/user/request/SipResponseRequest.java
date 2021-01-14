@@ -4,7 +4,7 @@ package com.punuo.sip.user.request;
  * Created by han.chen.
  * Date on 2019-08-21.
  **/
-public class SipResponseRequest extends BaseSipRequest {
+public class SipResponseRequest extends BaseUserSipRequest {
     private String body;
 
     public SipResponseRequest() {

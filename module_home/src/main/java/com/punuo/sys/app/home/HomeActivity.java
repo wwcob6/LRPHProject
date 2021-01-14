@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.model.Constant;
@@ -234,17 +235,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         if (mHeartBeatTaskResumeProcessorUser != null) {
             mHeartBeatTaskResumeProcessorUser.onDestroy();
         }
-        if ((groupid1 != null) && !("".equals(groupid1))) {
-            SipInfo.keepUserAlive.stopThread();
-            SipInfo.keepDevAlive.stopThread();
-        }
-        //关闭集群呼叫
-//       GroupInfo.wakeLock.release();
-//        if ((groupid1 != null) && !("".equals(groupid1))) {
-//        GroupInfo.rtpAudio.removeParticipant();
-//            GroupInfo.groupUdpThread.stopThread();
-//            GroupInfo.groupKeepAlive.stopThread();
-//        }
+        mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
+        mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         SipInfo.userLogined = false;
         SipInfo.devLogined = false;
         SipInfo.loginReplace = null;
@@ -254,19 +246,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         stopService(new Intent(HomeActivity.this, NewsService.class));
         //停止PPT监听服务
 //        stopService(new Intent(this, PTTService.class));
-        sipUser.setLoginNotifyListener(null);
-        sipUser.setBottomListener(null);
         //关闭线程池
-        sipUser.shutdown();
-        if ((groupid1 != null) && !("".equals(groupid1))) {
-            sipDev.shutdown();
-        }
-        //关闭监听线程
-        sipUser.halt();
-        if ((groupid1 != null) && !("".equals(groupid1))) {
-            sipDev.halt();
-        }
-        System.gc();
         running = false;
     }
 
@@ -368,6 +348,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        Intent startIntent = getIntent();
+        if (startIntent != null && startIntent.getExtras() != null) {
+            Bundle bundle = startIntent.getExtras();
+
+            // logout 为 1，强制到登录页
+            if (bundle.getInt("logout", 0) == 1) {
+                ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY).navigation();
+                finish();
+            }
+        }
     }
 
     /* sip注册相关该页面启动心跳包 并且在异常断开之后重新进行sip的注册*/

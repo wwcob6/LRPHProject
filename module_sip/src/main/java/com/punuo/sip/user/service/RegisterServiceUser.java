@@ -6,7 +6,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.model.NegotiateResponse;
-import com.punuo.sip.user.request.BaseSipRequest;
+import com.punuo.sip.user.request.BaseUserSipRequest;
 import com.punuo.sip.user.request.SipRegisterRequest;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
@@ -39,7 +39,7 @@ public class RegisterServiceUser extends NormalUserRequestService<NegotiateRespo
     }
 
     @Override
-    public void handleTimeOut(BaseSipRequest baseSipRequest) {
+    public void handleTimeOut(BaseUserSipRequest baseUserSipRequest) {
         Log.d(TAG, "注册第一步超时");
         EventBus.getDefault().post(new ReRegisterUserEvent());
     }
