@@ -3,7 +3,6 @@ package com.app.ui;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,11 +19,7 @@ import com.app.R2;
 import com.app.UserInfoManager;
 import com.app.sip.SipInfo;
 import com.app.ui.address.AddressManagerActivity;
-import com.punuo.sip.dev.SipDevManager;
-import com.punuo.sip.dev.request.SipDevLogoutRequest;
-import com.punuo.sip.user.SipUserManager;
-import com.punuo.sip.user.request.SipUserLogoutRequest;
-import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sip.AccountUtil;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.DataClearUtil;
@@ -113,13 +108,9 @@ public class SettingActivity extends BaseSwipeBackActivity {
                 .setMessage("确认退出登陆?")
                 .setNegativeButton("否", (dialog1, which) -> dialog1.dismiss())
                 .setPositiveButton("是", (dialog12, which) -> {
-                    SipUserManager.getInstance().addRequest(new SipUserLogoutRequest());
-                    if (!TextUtils.isEmpty(AccountManager.getDevId())) {
-                        SipDevManager.getInstance().addRequest(new SipDevLogoutRequest());
-                    }
-                    dialog12.dismiss();
-                    SipInfo.running = false;
                     UserInfoManager.clearUserData();
+                    SipInfo.running = false;
+                    AccountUtil.logout();
                     Bundle bundle = new Bundle();
                     bundle.putInt("logout", 1);
                     ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY)

@@ -26,7 +26,7 @@ import com.app.model.Constant;
 import com.app.model.MessageEvent;
 import com.app.ui.AddlikeView;
 import com.app.ui.CommentView;
-import com.app.ui.message.SystemNotify;
+import com.app.ui.message.SystemNotifyActivity;
 import com.app.view.CircleImageView;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
@@ -207,7 +207,7 @@ public class MessageFragment extends Fragment {
         } else if (id == R.id.rl_dianzan) {
             startActivity(new Intent(getActivity(), AddlikeView.class));
         } else if (id == R.id.rl_systemNotify) {
-            startActivity(new Intent(getActivity(), SystemNotify.class));
+            startActivity(new Intent(getActivity(), SystemNotifyActivity.class));
         }
     }
 

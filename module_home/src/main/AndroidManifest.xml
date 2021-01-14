@@ -16,7 +16,7 @@
             android:name=".ui.CommentView"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.message.SystemNotify"
+            android:name=".ui.message.SystemNotifyActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.VideoDial"

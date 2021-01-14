@@ -26,11 +26,11 @@ public class ErrorServiceUser extends NormalUserRequestService<String> {
     protected void onSuccess(Message msg, String result) {
         int code = msg.getStatusLine().getCode();
         if (code == 100) {
-            return;
+
         } else if (code == 401) {
             EventBus.getDefault().post(new UserLoginFailEvent());
         } else if (code == 400) {
-            return;
+
         } else {
             HandlerExceptionUtils.handleException(new ErrorTipException(BaseSipResponses.reasonOf(code)));
         }

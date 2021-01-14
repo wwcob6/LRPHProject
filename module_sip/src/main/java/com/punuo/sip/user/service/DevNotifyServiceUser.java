@@ -22,11 +22,7 @@ public class DevNotifyServiceUser extends NormalUserRequestService<DevNotifyData
     @Override
     protected void onSuccess(Message msg, DevNotifyData result) {
         if (result != null && result.mDevInfo != null) {
-            String info = "devid = " + result.mDevInfo.devId + "live = " + result.mDevInfo.live;
-//            ToastUtils.showToast(info);
             EventBus.getDefault().post(result);
-
-            //TODO 根据后端返回的设备在线信息，再去做相应的UI展示
         }
     }
 

@@ -89,17 +89,20 @@
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <ImageView
                 android:id="@+id/iv_message"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
-               android:padding="@dimen/dp_1"
                 android:layout_marginTop="@dimen/dp_2"
+                android:padding="@dimen/dp_1"
                 android:src="@drawable/selector_message" />
+
             <TextView
                 android:id="@+id/newmessage_notify"
                 android:layout_width="wrap_content"
@@ -111,7 +114,8 @@
                 android:gravity="center"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/sp_6"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

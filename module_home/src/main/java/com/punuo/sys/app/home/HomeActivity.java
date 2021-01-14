@@ -11,24 +11,24 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
+import com.app.UserInfoManager;
 import com.app.model.Constant;
 import com.app.model.MessageEvent;
 import com.app.service.NewsService;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
 import com.app.sip.SipMessageFactory;
-import com.app.ui.LoginActivity;
 import com.app.ui.fragment.LaoRenFragment;
 import com.app.ui.fragment.MessageFragment;
 import com.app.ui.fragment.MyFragmentManager;
 import com.app.ui.fragment.PersonFragment;
+import com.punuo.sip.AccountUtil;
 import com.punuo.sip.SipConfig;
 import com.punuo.sip.dev.DevHeartBeatHelper;
 import com.punuo.sip.dev.SipDevManager;
@@ -40,6 +40,7 @@ import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.UserHeartBeatHelper;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UserLoginFailEvent;
+import com.punuo.sip.user.event.UserReplaceEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorDev;
@@ -60,7 +61,6 @@ import butterknife.ButterKnife;
 
 import static com.app.model.Constant.groupid1;
 import static com.app.sip.SipInfo.running;
-import static com.app.sip.SipInfo.sipDev;
 import static com.app.sip.SipInfo.sipUser;
 
 
@@ -72,13 +72,9 @@ import static com.app.sip.SipInfo.sipUser;
  */
 @Route(path = HomeRouter.ROUTER_HOME_ACTIVITY)
 public class HomeActivity extends BaseActivity implements View.OnClickListener{
-    private final String TAG = getClass().getSimpleName();
-    @BindView(R2.id.network_layout)
-    LinearLayout networkLayout;
+    private final String TAG = "HomeActivity";
     @BindView(R2.id.content_frame)
     FrameLayout contentFrame;
-    @BindView(R2.id.menu_layout)
-    LinearLayout menuLayout;
     @BindView(R2.id.newmessage_notify)
     TextView newMessageNotify;
     @BindView(R2.id.home_tab)
@@ -142,51 +138,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         //startService(new Intent(HomeActivity.this, SipService.class));
         //启动监听服务
         startService(new Intent(this, NewsService.class));
-        SipInfo.loginReplace = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message message) {
-                sipUser.sendMessage(SipMessageFactory.createNotifyRequest(sipUser, SipInfo.user_to,
-                        SipInfo.user_from, BodyFactory.createLogoutBody()));
-                if ((groupid1 != null) && !("".equals(groupid1))) {
-                    sipDev.sendMessage(SipMessageFactory.createNotifyRequest(sipDev, SipInfo.dev_to,
-                            SipInfo.dev_from, BodyFactory.createLogoutBody()));
-                }
-                //关闭语音电话服务
-                //stopService(new Intent(HomeActivity.this, SipService.class));
-                //关闭监听服务
-                stopService(new Intent(HomeActivity.this, NewsService.class));
-                //关闭PTT监听服务
-//                stopService(new Intent(HomeActivity.this, PTTService.class));
-
-                //关闭用户心跳
-                SipInfo.keepUserAlive.stopThread();
-                //关闭设备心跳
-                if ((groupid1 != null) && !("".equals(groupid1))) {
-                    SipInfo.keepDevAlive.stopThread();
-                }
-                running = false;
-                //重置登录状态
-                SipInfo.userLogined = false;
-                SipInfo.devLogined = false;
-                //关闭集群呼叫
-//                GroupInfo.rtpAudio.removeParticipant();
-//                if ((groupid1 != null) && !("".equals(groupid1))) {
-//                    GroupInfo.groupUdpThread.stopThread();
-//                    GroupInfo.groupKeepAlive.stopThread();
-//                }
-                AlertDialog loginReplace = new AlertDialog.Builder(getApplicationContext())
-                        .setTitle("账号异地登录")
-                        .setMessage("请重新登录")
-                        .setPositiveButton("确定", null)
-                        .create();
-                loginReplace.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-                loginReplace.show();
-                loginReplace.setCancelable(false);
-                loginReplace.setCanceledOnTouchOutside(false);
-                IntentUtil.jumpActivity(getApplicationContext(), LoginActivity.class);
-                return true;
-            }
-        });
     }
 
     private void initTabBars() {
@@ -239,7 +190,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         SipInfo.userLogined = false;
         SipInfo.devLogined = false;
-        SipInfo.loginReplace = null;
         //停止语音电话服务
         //stopService(new Intent(HomeActivity.this, SipService.class));
         //关闭监听服务
@@ -467,4 +417,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         }
     }
     /* sip注册相关该页面启动心跳包 并且在异常断开之后重新进行sip的注册*/
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UserReplaceEvent event) {
+        AlertDialog loginReplace = new AlertDialog.Builder(getApplicationContext())
+                .setTitle("账号异地登录")
+                .setMessage("请重新登录")
+                .setPositiveButton("确定", null)
+                .create();
+        loginReplace.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        loginReplace.setCancelable(false);
+        loginReplace.setCanceledOnTouchOutside(false);
+        loginReplace.show();
+        UserInfoManager.clearUserData();
+        SipInfo.running = false;
+        AccountUtil.logout();
+        ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY).navigation();
+        finish();
+    }
 }

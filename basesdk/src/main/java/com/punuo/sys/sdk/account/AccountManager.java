@@ -2,7 +2,6 @@ package com.punuo.sys.sdk.account;
 
 import android.text.TextUtils;
 
-
 import com.punuo.sys.sdk.util.MMKVUtil;
 
 

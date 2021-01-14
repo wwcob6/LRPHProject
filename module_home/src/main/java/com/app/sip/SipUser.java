@@ -12,7 +12,6 @@ import com.app.ftp.Ftp;
 import com.app.ftp.FtpListener;
 import com.app.groupvoice.GroupInfo;
 import com.app.model.App;
-import com.app.model.Constant;
 import com.app.model.Device;
 import com.app.model.MessageEvent;
 import com.app.model.Msg;
@@ -210,10 +209,6 @@ public class SipUser extends SipProvider {
                             }
                             return true;
                         }
-
-
-
-
                         //亲聊新成员上线
                     case"user_online":
                         Element liveElement=(Element)root.getElementsByTagName("live").item(0);
@@ -247,9 +242,6 @@ public class SipUser extends SipProvider {
 
 
                         break;
-
-
-
                   //服务器回复亲聊在线成员userid
                     case "cluster_users":
                             Log.i("qqq","111");
@@ -267,8 +259,6 @@ public class SipUser extends SipProvider {
 
                         qinliaoUpdateListener.stausOnUpdate();
                         break;
-
-
                     case "alarm":{
                         Log.i("maomaomao","111");
                         Element useridElement = (Element) root.getElementsByTagName("userId").item(0);
@@ -282,206 +272,7 @@ public class SipUser extends SipProvider {
                         music = MediaPlayer.create(context, R.raw.alarm);
                         music.start();
                         return true;
-
-
-
                     }
-                    case "message": {
-                        Element idElement = (Element) root.getElementsByTagName("id").item(0);
-                        Element fromElement = (Element) root.getElementsByTagName("from").item(0);
-                        Element toElement = (Element) root.getElementsByTagName("to").item(0);
-                        Element contentElement = (Element) root.getElementsByTagName("content").item(0);
-                        Element timeElement = (Element) root.getElementsByTagName("time").item(0);
-                        Element typeElement = (Element) root.getElementsByTagName("type").item(0);
-                        final String id = idElement.getFirstChild().getNodeValue();
-                        final String content = contentElement.getFirstChild().getNodeValue();
-                        final int time = Integer.parseInt(timeElement.getFirstChild().getNodeValue());
-                        final String fromUserId = fromElement.getFirstChild().getNodeValue();
-                        final String toUserId = toElement.getFirstChild().getNodeValue();
-                        final int msgtype = Integer.parseInt(typeElement.getFirstChild().getNodeValue());
-                        final int isTimeShow;
-                        if (time - DatabaseInfo.sqLiteManager.queryLastTime(fromUserId, toUserId) > 300) {
-                            isTimeShow = 1;
-                        } else {
-                            isTimeShow = 0;
-                        }
-                        if (msgtype != 3) {
-                            DatabaseInfo.sqLiteManager.insertMessage(id, fromUserId, toUserId, time,
-                                    isTimeShow, content, msgtype, 0);
-                        }
-                        Message message = SipMessageFactory.createResponse(msg, 200, "OK", BodyFactory.createMessageResBody(id, 200));
-                        SipInfo.sipUser.sendMessage(message);
-                        if (msgtype == 2) {
-                            DatabaseInfo.sqLiteManager.insertLastestMsgFrom(0, fromUserId, "[位置信息]", time);
-                        } else if (msgtype != 3) {
-                            DatabaseInfo.sqLiteManager.insertLastestMsgFrom(0, fromUserId, content, time);
-                        }
-                        //消息
-                        Msg friendMsg = new Msg();
-                        friendMsg.setMsgId(id);
-                        friendMsg.setFromUserId(fromUserId);
-                        friendMsg.setToUserId(toUserId);
-                        friendMsg.setTime(time);
-                        friendMsg.setIsTimeShow(isTimeShow);
-                        friendMsg.setContent(content);
-                        friendMsg.setType(msgtype);
-                        if (totalListener != null) {
-                            totalListener.onReceivedTotalMessage(friendMsg);
-                        }
-                        if (bottomListener != null) {
-                            bottomListener.onReceivedBottomMessage(friendMsg);
-                        }
-
-                        if (messageListener != null) {
-                            messageListener.onReceivedMessage(friendMsg);
-                        }
-
-//                        if (!mediaPlayer.isPlaying()) {
-//                            mediaPlayer.start();
-//                        }
-                        return true;
-                    }
-                    case "filetransfer": {
-                        Element fromElement = (Element) root.getElementsByTagName("from").item(0);
-                        Element toElement = (Element) root.getElementsByTagName("to").item(0);
-                        Element idElement = (Element) root.getElementsByTagName("id").item(0);
-                        Element nameElement = (Element) root.getElementsByTagName("name").item(0);
-                        Element fileTypeElement = (Element) root.getElementsByTagName("filetype").item(0);
-                        Element timeElement = (Element) root.getElementsByTagName("time").item(0);
-                        Element pathElement = (Element) root.getElementsByTagName("path").item(0);
-                        Element sizeElement = (Element) root.getElementsByTagName("size").item(0);
-                        Element md5Element = (Element) root.getElementsByTagName("md5").item(0);
-                        Element typeElement = (Element) root.getElementsByTagName("type").item(0);
-                        final String fromUserId = fromElement.getFirstChild().getNodeValue();
-                        final String toUserId = toElement.getFirstChild().getNodeValue();
-                        final String id = idElement.getFirstChild().getNodeValue();
-                        final String name = nameElement.getFirstChild().getNodeValue();
-                        final String fileType = fileTypeElement.getFirstChild().getNodeValue();
-                        final int time = Integer.parseInt(timeElement.getFirstChild().getNodeValue());
-                        final String ftppath = pathElement.getFirstChild().getNodeValue();
-                        final String size = sizeElement.getFirstChild().getNodeValue();
-                        final String md5 = md5Element.getFirstChild().getNodeValue();
-                        final int typeInt = Integer.parseInt(typeElement.getFirstChild().getNodeValue());
-                        final int isTimeShow;
-                        if (time - DatabaseInfo.sqLiteManager.queryLastTime(fromUserId, toUserId) > 300) {
-                            isTimeShow = 1;
-                        } else {
-                            isTimeShow = 0;
-                        }
-                        String content = "[文件]";
-                        switch (typeInt) {
-                            case 0:
-                                content = "[语音消息]";
-                                break;
-                            case 1:
-                                content = "[小视频]";
-                                break;
-                            case 2:
-                                content = "[文件]";
-                                break;
-                            case 3:
-                                content = "[图片]";
-                                break;
-                            case 5:
-                                content = "[位置]";
-                                break;
-                        }
-                        if (typeInt != 3) {
-                            DatabaseInfo.sqLiteManager.insertMessage(id, fromUserId, toUserId, time,
-                                    isTimeShow, content, 1, 0);
-                            DatabaseInfo.sqLiteManager.insertFile(id, name, fromUserId, fileType, time, null,
-                                    ftppath, Long.parseLong(size), md5, typeInt, 0, 0);
-                            Message message = SipMessageFactory.createResponse(msg, 200, "OK",
-                                    BodyFactory.createFileTransferResBody(id, 200));
-                            SipInfo.sipUser.sendMessage(message);
-                            DatabaseInfo.sqLiteManager.insertLastestMsgFrom(0, fromUserId, content, time);
-                            final Msg friendMsg = new Msg();
-                            friendMsg.setMsgId(id);
-                            friendMsg.setFromUserId(fromUserId);
-                            friendMsg.setToUserId(toUserId);
-                            friendMsg.setTime(time);
-                            friendMsg.setIsTimeShow(isTimeShow);
-                            friendMsg.setContent(content);
-                            friendMsg.setType(1);
-
-                            if (messageListener != null) {
-                                messageListener.onReceivedMessage(friendMsg);
-                            }
-                            if (bottomListener != null) {
-                                bottomListener.onReceivedBottomMessage(friendMsg);
-                            }
-                            if (totalListener != null) {
-                                totalListener.onReceivedTotalMessage(friendMsg);
-                            }
-                        } else {
-                            FtpListener listener = new FtpListener() {
-                                @Override
-                                public void onStateChange(String currentStep) {
-
-                                }
-
-                                @Override
-                                public void onUploadProgress(String currentStep, long uploadSize, File targetFile) {
-
-                                }
-
-                                @Override
-                                public void onDownLoadProgress(String currentStep, long downProcess, File targetFile) {
-                                    if (currentStep.equals(Constant.FTP_DOWN_SUCCESS)) {
-                                        DatabaseInfo.sqLiteManager.insertMessage(id, fromUserId, toUserId, time,
-                                                isTimeShow, "[图片]", 1, 0);
-                                        DatabaseInfo.sqLiteManager.insertFile(id, name, fromUserId, fileType, time, null,
-                                                ftppath, Long.parseLong(size), md5, typeInt, 0, 0);
-                                        Message message = SipMessageFactory.createResponse(msg, 200, "OK",
-                                                BodyFactory.createFileTransferResBody(id, 200));
-                                        SipInfo.sipUser.sendMessage(message);
-                                        DatabaseInfo.sqLiteManager.insertLastestMsgFrom(0, fromUserId, "[图片]", time);
-                                        final Msg friendMsg = new Msg();
-                                        friendMsg.setMsgId(id);
-                                        friendMsg.setFromUserId(fromUserId);
-                                        friendMsg.setToUserId(toUserId);
-                                        friendMsg.setTime(time);
-                                        friendMsg.setIsTimeShow(isTimeShow);
-                                        friendMsg.setContent("[图片]");
-                                        friendMsg.setType(1);
-
-                                        if (messageListener != null) {
-                                            messageListener.onReceivedMessage(friendMsg);
-                                        }
-                                        if (bottomListener != null) {
-                                            bottomListener.onReceivedBottomMessage(friendMsg);
-                                        }
-                                        if (totalListener != null) {
-                                            totalListener.onReceivedTotalMessage(friendMsg);
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onDeleteProgress(String currentStep) {
-
-                                }
-                            };
-                            final Ftp mFtp = new Ftp(SipInfo.serverIp, 21, "ftpaller", "123456", listener);
-                            new Thread() {
-                                @Override
-                                public void run() {
-                                    String thumnailpath = ftppath.replace(context.getString(R.string.Image), context.getString(R.string.Thumbnail));
-                                    try {
-                                        mFtp.download(thumnailpath, SipInfo.localSdCard + "Files/Camera/Thumbnail/");
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }.start();
-                        }
-                        return true;
-                    }
-                    case "session_notify":
-                        if (SipInfo.loginReplace != null) {
-                            SipInfo.loginReplace.sendEmptyMessage(0x1111);
-                        }
-                        return true;
                 }
             } catch (Exception e) {
                 Log.e(TAG, "requestParse: ", e);

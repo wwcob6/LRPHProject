@@ -5,34 +5,6 @@
     android:background="#f8f8fa"
     android:orientation="vertical"
     android:fitsSystemWindows="true">
-    <!--android:background="@drawable/main_background"-->
-    <!--android:background="#f5c25e"-->
-
-
-    <LinearLayout
-        android:id="@+id/network_layout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#f58787"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:padding="5dp"
-            android:src="@drawable/main_attention" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:gravity="center"
-            android:text="@string/network"
-            android:textSize="15sp" />
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

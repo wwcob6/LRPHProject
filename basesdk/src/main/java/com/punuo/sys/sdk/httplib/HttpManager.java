@@ -40,7 +40,7 @@ public class HttpManager {
     private static OkHttpClient.Builder sBuilder = new OkHttpClient.Builder();
     private static boolean isDebug = false;
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
-    private static final String cacheDir = "/storage/emulated/0/Android/data/com.punuo.pet/cache";
+    private static final String cacheDir = "/storage/emulated/0/Android/data/com.punuo.sys.app.main/cache";
     public static OkHttpClient getOkHttpClient() {
         init();
         return sOkHttpClient;

@@ -11,8 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
-import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -20,7 +18,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -35,9 +32,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
-import com.app.db.DatabaseInfo;
-import com.app.db.MyDatabaseHelper;
-import com.app.db.SQLiteManager;
 import com.app.friendCircleMain.domain.Alldevid;
 import com.app.friendCircleMain.domain.Group;
 import com.app.friendCircleMain.domain.UserFromGroup;
@@ -49,11 +43,7 @@ import com.app.model.PNUserInfo;
 import com.app.request.GetAllGroupFromUserRequest;
 import com.app.request.GetAllUserFromGroupRequest;
 import com.app.request.GetDevIdFromIdRequest;
-import com.app.sip.KeepAlive;
-import com.app.sip.SipDev;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
-import com.app.sip.SipUser;
 import com.app.tools.PermissionUtils;
 import com.app.views.CleanEditText;
 import com.punuo.sip.dev.SipDevManager;
@@ -72,19 +62,17 @@ import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
+import com.punuo.sys.sdk.util.CommonUtil;
+import com.punuo.sys.sdk.util.MMKVUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
-import org.zoolu.sip.message.Message;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -94,8 +82,6 @@ import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
-
-import static java.lang.Thread.sleep;
 
 /**
  * 用户登陆页
@@ -107,15 +93,8 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
     private String groupid;
     private String appdevid;
     private Handler handler = new Handler();
-
-    //前一次的账号
-    private String lastUserAccount;
     //网络连接失败窗口
     private AlertDialog newWorkConnectedDialog;
-    //账号不存在
-    private AlertDialog accountNotExistDialog;
-    //登陆超时
-    private AlertDialog timeOutDialog;
     protected CompositeSubscription mCompositeSubscription = new CompositeSubscription();
     public static List<Activity> activityList = new LinkedList();
 
@@ -142,11 +121,14 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login1);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         setSwipeBackEnable(false);
         LoginActivity.activityList.add(this);
-        showAboutDialog();
+        boolean showed = MMKVUtil.getBoolean("privacy_dialog_showed", false);
+        if (!showed) {
+            showAboutDialog();
+        }
         setUpSplash();
         initViews();
         StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
@@ -178,20 +160,19 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         return SipInfo.isNetworkConnected;
     }
 
-    public void showAboutDialog(){
+    public void showAboutDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         TextView title = new TextView(this);
         title.setText("服务协议和隐私政策");
-        title.setPadding(10,10,10,10);
+        title.setPadding(0, CommonUtil.dip2px(12f), 0, CommonUtil.dip2px(12f));
         title.setGravity(Gravity.CENTER);
         title.setTextSize(20);
         title.setTextColor(getResources().getColor(R.color.common_title_bg));
         dialog.setCustomTitle(title);
         TextView content = new TextView(this);
+        content.setPadding(CommonUtil.dip2px(12f), 0, CommonUtil.dip2px(12f), 0);
         content.setText(Html.fromHtml(
-                "\n" +"请你务必审慎阅读.充分理解“服务协议”和“隐私政策”各条款，包括但不限于:为了向你提供即时通讯、内容分享等服务，我们需要收集你的设备信息、操作日志等个人信息。你可以在“设置”中查看，变更，删除个人信息并管理你的授权\n" +
-                "\n" +
-                "你可阅读"+"<a href=\"http://feeder.mengshitech.com/test/userPolicy.html\">《服务协议》</a>"+"和"+"<a href=\"http://feeder.mengshitech.com/test/privacy.html\">《隐私政策》</a>"+"了解详细信息。如你同意，请点击同意开始接受我们的服务。"));
+                "请你务必审慎阅读.充分理解“服务协议”和“隐私政策”各条款，包括但不限于:为了向你提供即时通讯、内容分享等服务，我们需要收集你的设备信息、操作日志等个人信息。你可以在“设置”中查看，变更，删除个人信息并管理你的授权你可阅读<a href=\"http://feeder.mengshitech.com/test/userPolicy.html\">《服务协议》</a>和<a href=\"http://feeder.mengshitech.com/test/privacy.html\">《隐私政策》</a>了解详细信息。如你同意，请点击同意开始接受我们的服务。"));
         content.setMovementMethod(LinkMovementMethod.getInstance());
         dialog.setView(content);
         dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -200,21 +181,24 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
                 dialog.dismiss();
             }
         });
-        dialog.setNegativeButton("暂不使用", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 exit();
             }
         });
         dialog.show();
+        MMKVUtil.setBoolean("privacy_dialog_showed", true);
     }
-    public void exit(){
-        for(Activity act:activityList){
+
+    public void exit() {
+        for (Activity act : activityList) {
             act.finish();
         }
         System.exit(0);
 
     }
+
     private void initViews() {
         numInput2.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         numInput2.setTransformationMethod(HideReturnsTransformationMethod
@@ -224,155 +208,33 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
         passwordInput.setImeOptions(EditorInfo.IME_ACTION_GO);
         passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        passwordInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                        || actionId == EditorInfo.IME_ACTION_GO) {
-                    clickLogin();
-                }
-                return false;
+        passwordInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE
+                    || actionId == EditorInfo.IME_ACTION_GO) {
+                clickLogin();
             }
+            return false;
         });
         passwordInput.setText(AccountManager.getPassword());
         SipInfo.localSdCard = Environment.getExternalStorageDirectory().getAbsolutePath() + "/faxin/";
         isNetworkReachable();
     }
 
-    // 网络是否连接
-    private Runnable networkConnectedFailed = new Runnable() {
-        @Override
-        public void run() {
-            if (newWorkConnectedDialog == null || !newWorkConnectedDialog.isShowing()) {
-                newWorkConnectedDialog = new AlertDialog.Builder(LoginActivity.this)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent mIntent = new Intent(Settings.ACTION_SETTINGS);
-                                startActivity(mIntent);
-                            }
-                        })
-                        .setTitle("当前无网络,请检查网络连接")
-                        .create();
-                newWorkConnectedDialog.setCancelable(false);
-                newWorkConnectedDialog.setCanceledOnTouchOutside(false);
-                newWorkConnectedDialog.show();
-            }
-        }
-    };
-
     private void clickLogin() {
-        if (SipInfo.isNetworkConnected) {
-            CharSequence userAccount = numInput2.getText();
-            CharSequence passWord = passwordInput.getText();
-            if (checkPhoneNumber(userAccount) && checkPassword(passWord)) {
-                AccountManager.setUserAccount(userAccount);
-                AccountManager.setPassword(passWord);
-//                beforeLogin();
-                showLoadingDialog();
-                getUserId();
-//                new Thread(connecting).start();
-            }
-        } else {
-            //弹出网络连接失败窗口
-            handler.post(networkConnectedFailed);
+        CharSequence userAccount = numInput2.getText();
+        CharSequence passWord = passwordInput.getText();
+        if (checkPhoneNumber(userAccount) && checkPassword(passWord)) {
+            AccountManager.setUserAccount(userAccount);
+            AccountManager.setPassword(passWord);
+            showLoadingDialog();
+            getUserId();
         }
     }
 
-    private void beforeLogin() {
-        SipInfo.phoneType = Build.MODEL;
-        Log.i("手机型号", "model" + SipInfo.phoneType);
-        SipInfo.isAccountExist = true;
-        SipInfo.passwordError = false;
-        SipInfo.userLogined = false;
-        SipInfo.loginTimeout = true;
-        SipURL local = new SipURL(SipInfo.REGISTER_ID, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-        SipURL remote = new SipURL(SipInfo.SERVER_ID, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-        SipInfo.user_from = new NameAddress(SipInfo.userAccount, local);
-        SipInfo.user_to = new NameAddress(SipInfo.SERVER_NAME, remote);
-        SipInfo.devLogined = false;
-        SipInfo.dev_loginTimeout = true;
-
-        SipURL remote_dev = new SipURL(SipInfo.SERVER_ID, SipInfo.serverIp, SipInfo.SERVER_PORT_DEV);
-
-        SipInfo.dev_to = new NameAddress(SipInfo.SERVER_NAME, remote_dev);
-    }
-
-    Runnable connecting = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                int hostPort = new Random().nextInt(5000) + 2000;
-                SipInfo.sipUser = new SipUser(null, hostPort, LoginActivity.this);
-                Message register = SipMessageFactory.createRegisterRequest(
-                        SipInfo.sipUser, SipInfo.user_to, SipInfo.user_from);
-                SipInfo.sipUser.sendMessage(register);
-                sleep(1000);
-                for (int i = 0; i < 2; i++) {
-                    if (!SipInfo.isAccountExist) {
-                        //用户账号不存在
-                        break;
-                    }
-                    if (SipInfo.passwordError) {
-                        //密码错误
-                        break;
-                    }
-                    if (!SipInfo.loginTimeout) {
-                        //没有超时
-                        break;
-                    }
-                    SipInfo.sipUser.sendMessage(register);
-                    sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-
-                if (!SipInfo.isAccountExist) {
-                    dismissLoadingDialog();
-                    /*账号不存在提示*/
-                    handler.post(accountNotExist);
-                } else if (SipInfo.passwordError) {
-                    //密码错误提示
-                    dismissLoadingDialog();
-                    ToastUtils.showToast("账号密码错误");
-                    lastUserAccount = SipInfo.userAccount;
-                } else if (SipInfo.loginTimeout) {
-                    dismissLoadingDialog();
-                    //超时
-                    handler.post(timeOut);
-                } else {
-                    if (SipInfo.userLogined) {
-                        Log.i(TAG, "用户登录成功!");
-                        //开启用户保活心跳包
-                        SipInfo.keepUserAlive = new KeepAlive();
-                        SipInfo.keepUserAlive.setType(0);
-                        SipInfo.keepUserAlive.startThread();
-                        //数据库
-                        String dbPath = SipInfo.userId + ".db";
-//                        deleteDatabase(dbPath);
-                        MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(LoginActivity.this, dbPath, null, 1);
-                        DatabaseInfo.sqLiteManager = new SQLiteManager(myDatabaseHelper);
-
-//                        SipInfo.applist.clear();
-//                        //请求服务器上的app列表
-//                        SipInfo.sipUser.sendMessage(SipMessageFactory.createSubscribeRequest(SipInfo.sipUser,
-//                                SipInfo.user_to, SipInfo.user_from, BodyFactory.createAppsQueryBody()));
-                        //启动设备注册线程
-//                        new Thread(getuserinfo).start();
-                        getUserInfo();
-                    }
-                }
-            }
-        }
-    };
 
     //获取用户信息
     private void getUserInfo() {
-        RequestListener listener = new RequestListener<PNUserInfo>() {
+        RequestListener<PNUserInfo> listener = new RequestListener<PNUserInfo>() {
             @Override
             public void onComplete() {
 
@@ -437,7 +299,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
                             dismissLoadingDialog();
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         }
-                    }else {
+                    } else {
                         dismissLoadingDialog();
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     }
@@ -521,7 +383,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         }
         mGetDevIdFromIdRequest = new GetDevIdFromIdRequest();
         mGetDevIdFromIdRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        Log.i(TAG, "getUserId"+UserInfoManager.getUserInfo().id);
+        Log.i(TAG, "getUserId" + UserInfoManager.getUserInfo().id);
         mGetDevIdFromIdRequest.setRequestListener(new RequestListener<Alldevid>() {
             @Override
             public void onComplete() {
@@ -537,7 +399,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     } else {
                         appdevid = devIdLists.get(0);
-                        Log.i(TAG, "appdevid"+appdevid);
+                        Log.i(TAG, "appdevid" + appdevid);
                         Constant.appdevid1 = appdevid;
                         //TODO 设备注册
                         if (!TextUtils.isEmpty(appdevid)) {
@@ -566,116 +428,6 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         });
         HttpManager.addRequest(mGetDevIdFromIdRequest);
     }
-
-    //设备注册线程
-    private Runnable devConnecting = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                int hostPort = new Random().nextInt(5000) + 2000;
-                SipInfo.sipDev = new SipDev(LoginActivity.this, null, hostPort);//无网络时在主线程操作会报异常
-                Message register = SipMessageFactory.createRegisterRequest(
-                        SipInfo.sipDev, SipInfo.dev_to, SipInfo.dev_from);
-
-                for (int i = 0; i < 3; i++) {//如果没有回应,最多重发2次
-                    SipInfo.sipDev.sendMessage(register);
-                    sleep(2000);
-                    if (!SipInfo.dev_loginTimeout) {
-                        break;
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                if (SipInfo.devLogined) {
-                    Log.d(TAG, "设备注册成功!");
-                    Log.d(TAG, "设备心跳包发送!");
-
-                    //启动设备心跳线程
-                    SipInfo.keepDevAlive = new KeepAlive();
-                    SipInfo.keepDevAlive.setSipDev(SipInfo.sipDev);
-                    SipInfo.keepDevAlive.setDev_from(SipInfo.dev_from);
-                    SipInfo.keepDevAlive.setType(1);
-                    SipInfo.keepDevAlive.startThread();
-
-                } else {
-                    Log.e(TAG, "设备注册失败!");
-                    Looper.prepare();
-                    ToastUtils.showToastShort("设备注册失败请重新登录");
-                    dismissLoadingDialog();
-                    Looper.loop();
-                }
-            }
-        }
-    };
-
-    private void showDialogTip(final int errorTime) {
-        if (errorTime < 2) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog dialog = new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("密码输入错误/还有" + (2 - errorTime) + "次输入机会")
-                            .setPositiveButton("确定", null)
-                            .create();
-                    dialog.show();
-                    dialog.setCanceledOnTouchOutside(false);
-                }
-            });
-        } else {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog dialog = new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle("由于密码输入错误过多,该账号已被冻结")
-                            .setPositiveButton("确定", null)//锁账号暂未完成
-                            .create();
-                    dialog.show();
-                    dialog.setCanceledOnTouchOutside(false);
-                    Toast.makeText(getApplicationContext(), "该账号已被冻结", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private Runnable accountNotExist = new Runnable() {
-        @Override
-        public void run() {
-            if (accountNotExistDialog == null || !accountNotExistDialog.isShowing()) {
-                accountNotExistDialog = new AlertDialog.Builder(LoginActivity.this)
-                        .setTitle("不存在该账号")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .create();
-                accountNotExistDialog.show();
-                accountNotExistDialog.setCancelable(false);
-                accountNotExistDialog.setCanceledOnTouchOutside(false);
-            }
-        }
-    };
-    private Runnable timeOut = new Runnable() {
-        @Override
-        public void run() {
-            if (timeOutDialog == null || !timeOutDialog.isShowing()) {
-                timeOutDialog = new AlertDialog.Builder(LoginActivity.this)
-                        .setTitle("连接超时,请检查网络")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .create();
-                timeOutDialog.show();
-                timeOutDialog.setCancelable(false);
-                timeOutDialog.setCanceledOnTouchOutside(false);
-            }
-        }
-    };
 
     @Override
     protected void onDestroy() {
@@ -708,11 +460,6 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
                     .navigation();
         }
     }
-
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            "android.PermissionUtils.READ_EXTERNAL_STORAGE",
-            "android.PermissionUtils.WRITE_EXTERNAL_STORAGE"};
 
     private PermissionUtils.PermissionGrant mGrant = new PermissionUtils.PermissionGrant() {
         @Override
@@ -764,6 +511,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         SipGetUserIdRequest getUserIdRequest = new SipGetUserIdRequest();
         SipUserManager.getInstance().addRequest(getUserIdRequest);
     }
+
     /**
      * 设备注册第一步
      */
@@ -774,6 +522,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
     /**
      * 用户注册成功
+     *
      * @param model
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -783,6 +532,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
     /**
      * 设备注册成功
+     *
      * @param model
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -794,6 +544,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
     /**
      * 设备Sip服务重新注册事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -807,6 +558,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
     /**
      * 设备Sip服务注册失败事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -816,6 +568,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
     /**
      * 用户Sip服务重新注册事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -829,6 +582,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
     /**
      * 用户Sip服务注册失败事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
