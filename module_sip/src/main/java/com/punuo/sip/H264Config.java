@@ -1,7 +1,7 @@
 package com.punuo.sip;
 
-import com.punuo.sip.model.MediaData;
-import com.punuo.sip.model.QueryResponse;
+import com.punuo.sip.user.model.MediaData;
+import com.punuo.sip.user.model.QueryResponse;
 
 /**
  * Created by han.chen.

@@ -11,7 +11,6 @@ import com.app.model.Device;
 import com.app.model.Device1;
 import com.app.model.Familymember;
 import com.app.model.Friend;
-import com.app.model.LastestMsg;
 import com.app.model.MailInfo;
 import com.app.model.MessageNotify;
 import com.app.model.TaskInfo;
@@ -150,19 +149,12 @@ public class SipInfo {
     public static boolean inviteResponse;
     //视频编码状态
     public static boolean decoding = false;
-
     //根目录
     public static String localSdCard;
-    //新邮件(关于NoteBook)
-    public static Handler newMail;
     //群组用户id
     public static String groupid;
     //异地登录
     public static Handler loginReplace;
-    //新工单(关于TaskApp)
-    public static Handler newTask;
-    //最近消息列表
-    public static List<LastestMsg> lastestMsgs = new ArrayList<>();
 
     //是否允许调用摄像头
     public static boolean flag = true;

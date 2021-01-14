@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
@@ -49,9 +50,11 @@ import com.app.views.CleanEditText;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mob.MobSDK;
+import com.punuo.sys.app.home.HomeActivity;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.RegexUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
 
@@ -73,6 +76,7 @@ import static com.app.model.Constant.devid2;
 import static com.app.model.Constant.devid3;
 import static java.lang.Thread.sleep;
 
+@Route(path = HomeRouter.ROUTER_VERIFY_CODE_LOGIN_ACTIVITY)
 public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
     @BindView(R2.id.num_input4)
     CleanEditText numInput4;

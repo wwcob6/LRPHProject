@@ -224,7 +224,6 @@ public class SipDev extends SipProvider {
                         Element useridElement = (Element) root.getElementsByTagName("operate").item(0);
                         final String operate = useridElement.getFirstChild().getNodeValue();
                         if(operate.equals("agree")){
-//                            SipInfo.IsVideoOn=true;
                             Intent intent = new Intent("com.example.broadcast.CALL_AGREE");
 //                        context.getApplicationContext().sendBroadcast(intent);
                             context.sendBroadcast(intent);
@@ -251,74 +250,14 @@ public class SipDev extends SipProvider {
                         break;
 
                     case "operation": {
-//                        Log.i(TAG, "12435235");
-//                        Element useridElement = (Element) root.getElementsByTagName("operate").item(0);
-//                        final String operate = useridElement.getFirstChild().getNodeValue();
                         Intent intent = new Intent("com.example.broadcast.CALL_REQUEST");
-//                        context.getApplicationContext().sendBroadcast(intent);
                         context.sendBroadcast(intent);
-//                        Intent intent=new Intent(SipUser.class,VideoConnect.class);
                         return true;
 
                     }
                     case "suspend_monitor":
                         EventBus.getDefault().post(new MessageEvent("停止浏览"));
                         break;
-
-                    case "task": {
-//                        Element userIdElement = (Element) root.getElementsByTagName("user_id").item(0);
-//                        Element devIdElement = (Element) root.getElementsByTagName("dev_id").item(0);
-//                        Element receiverElement = (Element) root.getElementsByTagName("receiver").item(0);
-//                        Element receiveTimeElement = (Element) root.getElementsByTagName("receive_time").item(0);
-//                        Element infoSourceElement = (Element) root.getElementsByTagName("info_source").item(0);
-//                        Element taskTypeElement = (Element) root.getElementsByTagName("task_type").item(0);
-//                        Element taskIdElement = (Element) root.getElementsByTagName("task_id").item(0);
-//                        Element taskNameElement = (Element) root.getElementsByTagName("task_name").item(0);
-//                        Element orderElement = (Element) root.getElementsByTagName("order").item(0);
-//                        Element locationElement = (Element) root.getElementsByTagName("location").item(0);
-//                        Element eventIdElement = (Element) root.getElementsByTagName("event_id").item(0);
-//                        Element eventTimeElement = (Element) root.getElementsByTagName("event_time").item(0);
-//                        Element picPathDownElement = (Element) root.getElementsByTagName("pic_path_down").item(0);
-//                        Element vehicleFaultNumElement = (Element) root.getElementsByTagName("vehicle_fault_num").item(0);
-//                        Element vehicleFaultTypeElement = (Element) root.getElementsByTagName("vehicle_fault_type").item(0);
-//                        Element parkingPositionElement = (Element) root.getElementsByTagName("parking_position").item(0);
-//                        Element cargoElement = (Element) root.getElementsByTagName("cargo").item(0);
-//                        Element wreckerNumElement = (Element) root.getElementsByTagName("wrecker_num").item(0);
-//                        Element wreckerTypeElement = (Element) root.getElementsByTagName("wrecker_type").item(0);
-//                        Element driverElement = (Element) root.getElementsByTagName("driver").item(0);
-//                        Element coDriverElement = (Element) root.getElementsByTagName("co_driver").item(0);
-//                        Element roadOccupancyElement = (Element) root.getElementsByTagName("road_occupancy").item(0);
-//                        Element descriptionElement = (Element) root.getElementsByTagName("description").item(0);
-//                        TaskInfo taskInfo = new TaskInfo();
-//                        taskInfo.setDev_id(devIdElement.getFirstChild().getNodeValue());
-//                        taskInfo.setReceiver(receiverElement.getFirstChild().getNodeValue());
-//                        taskInfo.setReceive_time(receiveTimeElement.getFirstChild().getNodeValue());
-//                        taskInfo.setInfo_source(infoSourceElement.getFirstChild().getNodeValue());
-//                        taskInfo.setTask_type(taskTypeElement.getFirstChild().getNodeValue());
-//                        taskInfo.setTask_id(taskIdElement.getFirstChild().getNodeValue());
-//                        taskInfo.setTask_name(taskNameElement.getFirstChild().getNodeValue());
-//                        taskInfo.setOrder(orderElement.getFirstChild().getNodeValue());
-//                        taskInfo.setLocation(locationElement.getFirstChild().getNodeValue());
-//                        taskInfo.setEvent_time(eventTimeElement.getFirstChild().getNodeValue());
-//                        taskInfo.setPic_path_down(picPathDownElement.getFirstChild().getNodeValue());
-//                        taskInfo.setVehicle_fault_num(vehicleFaultNumElement.getFirstChild().getNodeValue());
-//                        taskInfo.setVehicle_fault_type(vehicleFaultTypeElement.getFirstChild().getNodeValue());
-//                        taskInfo.setParking_position(parkingPositionElement.getFirstChild().getNodeValue());
-//                        taskInfo.setCargo(cargoElement.getFirstChild().getNodeValue());
-//                        taskInfo.setWrecker_num(wreckerNumElement.getFirstChild().getNodeValue());
-//                        taskInfo.setWrecker_type(wreckerTypeElement.getFirstChild().getNodeValue());
-//                        taskInfo.setDriver(driverElement.getFirstChild().getNodeValue());
-//                        taskInfo.setCo_driver(coDriverElement.getFirstChild().getNodeValue());
-//                        taskInfo.setTxPath(roadOccupancyElement.getFirstChild().getNodeValue());
-//                        taskInfo.setState(descriptionElement.getFirstChild().getNodeValue());
-//                        SipInfo.newTask.sendMessage(new android.os.Message());
-//                        Intent intent = new Intent("com.app.task_receive");
-//                        SipInfo.tasklist.add(taskInfo);
-//                        context.sendBroadcast(intent);
-//                        SipInfo.sipDev.sendMessage(SipMessageFactory.
-//                                createResponse(msg, 200, "OK", BodyFactory.createTaskResponse()));
-//                        return true;
-                    }
                     default:
                         return false;
                 }

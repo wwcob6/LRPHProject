@@ -1,16 +1,30 @@
 package com.punuo.sys.sdk.httplib;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -24,17 +38,15 @@ public class HttpManager {
     public static final long DEFAULT_TIME_OUT = 30L;
     private static volatile OkHttpClient sOkHttpClient;
     private static OkHttpClient.Builder sBuilder = new OkHttpClient.Builder();
-    private static Context sContext;
-
-    public static OkHttpClient getsOkHttpClient() {
+    private static boolean isDebug = false;
+    private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+    private static final String cacheDir = "/storage/emulated/0/Android/data/com.punuo.pet/cache";
+    public static OkHttpClient getOkHttpClient() {
         init();
         return sOkHttpClient;
     }
 
     public static void init() {
-        if (sContext == null) {
-            throw new RuntimeException("context is null, please set context");
-        }
         if (sOkHttpClient == null) {
             synchronized (HttpManager.class) {
                 if (sOkHttpClient == null) {
@@ -43,8 +55,21 @@ public class HttpManager {
                             .writeTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS)
                             .followRedirects(true)
                             .retryOnConnectionFailure(true)
-                            .cache(new Cache(new File(sContext.getExternalCacheDir(), "okhttp"),
+                            .cookieJar(new CookieJar() {
+                                @Override
+                                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                                    cookieStore.put(url.host(), cookies);
+                                }
+
+                                @Override
+                                public List<Cookie> loadForRequest(HttpUrl url) {
+                                    List<Cookie> cookies = cookieStore.get(url.host());
+                                    return cookies != null ? cookies : new ArrayList<Cookie>();
+                                }
+                            })
+                            .cache(new Cache(new File(cacheDir, "okhttp"),
                                     500 * 1024 * 1024));
+                    debugInit();
                     sOkHttpClient = sBuilder.build();
                 }
             }
@@ -52,12 +77,64 @@ public class HttpManager {
     }
 
     /**
-     * 设置context
-     *
-     * @param context
+     * debug 模式允许所有证书有效
      */
-    public static void setContext(Context context) {
-        sContext = context.getApplicationContext();
+    private static void debugInit() {
+        if (isDebug) {
+            try {
+                final X509TrustManager[] trustAllcerts = new X509TrustManager[]{
+                        new X509TrustManager() {
+                            @Override
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                            }
+
+                            @Override
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                            }
+
+                            @Override
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[0];
+                            }
+                        }
+                };
+                SSLContext sslContext = null;
+                try {
+                    sslContext = SSLContext.getInstance("TLSv1.2");
+                } catch (NoSuchAlgorithmException e) {
+                    try {
+                        sslContext = SSLContext.getInstance("TLSv1.1");
+                    } catch (NoSuchAlgorithmException e1) {
+                        sslContext = SSLContext.getInstance("TLS");
+                    }
+                }
+
+                sslContext.init(null, trustAllcerts, new SecureRandom());
+
+                sBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustAllcerts[0]);
+            } catch (NoSuchAlgorithmException | KeyManagementException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void setDebug(boolean debug) {
+        isDebug = debug;
+    }
+
+    /**
+     * 必须在OkHttpClient初始化之前调用
+     * @param interceptor
+     * @return
+     */
+    public static OkHttpClient.Builder addInterceptor(Interceptor interceptor) {
+        if (interceptor == null) {
+            throw  new IllegalArgumentException("interceptor is null");
+        }
+        sBuilder.addInterceptor(interceptor);
+        return sBuilder;
     }
 
     private static ExecutorDelivery sDelivery = new ExecutorDelivery(new Handler(Looper
@@ -65,7 +142,7 @@ public class HttpManager {
 
     public static void addRequest(final NetRequest netRequest) {
         final Request request = netRequest.build();
-        HttpManager.getsOkHttpClient().newCall(request).enqueue(new Callback() {
+        HttpManager.getOkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 sDelivery.postError(netRequest, e);
@@ -94,7 +171,7 @@ public class HttpManager {
         Request requestTemp = request.build();
 
         try {
-            Response okHttpResponse = HttpManager.getsOkHttpClient().newCall(requestTemp).execute();
+            Response okHttpResponse = HttpManager.getOkHttpClient().newCall(requestTemp).execute();
             return handlerResponse(request, okHttpResponse, false);
         } catch (Exception e) {
             sDelivery.postCacheResponse(request, null, e);

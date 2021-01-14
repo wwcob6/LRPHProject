@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.punuo.sys.sdk.app.AppStateManager;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -43,12 +45,13 @@ public class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityResumed(Activity activity) {
+        AppStateManager.getInstance().onActivityVisible(activity);
         mActivityReference = new WeakReference<>(activity);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-
+        AppStateManager.getInstance().onActivityInvisible(activity);
     }
 
     @Override

@@ -31,9 +31,16 @@ public class SipConfig {
         return host;
     }
 
-    public static int getPort() {
+    public static int getUserPort() {
         if (sSipConfig != null) {
-            return sSipConfig.getPort();
+            return sSipConfig.getUserPort();
+        }
+        return port;
+    }
+
+    public static int getDevPort() {
+        if (sSipConfig != null) {
+            return sSipConfig.getDevPort();
         }
         return port;
     }
@@ -42,15 +49,31 @@ public class SipConfig {
         if (sSipConfig != null) {
             return sSipConfig.getUserRegisterAddress();
         } else {
-            throw new RuntimeException("RegisterNameAddress is null, please set RegisterNameAddress");
+            throw new RuntimeException("RegisterUserNameAddress is null, please set RegisterUserNameAddress");
         }
     }
 
-    public static NameAddress getServerAddress() {
+    public static NameAddress getDevRegisterAddress() {
         if (sSipConfig != null) {
-            return sSipConfig.getServerAddress();
+            return sSipConfig.getDevRegisterAddress();
         } else {
-            throw new RuntimeException("ServerNameAddress is null, please set ServerNameAddress");
+            throw new RuntimeException("RegisterDevNameAddress is null, please set RegisterDevNameAddress");
+        }
+    }
+
+    public static NameAddress getUserServerAddress() {
+        if (sSipConfig != null) {
+            return sSipConfig.getUserServerAddress();
+        } else {
+            throw new RuntimeException("UserServerNameAddress is null, please set UserServerNameAddress");
+        }
+    }
+
+    public static NameAddress getDevServerAddress() {
+        if (sSipConfig != null) {
+            return sSipConfig.getDevServerAddress();
+        } else {
+            throw new RuntimeException("DevServerNameAddress is null, please set DevServerNameAddress");
         }
     }
 
@@ -58,7 +81,15 @@ public class SipConfig {
         if (sSipConfig != null) {
             return sSipConfig.getUserNormalAddress();
         } else {
-            throw new RuntimeException("NormalNameAddress is null, please set NormalNameAddress");
+            throw new RuntimeException("NormalUserNameAddress is null, please set NormalUserNameAddress");
+        }
+    }
+
+    public static NameAddress getDevNormalAddress() {
+        if (sSipConfig != null) {
+            return sSipConfig.getDevNormalAddress();
+        } else {
+            throw new RuntimeException("NormalDevNameAddress is null, please set NormalDevNameAddress");
         }
     }
 

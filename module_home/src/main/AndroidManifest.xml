@@ -30,7 +30,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.HomeActivity"
+            android:name="com.punuo.sys.app.home.HomeActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -108,7 +108,7 @@
             android:name=".ui.VerifyCodeLoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SetNewPasswordActivity"
+            android:name=".ui.ApplyPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.FamilyCircleActivity"

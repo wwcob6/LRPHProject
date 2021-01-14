@@ -1,7 +1,6 @@
 package com.app.sip;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.PowerManager;
@@ -15,7 +14,6 @@ import com.app.groupvoice.GroupInfo;
 import com.app.model.App;
 import com.app.model.Constant;
 import com.app.model.Device;
-import com.app.model.MailInfo;
 import com.app.model.MessageEvent;
 import com.app.model.Msg;
 import com.app.model.MyFile;
@@ -159,45 +157,6 @@ public class SipUser extends SipProvider {
                 Element root = document.getDocumentElement();
                 final String type = root.getTagName();
                 switch (type) {
-                    case "friends":
-//                        NodeList friends = root.getElementsByTagName("friend");
-//                        for (int i = 0; i < friends.getLength(); i++) {
-//                            Friend friend = new Friend();
-//                            Element friendElement = (Element) friends.item(i);
-//                            Element friendIdElement = (Element) friendElement.getElementsByTagName("userid").item(0);
-//                            Element usernameElement = (Element) friendElement.getElementsByTagName("username").item(0);
-//                            Element phoneElement = (Element) friendElement.getElementsByTagName("phone_num").item(0);
-//                            Element liveElement = (Element) friendElement.getElementsByTagName("live").item(0);
-//                            Element telElement = (Element) friendElement.getElementsByTagName("tel_num").item(0);
-//                            Element realnamement = (Element) friendElement.getElementsByTagName("real_name").item(0);
-//                            Element unitment = (Element) friendElement.getElementsByTagName("unit").item(0);
-//                            friend.setUserId(friendIdElement.getFirstChild().getNodeValue());
-//                            friend.setUsername(usernameElement.getFirstChild().getNodeValue());
-//                            friend.setPhoneNum(phoneElement.getFirstChild().getNodeValue());
-//                            friend.setRealName(realnamement.getFirstChild().getNodeValue());
-//                            String tel = telElement.getFirstChild().getNodeValue();
-//                            if (!tel.equals("None")) {
-//                                friend.setTelNum(tel);
-//                            }
-//                            friend.setUnit(unitment.getFirstChild().getNodeValue());
-//                            if (liveElement.getFirstChild().getNodeValue().equals("1")) {
-//                                friend.setLive(true);
-//                            } else {
-//                                friend.setLive(false);
-//                            }
-//                            if (!SipInfo.friendList.containsKey(friend.getUnit())) {
-//                                SipInfo.friendList.put(friend.getUnit(), new ArrayList<Friend>());
-//                            }
-//                            SipInfo.friends.add(friend);
-//                            SipInfo.friendList.get(friend.getUnit()).add(friend);
-//                        }
-//                        Message message = SipMessageFactory.createResponse(msg, 200, "OK", "");
-//                        SipInfo.sipUser.sendMessage(message);
-//                        if (loginNotifyListener != null) {
-//                            loginNotifyListener.onUserNotify();
-//                        }
-                        return true;
-
                     case "dev_notify"://设备列表
                         Element devsElement = (Element) root.getElementsByTagName("devs").item(0);
                         Element loginElement = (Element) root.getElementsByTagName("login").item(0);
@@ -299,41 +258,12 @@ public class SipUser extends SipProvider {
                             list.clear();
                             for (int i = 0; i < clusters.getLength(); i++) {
                                 Log.i(TAG, "111");
-//                                Cluster cluster = new Cluster();
                                 Element clusterElement = (Element) clusters.item(i);
                                 Element nameElement = (Element) clusterElement.getElementsByTagName("name").item(0);
                                 list.add(nameElement.getFirstChild().getNodeValue());
                                 Log.i(TAG, "qinliao" + list.get(i));
                             }
                             list.add(SipInfo.userId);
-//                                if (nameElement.getFirstChild().getNodeValue().equals("超级用户")||nameElement.getFirstChild().getNodeValue().equals("None")) {
-//                                    continue;
-//                                }
-////                                cluster.setName(nameElement.getFirstChild().getNodeValue());
-////                                SipInfo.cacheClusters.add(cluster);
-////                                Log.d(TAG, "requestParse: " + "添加完毕" + SipInfo.cacheClusters.size());
-//                            }
-
-//                            Element f = (Element) root.getElementsByTagName("finish").item(0);
-//                            int isfinish = Integer.parseInt(f.getFirstChild().getNodeValue());
-//                            if (isfinish == 1) {
-//                                if (clusterNotifyListener != null ) {
-//                                    SipInfo.finish = true;
-////                                    Collections.sort(SipInfo.cacheClusters);
-//                                    Log.d(TAG, "requestParse: " + "更新");
-//                                    clusterNotifyListener.onNotify();
-//                                    SipInfo.sipUser.sendMessage(SipMessageFactory.createResponse(msg, 200, "OK", ""));
-//                                }else{
-////                                    SipInfo.cacheClusters.clear();
-////                                    org.zoolu.sip.message.Message query_channel = SipMessageFactory.createNotifyRequest(
-////                                            SipInfo.sipUser, SipInfo.user_to, SipInfo.user_from, BodyFactory.createQueryClusterIdBody(SipInfo.userId));
-////                                    SipInfo.sipUser.sendMessage(query_channel);
-//                                }
-//                            } else {
-//                                SipInfo.finish = false;
-//                                SipInfo.sipUser.sendMessage(SipMessageFactory.createResponse(msg, 200, "OK", ""));
-
-////                            return true;
 
                         qinliaoUpdateListener.stausOnUpdate();
                         break;
@@ -409,38 +339,6 @@ public class SipUser extends SipProvider {
 //                        if (!mediaPlayer.isPlaying()) {
 //                            mediaPlayer.start();
 //                        }
-                        return true;
-                    }
-                    case "mail": {
-                        Element idElement = (Element) root.getElementsByTagName("id").item(0);
-                        Element fromElement = (Element) root.getElementsByTagName("from").item(0);
-                        Element toElement = (Element) root.getElementsByTagName("to").item(0);
-                        Element contentElement = (Element) root.getElementsByTagName("content").item(0);
-                        Element timeElement = (Element) root.getElementsByTagName("time").item(0);
-                        Element themeElement = (Element) root.getElementsByTagName("theme").item(0);
-                        final String id = idElement.getFirstChild().getNodeValue();
-                        final String content = contentElement.getFirstChild().getNodeValue();
-                        final int time = Integer.parseInt(timeElement.getFirstChild().getNodeValue());
-                        final String fromUserId = fromElement.getFirstChild().getNodeValue();
-                        final String toUserId = toElement.getFirstChild().getNodeValue();
-                        final String theme = themeElement.getFirstChild().getNodeValue();
-                        Message message = SipMessageFactory.createResponse(msg, 200, "OK", BodyFactory.createMailResponseBody(id, 200));
-                        SipInfo.sipUser.sendMessage(message);
-                        boolean result = DatabaseInfo.sqLiteManager.insertMail(id, fromUserId, toUserId, time, content, theme);
-                        //邮件
-                        MailInfo mail = new MailInfo();
-                        mail.setMailId(id);
-                        mail.setFromUserId(fromUserId);
-                        mail.setToUserId(toUserId);
-                        mail.setTime(time);
-                        mail.setContent(content);
-                        mail.setTheme(theme);
-                        mail.setIsRead(0);
-                        if (result) {
-                            SipInfo.newMail.sendMessage(new android.os.Message());
-                            Intent intent = new Intent("com.app.mail_receive");
-                            context.sendBroadcast(intent);
-                        }
                         return true;
                     }
                     case "filetransfer": {

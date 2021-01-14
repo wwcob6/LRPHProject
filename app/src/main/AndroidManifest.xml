@@ -44,7 +44,7 @@
             android:value="c185fab426edd3f538ebd949a2b43adf" />
 
         <activity
-            android:name=".compat.splash.SplashActivity"
+            android:name="com.punuo.sys.app.compat.splash.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Splash">
             <intent-filter>

@@ -10,13 +10,21 @@ public interface ISipConfig {
 
     String getServerIp();
 
-    int getPort();
+    int getUserPort();
 
-    NameAddress getServerAddress();
+    int getDevPort();
+
+    NameAddress getUserServerAddress();
 
     NameAddress getUserRegisterAddress();
 
     NameAddress getUserNormalAddress();
+
+    NameAddress getDevServerAddress();
+
+    NameAddress getDevRegisterAddress();
+
+    NameAddress getDevNormalAddress();
 
     void reset();
 }

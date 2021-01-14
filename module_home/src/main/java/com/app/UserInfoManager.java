@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.app.model.PNUserInfo;
 import com.app.request.GetUserInfoRequest;
-import com.app.sip.SipInfo;
 import com.punuo.sys.sdk.PnApplication;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.JsonUtil;
 import com.punuo.sys.sdk.httplib.RequestListener;
@@ -86,7 +86,7 @@ public class UserInfoManager {
             return;
         }
         mGetUserInfoRequest = new GetUserInfoRequest();
-        mGetUserInfoRequest.addUrlParam("userid", SipInfo.userId);
+        mGetUserInfoRequest.addUrlParam("userid", AccountManager.getUserId());
         mGetUserInfoRequest.setRequestListener(listener);
         HttpManager.addRequest(mGetUserInfoRequest);
     }

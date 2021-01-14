@@ -22,14 +22,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.app.R;
 import com.app.R2;
 import com.app.http.GetPostUtil;
-import com.app.http.VerifyCodeManager;
 import com.app.model.Constant;
 import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mob.MobSDK;
-import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.util.RegexUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
 
@@ -39,7 +38,7 @@ import butterknife.OnClick;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
-public class NumberBind extends BaseActivity {
+public class NumberBind extends BaseSwipeBackLoginActivity {
     @BindView(R2.id.iv_back1)
     ImageView ivBack1;
     @BindView(R2.id.textView4)
@@ -53,12 +52,11 @@ public class NumberBind extends BaseActivity {
     @BindView(R2.id.verificode_input2)
     CleanEditText verificodeInput2;
     @BindView(R2.id.btn_send_verifi_code)
-    Button btnSendVerifiCode;
+    TextView btnSendVerifiCode;
     @BindView(R2.id.rl_phone)
     RelativeLayout rlPhone;
     @BindView(R2.id.btn_confirm)
     Button btnConfirm;
-    private VerifyCodeManager codeManager;
     String response;
     private EventHandler eventHandler;
 
@@ -68,9 +66,8 @@ public class NumberBind extends BaseActivity {
         setContentView(R.layout.activity_number_bind);
         ButterKnife.bind(this);
         initView();
-        codeManager = new VerifyCodeManager(this, tvPhone, btnSendVerifiCode);
+
         currentphone.setText(SipInfo.userAccount);
-//        btnConfirm.setBackgroundColor(Color.parseColor("#f3b337"));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -117,9 +114,9 @@ public class NumberBind extends BaseActivity {
     }
 
     private void commit() {
-        SipInfo.userAccount=tvPhone.getText().toString().trim();
-        String code=verificodeInput2.getText().toString().trim();
-        if(checkInput(SipInfo.userAccount,code)){
+        SipInfo.userAccount = tvPhone.getText().toString().trim();
+        String code = verificodeInput2.getText().toString().trim();
+        if (checkInput(SipInfo.userAccount, code)) {
             new Thread() {
                 @Override
                 public void run() {
@@ -128,12 +125,12 @@ public class NumberBind extends BaseActivity {
                     if ((response != null) && !("".equals(response))) {
                         JSONObject obj = JSON.parseObject(response);
                         String msg = obj.getString("msg");
-                        if(msg.equals("success")){
+                        if (msg.equals("success")) {
                             handler1.sendEmptyMessage(1111);
-                            Log.d("1234","绑定的手机号更改");
-                        }else if(msg.equals("更新失败")){
+                            Log.d("1234", "绑定的手机号更改");
+                        } else if (msg.equals("更新失败")) {
                             handler1.sendEmptyMessage(2222);
-                            Log.d("1234","绑定的手机号更改失败");
+                            Log.d("1234", "绑定的手机号更改失败");
                         }
                     }
                 }
@@ -143,30 +140,32 @@ public class NumberBind extends BaseActivity {
 
 
     @OnClick({R2.id.tv_phone, R2.id.verificode_input2, R2.id.btn_send_verifi_code,
-            R2.id.rl_phone, R2.id.btn_confirm, R2.id.currentphone,R2.id.iv_back1})
+            R2.id.rl_phone, R2.id.btn_confirm, R2.id.currentphone, R2.id.iv_back1})
     public void onClick(View v) {
         int id = v.getId();
+        final CharSequence phone = tvPhone.getText();
+        final CharSequence code = verificodeInput2.getText();
         if (id == R.id.btn_send_verifi_code) {
-            codeManager.getVerifyCode(VerifyCodeManager.REGISTER);
-        } else if (id == R.id.btn_confirm) {
-            final String phone = tvPhone.getText().toString().trim();
-            final String code = verificodeInput2.getText().toString().trim();
-            if (checkInput(phone, code)) {
-                SMSSDK.submitVerificationCode("86", phone, code);
+            if (checkPhoneNumber(phone)) {
+                getVerifyCode(phone);
             }
-
+        } else if (id == R.id.btn_confirm) {
+            if (checkPhoneNumber(phone) && checkCode(code)) {
+                SMSSDK.submitVerificationCode("86", phone.toString(), code.toString());
+            }
             finish();
         } else if (id == R.id.iv_back1) {
             finish();
         }
     }
-    Handler handler1=new Handler(){
-        public void handleMessage(Message msg){
+
+    Handler handler1 = new Handler() {
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==1111){
+            if (msg.what == 1111) {
                 finish();
                 ToastUtils.showToastShort("更改成功");
-            }else if(msg.what==2222){
+            } else if (msg.what == 2222) {
                 ToastUtils.showToastShort("更改失败");
             }
         }
@@ -210,7 +209,7 @@ public class NumberBind extends BaseActivity {
         }
     };
 
-    private boolean checkInput(String phone, String code) {
+    private boolean checkInput(CharSequence phone, CharSequence code) {
         if (TextUtils.isEmpty(phone)) { // 电话号码为空
             ToastUtils.showToast(R.string.tip_phone_can_not_be_empty);
         } else {

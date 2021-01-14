@@ -1,11 +1,9 @@
 package com.app.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
@@ -32,10 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
@@ -60,13 +56,28 @@ import com.app.sip.SipMessageFactory;
 import com.app.sip.SipUser;
 import com.app.tools.PermissionUtils;
 import com.app.views.CleanEditText;
-import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sip.dev.SipDevManager;
+import com.punuo.sip.dev.event.DevLoginFailEvent;
+import com.punuo.sip.dev.event.ReRegisterDevEvent;
+import com.punuo.sip.dev.model.LoginResponseDev;
+import com.punuo.sip.dev.request.SipDevRegisterRequest;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.event.ReRegisterUserEvent;
+import com.punuo.sip.user.event.UserLoginFailEvent;
+import com.punuo.sip.user.model.LoginResponseUser;
+import com.punuo.sip.user.request.SipGetUserIdRequest;
+import com.punuo.sys.app.home.HomeActivity;
+import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.address.SipURL;
 import org.zoolu.sip.message.Message;
@@ -84,23 +95,19 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.app.groupvoice.GroupInfo.wakeLock;
 import static java.lang.Thread.sleep;
 
 /**
  * 用户登陆页
  */
 @Route(path = HomeRouter.ROUTER_LOGIN_ACTIVITY)
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseSwipeBackLoginActivity {
     private static final String TAG = "LoginActivity";
     private String groupname;
     private String groupid;
     private String appdevid;
     private Handler handler = new Handler();
 
-    private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
     //前一次的账号
     private String lastUserAccount;
     //网络连接失败窗口
@@ -109,8 +116,6 @@ public class LoginActivity extends BaseActivity {
     private AlertDialog accountNotExistDialog;
     //登陆超时
     private AlertDialog timeOutDialog;
-    //密码错误次数
-    private int errorTime = 0;
     protected CompositeSubscription mCompositeSubscription = new CompositeSubscription();
     public static List<Activity> activityList = new LinkedList();
 
@@ -131,12 +136,15 @@ public class LoginActivity extends BaseActivity {
     @BindView(R2.id.layout_root)
     RelativeLayout layoutRoot;
 
+    private boolean userLoginFailed = false;
+    private boolean devLoginFailed = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login1);
         ButterKnife.bind(this);
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        setSwipeBackEnable(false);
         LoginActivity.activityList.add(this);
         showAboutDialog();
         setUpSplash();
@@ -148,6 +156,7 @@ public class LoginActivity extends BaseActivity {
             statusBar.getLayoutParams().height = StatusBarUtil.getStatusBarHeight(this);
             statusBar.requestLayout();
         }
+        EventBus.getDefault().register(this);
     }
 
     private void setUpSplash() {
@@ -200,13 +209,9 @@ public class LoginActivity extends BaseActivity {
         dialog.show();
     }
     public void exit(){
-
         for(Activity act:activityList){
-
             act.finish();
-
         }
-
         System.exit(0);
 
     }
@@ -214,8 +219,7 @@ public class LoginActivity extends BaseActivity {
         numInput2.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         numInput2.setTransformationMethod(HideReturnsTransformationMethod
                 .getInstance());
-        String account = pref.getString("account", "");
-        numInput2.setText(account);
+        numInput2.setText(AccountManager.getUserAccount());
 
         passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
         passwordInput.setImeOptions(EditorInfo.IME_ACTION_GO);
@@ -232,8 +236,7 @@ public class LoginActivity extends BaseActivity {
                 return false;
             }
         });
-        String password = pref.getString("password", "");
-        passwordInput.setText(password);
+        passwordInput.setText(AccountManager.getPassword());
         SipInfo.localSdCard = Environment.getExternalStorageDirectory().getAbsolutePath() + "/faxin/";
         isNetworkreachable();
     }
@@ -262,24 +265,16 @@ public class LoginActivity extends BaseActivity {
     };
 
     private void clickLogin() {
-//        verifyStoragePermissions(this);
-//        requestPower();
         if (SipInfo.isNetworkConnected) {
-            SipInfo.userAccount = numInput2.getText().toString();
-            SipInfo.passWord = passwordInput.getText().toString();
-            editor = pref.edit();
-            editor.putString("account", SipInfo.userAccount);
-            editor.putString("password", SipInfo.passWord);
-            editor.apply();
-            if (checkInput(SipInfo.userAccount, SipInfo.passWord)) {
-                // TODO: 请求服务器登录账号
-                if (!SipInfo.userAccount.equals(lastUserAccount)) {
-                    errorTime = 0;
-                }
-                beforeLogin();
+            CharSequence userAccount = numInput2.getText();
+            CharSequence passWord = passwordInput.getText();
+            if (checkPhoneNumber(userAccount) && checkPassword(passWord)) {
+                AccountManager.setUserAccount(userAccount);
+                AccountManager.setPassword(passWord);
+//                beforeLogin();
                 showLoadingDialog();
-
-                new Thread(connecting).start();
+                getUserId();
+//                new Thread(connecting).start();
             }
         } else {
             //弹出网络连接失败窗口
@@ -343,7 +338,7 @@ public class LoginActivity extends BaseActivity {
                 } else if (SipInfo.passwordError) {
                     //密码错误提示
                     dismissLoadingDialog();
-                    showDialogTip(errorTime++);
+                    ToastUtils.showToast("账号密码错误");
                     lastUserAccount = SipInfo.userAccount;
                 } else if (SipInfo.loginTimeout) {
                     dismissLoadingDialog();
@@ -444,7 +439,7 @@ public class LoginActivity extends BaseActivity {
                         }
                     }else {
                         dismissLoadingDialog();
-                        startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     }
                 } else {
                     ToastUtils.showToastShort("获取用户数据失败请重试");
@@ -498,7 +493,7 @@ public class LoginActivity extends BaseActivity {
                         GroupInfo.level = "1";
                         SipInfo.devName = UserInfoManager.getUserInfo().nickname;
                         dismissLoadingDialog();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+//                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     } else {
                         ToastUtils.showToastShort("获取用户数据失败请重试");
                         dismissLoadingDialog();
@@ -544,12 +539,15 @@ public class LoginActivity extends BaseActivity {
                         appdevid = devIdLists.get(0);
                         Log.i(TAG, "appdevid"+appdevid);
                         Constant.appdevid1 = appdevid;
+                        //TODO 设备注册
                         if (!TextUtils.isEmpty(appdevid)) {
-                            SipInfo.devId = appdevid;
-                            Log.i(TAG, "SipInfodevid"+SipInfo.devId);
-                            SipURL local_dev = new SipURL(SipInfo.devId, SipInfo.serverIp, SipInfo.SERVER_PORT_DEV);
-                            SipInfo.dev_from = new NameAddress(SipInfo.devId, local_dev);
-                            new Thread(devConnecting).start();
+//                            SipInfo.devId = appdevid;
+//                            Log.i(TAG, "SipInfodevid"+SipInfo.devId);
+//                            SipURL local_dev = new SipURL(SipInfo.devId, SipInfo.serverIp, SipInfo.SERVER_PORT_DEV);
+//                            SipInfo.dev_from = new NameAddress(SipInfo.devId, local_dev);
+//                            new Thread(devConnecting).start();
+                            AccountManager.setDevId(appdevid);
+                            registerDev();
                         }
                         //获取组内用户
                         getAllUserFormGroup();
@@ -679,43 +677,10 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
-    private boolean checkInput(String userAccount, String passWord) {
-        // 账号为空时提示
-        if (userAccount == null || userAccount.trim().equals("")) {
-            Toast.makeText(LoginActivity.this, R.string.tip_account_empty, Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            // 账号不匹配手机号格式（11位数字且以1开头）
-//            if (!RegexUtils.checkMobile(account)) {
-//                Toast.makeText(LoginActivity.this, R.string.tip_account_regex_not_right,
-//                        Toast.LENGTH_LONG).show();
-            if (passWord == null || passWord.trim().equals("")) {
-                Toast.makeText(LoginActivity.this, R.string.tip_password_can_not_be_empty,
-                        Toast.LENGTH_LONG).show();
-            } else {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if ((wakeLock != null) && (wakeLock.isHeld() == false)) {
-            wakeLock.acquire();
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (wakeLock != null) {
-            wakeLock.release();
-            wakeLock = null;
-        }
-        //ButterKnife.unbind(this);//空间解绑
+        EventBus.getDefault().unregister(this);
     }
 
     @OnClick({R2.id.num_input2, R2.id.password_input, R2.id.hidepassword,
@@ -733,11 +698,14 @@ public class LoginActivity extends BaseActivity {
                 passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
             }
         } else if (id == R.id.vericode_login) {
-            startActivity(new Intent(this, VerifyCodeLoginActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_VERIFY_CODE_LOGIN_ACTIVITY)
+                    .navigation();
         } else if (id == R.id.password_forget) {
-            startActivity(new Intent(this, ForgetPasswordActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_FORGET_PASSWORD_ACTIVITY)
+                    .navigation();
         } else if (id == R.id.tv_register) {
-            startActivity(new Intent(this, RegisterAccountActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_REGISTER_ACTIVITY)
+                    .navigation();
         }
     }
 
@@ -745,59 +713,6 @@ public class LoginActivity extends BaseActivity {
     private static String[] PERMISSIONS_STORAGE = {
             "android.PermissionUtils.READ_EXTERNAL_STORAGE",
             "android.PermissionUtils.WRITE_EXTERNAL_STORAGE"};
-
-
-    public static void verifyStoragePermissions(Activity activity) {
-
-        try {
-            //检测是否有写的权限
-
-            int permission = ActivityCompat.checkSelfPermission(activity,
-                    "android.PermissionUtils.WRITE_EXTERNAL_STORAGE");
-            if (permission != PERMISSION_GRANTED) {
-                // 没有写的权限，去申请写的权限，会弹出对话框
-                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void requestPower() {
-        if (ContextCompat.checkSelfPermission(
-                this, Manifest.permission.READ_EXTERNAL_STORAGE) != PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, "需要读写权限，请打开设置开启对应的权限", Toast.LENGTH_LONG).show();
-            } else {
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1);
-            }
-        }
-    }
-
-    /**
-     * onRequestPermissionsResult方法重写，Toast显示用户是否授权
-     */
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        String requestPermissionsResult = "";
-//        if (requestCode == 1) {
-//            for (int i = 0; i < permissions.length; i++) {
-//                if (grantResults[i] == PERMISSION_GRANTED) {
-//                    requestPermissionsResult += permissions[i] + " 申请成功\n";
-//                } else {
-//                    requestPermissionsResult += permissions[i] + " 申请失败\n";
-//                }
-//            }
-//        }
-//        Toast.makeText(this, requestPermissionsResult, Toast.LENGTH_SHORT).show();
-//    }
 
     private PermissionUtils.PermissionGrant mGrant = new PermissionUtils.PermissionGrant() {
         @Override
@@ -837,6 +752,91 @@ public class LoginActivity extends BaseActivity {
             new Handler().postDelayed(this::requestPermission, 500);
 
         }
-
     }
+    /** sip注册相关该页面只进行sip的注册不启动心跳包 心跳包在
+     * {@link com.punuo.sys.app.home.HomeActivity}
+     * 上开启
+     */
+    /**
+     * 用户注册第一步
+     */
+    private void getUserId() {
+        SipGetUserIdRequest getUserIdRequest = new SipGetUserIdRequest();
+        SipUserManager.getInstance().addRequest(getUserIdRequest);
+    }
+    /**
+     * 设备注册第一步
+     */
+    private void registerDev() {
+        SipDevRegisterRequest sipDevRegisterRequest = new SipDevRegisterRequest();
+        SipDevManager.getInstance().addRequest(sipDevRegisterRequest);
+    }
+
+    /**
+     * 用户注册成功
+     * @param model
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(final LoginResponseUser model) {
+        getUserInfo();
+    }
+
+    /**
+     * 设备注册成功
+     * @param model
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(final LoginResponseDev model) {
+        ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY)
+                .navigation();
+        finish();
+    }
+
+    /**
+     * 设备Sip服务重新注册事件
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ReRegisterDevEvent event) {
+        if (devLoginFailed) {
+            devLoginFailed = false;
+            return;
+        }
+        registerDev();
+    }
+
+    /**
+     * 设备Sip服务注册失败事件
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DevLoginFailEvent event) {
+        devLoginFailed = true;
+    }
+
+    /**
+     * 用户Sip服务重新注册事件
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ReRegisterUserEvent event) {
+        if (userLoginFailed) {
+            userLoginFailed = false;
+            return;
+        }
+        getUserId();
+    }
+
+    /**
+     * 用户Sip服务注册失败事件
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UserLoginFailEvent event) {
+        userLoginFailed = true;
+    }
+    /** sip注册相关该页面只进行sip的注册不启动心跳包 心跳包在
+     * {@link com.punuo.sys.app.home.HomeActivity}
+     * 上开启
+     */
 }

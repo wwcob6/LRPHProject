@@ -2,7 +2,6 @@ package com.app.service;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -14,11 +13,9 @@ import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.app.R;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
 import com.app.sip.SipMessageFactory;
-import com.app.tools.NewsVideo;
 import com.app.tools.SipCallManager;
 import com.app.ui.VideoCallActivity;
 
@@ -80,54 +77,6 @@ public class NewsService extends Service {
 //                    startActivity(intent);
 //                    super.handleMessage(msg);
 //                }
-            }
-        };
-            
-        SipInfo.newTask = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                System.out.println("收到了新的工单");
-                NewsVideo newsvideo = new NewsVideo(NewsService.this, false);
-                newsvideo.VideoAlerm();
-
-                Notification notify = new Notification.Builder(getApplicationContext())
-                        .setAutoCancel(true)
-                        .setTicker("有新工单")
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("收到一条新工单")
-                        .setContentText("点击查看")
-                        .setDefaults(Notification.DEFAULT_SOUND)
-                        .setWhen(System.currentTimeMillis())
-//                        .setContentIntent(pi)
-                        .build();
-                notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                //发送通知(id相同，只显示最新的notification)
-                notificationManager.notify(TASK_NOTIFICATION_ID, notify);
-                super.handleMessage(msg);
-            }
-        };
-        
-        SipInfo.newMail = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                System.out.println("收到了新的邮件");
-                NewsVideo newsvideo = new NewsVideo(NewsService.this, false);
-                newsvideo.VideoAlerm();
-
-                Notification notify = new Notification.Builder(getApplicationContext())
-                        .setAutoCancel(true)
-                        .setTicker("有新邮件")
-                        .setSmallIcon(R.drawable.icon_mail)
-                        .setContentTitle("收到一条新邮件")
-                        .setContentText("点击查看")
-                        .setDefaults(Notification.DEFAULT_SOUND)
-                        .setWhen(System.currentTimeMillis())
-//                        .setContentIntent(pi)
-                        .build();
-                notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                //发送通知(id相同，只显示最新的notification)
-                notificationManager.notify(MAIL_NOTIFICATION_ID, notify);
-                super.handleMessage(msg);
             }
         };
     }

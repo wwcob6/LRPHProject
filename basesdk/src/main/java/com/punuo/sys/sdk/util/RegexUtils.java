@@ -53,7 +53,7 @@ public final class RegexUtils {
 	 *            </p>
 	 * @return 验证成功返回true，验证失败返回false
 	 */
-	public static boolean checkMobile(String mobile) {
+	public static boolean checkMobile(CharSequence mobile) {
 		String regex = "(\\+\\d+)?1[34578]\\d{9}$";
 		return Pattern.matches(regex, mobile);
 	}

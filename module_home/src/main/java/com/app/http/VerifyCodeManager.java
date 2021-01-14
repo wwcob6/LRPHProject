@@ -2,12 +2,12 @@ package com.app.http;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.app.R;
+import com.punuo.sys.sdk.util.BaseHandler;
 import com.punuo.sys.sdk.util.RegexUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
 
@@ -17,83 +17,78 @@ import java.util.TimerTask;
 import cn.smssdk.SMSSDK;
 
 
-public class VerifyCodeManager {
-	
+public class VerifyCodeManager implements BaseHandler.MessageHandler {
+
 	public final static int REGISTER = 1;
 	public final static int RESET_PWD = 2;
 	public final static int BIND_PHONE = 3;
 
 	private Context mContext;
 	private int recLen = 60;
-	private Timer timer = new Timer();
-	private Handler mHandler = new Handler();
-	private String phone;
+
+	private BaseHandler mHandler  = new BaseHandler(this);
+
+	private TextView targetView;
+	private Timer timer;
+	private TimerTask mTimerTask;
 	
-	private EditText phoneEdit;
-	private Button getVerifiCodeButton;
-	
-	public VerifyCodeManager(Context context, EditText editText, Button btn) {
+	public VerifyCodeManager(Context context, TextView btn) {
 		this.mContext = context;
-		this.phoneEdit = editText;
-		this.getVerifiCodeButton = btn;
+		this.targetView = btn;
 	}
 
-	public void getVerifyCode(int type) {
-		// 获取验证码之前先判断手机号
-		phone = phoneEdit.getText().toString().trim();
+	public void getVerifyCode(CharSequence phoneNum) {
 
-		if (TextUtils.isEmpty(phone)) {
+		if (TextUtils.isEmpty(phoneNum)) {
 			ToastUtils.showToast("请输入手机号");
 			return;
-		} else if (phone.length() < 11) {
+		} else if (phoneNum.length() < 11) {
 			ToastUtils.showToast( R.string.tip_phone_regex_not_right);
 			return;
-		} else if (!RegexUtils.checkMobile(phone)) {
+		} else if (!RegexUtils.checkMobile(phoneNum)) {
 			ToastUtils.showToast(R.string.tip_phone_regex_not_right);
 			return;
 		}else {
-			SMSSDK.getVerificationCode("86", phone);
+			SMSSDK.getVerificationCode("86", phoneNum.toString());
 		}
 
-		// 2. 请求服务端，由服务端为客户端发送验证码
-//		HttpRequestHelper.getInstance().getVerifyCode(mContext, phone, type,
-//				getVerifyCodeHandler);
-
-		TimerTask task = new TimerTask() {
+		mTimerTask = new TimerTask() {
 			@Override
 			public void run() {
-				mHandler.post(new Runnable() {
-					@Override
-					public void run() {
-						setButtonStatusOff();
-						if (recLen < 1) {
-							setButtonStatusOn();
-						}
+				mHandler.post(() -> {
+					setButtonStatusOff();
+					if (recLen < 1) {
+						setButtonStatusOn();
 					}
 				});
 			}
 		};
 
 		timer = new Timer();
-		timer.schedule(task, 0, 1000);
+		timer.schedule(mTimerTask, 0, 1000);
 
 	}
 
 	private void setButtonStatusOff() {
-		getVerifiCodeButton.setText(String.format(
+		targetView.setText(String.format(
 				mContext.getResources().getString(R.string.count_down), recLen-- + ""));
-		getVerifiCodeButton.setClickable(false);
-		getVerifiCodeButton.setTextColor(Color.parseColor("#f3f4f8"));
-		getVerifiCodeButton.setBackgroundColor(Color.parseColor("#b1b1b3"));
+		targetView.setClickable(false);
+		targetView.setTextColor(Color.parseColor("#f3f4f8"));
+		targetView.setBackgroundColor(Color.parseColor("#ffffff"));
+
 	}
 
 	private void setButtonStatusOn() {
 		timer.cancel();
-		getVerifiCodeButton.setText("重新发送");
-		getVerifiCodeButton.setTextColor(Color.parseColor("#b1b1b3"));
-		getVerifiCodeButton.setBackgroundColor(Color.parseColor("#f3f4f8"));
+		targetView.setText("重新发送");
+		targetView.setTextColor(Color.parseColor("#b1b1b3"));
+		targetView.setBackgroundColor(Color.parseColor("#ffffff"));
 		recLen = 60;
-		getVerifiCodeButton.setClickable(true);
+		targetView.setClickable(true);
 	}
 
+	@Override
+	public void handleMessage(Message msg) {
+
+	}
 }
