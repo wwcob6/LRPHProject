@@ -1,13 +1,11 @@
 package com.punuo.sys.app.home;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -21,9 +19,7 @@ import com.app.UserInfoManager;
 import com.app.model.Constant;
 import com.app.model.MessageEvent;
 import com.app.service.NewsService;
-import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
 import com.app.ui.fragment.LaoRenFragment;
 import com.app.ui.fragment.MessageFragment;
 import com.app.ui.fragment.MyFragmentManager;
@@ -45,6 +41,9 @@ import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorDev;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorUser;
+import com.punuo.sys.app.message.badge.BadgeHelper;
+import com.punuo.sys.app.message.badge.MessageBadgeCnt;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.fragment.WebViewFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
@@ -59,9 +58,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.app.model.Constant.groupid1;
 import static com.app.sip.SipInfo.running;
-import static com.app.sip.SipInfo.sipUser;
 
 
 
@@ -108,6 +105,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         switchFragment(Constant.HOME);
         StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
         startUpdateService();
+        if (!mBaseHandler.hasMessages(BadgeHelper.MSG_BADGE_VALUE)) {
+            mBaseHandler.sendEmptyMessageDelayed(BadgeHelper.MSG_BADGE_VALUE, BadgeHelper.DELAY);
+        }
     }
 
     private void initHeartBeat() {
@@ -188,6 +188,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         }
         mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
+        mBaseHandler.removeMessages(BadgeHelper.MSG_BADGE_VALUE);
         SipInfo.userLogined = false;
         SipInfo.devLogined = false;
         //停止语音电话服务
@@ -216,7 +217,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case Constant.COMMUNITY:
                 StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, true); //单独处理顶部状态栏颜色
-                bundle.putString("url", "http://pet.qinqingonline.com:8889?user_id="+ SipInfo.userId);
+                bundle.putString("url", "http://pet.qinqingonline.com:8889?user_id="+ AccountManager.getUserId());
                 mMyFragmentManager.switchFragmentWithCache(WebViewFragment.class.getName(), bundle);
                 break;
             case Constant.MESSAGE:
@@ -254,50 +255,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 mTabBars[i].setSelected(false);
             }
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        System.out.println("keyCode = " + keyCode);
-        if (keyCode == 82) {
-            AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setMessage("注销账户?")
-                    .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            sipUser.sendMessage(SipMessageFactory.createNotifyRequest(sipUser,
-                                    SipInfo.user_to,
-                                    SipInfo.user_from, BodyFactory.createLogoutBody()));
-                            if ((groupid1 != null) && !("".equals(groupid1))) {
-                                SipInfo.sipDev.sendMessage(SipMessageFactory.createNotifyRequest
-                                        (SipInfo.sipDev, SipInfo.dev_to,
-                                                SipInfo.dev_from, BodyFactory.createLogoutBody()));
-                            }
-//                            if ((groupid1 != null) && !("".equals(groupid1))) {
-//                                GroupInfo.groupUdpThread.stopThread();
-//                                GroupInfo.groupKeepAlive.stopThread();
-//                            }
-                            dialog.dismiss();
-                            running = false;
-                            com.punuo.sys.sdk.activity.ActivityCollector.finishToFirstView();
-                        }
-                    }).create();
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-            return true;
-        }
-        if (keyCode == 4) {
-            switchFragment(Constant.HOME);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -414,6 +371,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             case DevHeartBeatHelper.MSG_HEART_BEAR_VALUE:
                 DevHeartBeatHelper.heartBeat();
                 break;
+            case BadgeHelper.MSG_BADGE_VALUE:
+                BadgeHelper.refreshBadge();
+                break;
         }
     }
     /* sip注册相关该页面启动心跳包 并且在异常断开之后重新进行sip的注册*/
@@ -434,5 +394,20 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         AccountUtil.logout();
         ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY).navigation();
         finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageBadgeCnt event) {
+        if (event.commentCount > 0 || event.likeCount > 0) {
+            newMessageNotify.setVisibility(View.VISIBLE);
+        } else {
+            newMessageNotify.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BadgeHelper.refreshBadge();
     }
 }

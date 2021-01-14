@@ -12,7 +12,7 @@
         android:background="@color/newbackground"
         android:visibility="gone" />
 
-    <include layout="@layout/fragment_title" />
+    <include layout="@layout/layout_title_bar" />
 
     <RelativeLayout
         android:id="@+id/rl_huifu"

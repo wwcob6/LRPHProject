@@ -10,74 +10,73 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.Util;
-import com.app.model.Comments;
+import com.punuo.sys.app.message.model.CommentModel;
 import com.app.view.CircleImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder>{
+public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-    private List<Comments> mCommentsList;
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    private List<CommentModel> mCommentModelList;
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView replyName;
         TextView replyContent;
         TextView replyTime;
         TextView replyAddlikes;
         CircleImageView replyAvatar;
         ImageView commenttedPicture;
-         public ViewHolder(View view){
-             super(view);
-             replyName=(TextView)view.findViewById(R.id.reply_name);
-             replyContent=(TextView)view.findViewById(R.id.reply_content);
-             replyTime=(TextView)view.findViewById(R.id.reply_time);
-             replyAddlikes=(TextView)view.findViewById(R.id.reply_addlikes);
-             replyAvatar=(CircleImageView)view.findViewById(R.id.reply_avatar);
-             commenttedPicture=(ImageView)view.findViewById(R.id.commentted_picture);
-         }
+
+        public ViewHolder(View view) {
+            super(view);
+            replyName = (TextView) view.findViewById(R.id.reply_name);
+            replyContent = (TextView) view.findViewById(R.id.reply_content);
+            replyTime = (TextView) view.findViewById(R.id.reply_time);
+            replyAddlikes = (TextView) view.findViewById(R.id.reply_addlikes);
+            replyAvatar = (CircleImageView) view.findViewById(R.id.reply_avatar);
+            commenttedPicture = (ImageView) view.findViewById(R.id.commentted_picture);
+        }
     }
 
-    public CommentAdapter(List<Comments> commentsList){
-        mCommentsList=commentsList;
+    public CommentAdapter(List<CommentModel> commentModelList) {
+        mCommentModelList = commentModelList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.comments_view,parent,false);
-        final ViewHolder holder=new ViewHolder(view);
-        return holder;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comments_view, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Comments comments=mCommentsList.get(position);
-        holder.replyName.setText(comments.getReplyName());
-        if((comments.getPraisetype()!=null)&&!("".equals(comments.getPraisetype()))){
+        CommentModel commentModel = mCommentModelList.get(position);
+        holder.replyName.setText(commentModel.replyName);
+        if ((commentModel.praisetype != null) && !("".equals(commentModel.praisetype))) {
             holder.replyContent.setVisibility(View.INVISIBLE);
             holder.replyAddlikes.setVisibility(View.VISIBLE);
-            holder.replyAddlikes.setText(comments.getPraisetype());
-        }else {
+            holder.replyAddlikes.setText(commentModel.praisetype);
+        } else {
             holder.replyContent.setVisibility(View.VISIBLE);
             holder.replyAddlikes.setVisibility(View.INVISIBLE);
-            holder.replyContent.setText(comments.getComment());
+            holder.replyContent.setText(commentModel.comment);
         }
-        holder.replyTime.setText(comments.getCreate_time());
-//        holder.replyAvatar.setImageResource(R.drawable.d_han);
-        if (comments.getAvatar()==null)
-        {
+        holder.replyTime.setText(commentModel.createTime);
+        if (commentModel.avatar == null) {
             holder.replyAvatar.setImageResource(R.drawable.defaultavator);
-        }else {
-            ImageLoader.getInstance().displayImage(Util.getImageUrl(comments.getId(), comments.getAvatar()), holder.replyAvatar);
+        } else {
+            ImageLoader.getInstance().displayImage(Util.getImageUrl(commentModel.id, commentModel.avatar), holder.replyAvatar);
         }
-        if(comments.getPic()==null){
+        if (commentModel.pic == null) {
             holder.commenttedPicture.setImageResource(R.drawable.defaultavator);
-        }else {
-            ImageLoader.getInstance().displayImage(Util.getImageUrl(comments.getPic()), holder.commenttedPicture);
+        } else {
+            ImageLoader.getInstance().displayImage(Util.getImageUrl(commentModel.pic), holder.commenttedPicture);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mCommentsList.size();
+        return mCommentModelList.size();
     }
 }

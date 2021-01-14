@@ -1,6 +1,6 @@
-package com.punuo.sys.app.home.request;
+package com.punuo.sys.app.message.request;
 
-import com.punuo.sys.app.home.model.PostNewModel;
+import com.punuo.sys.app.message.model.PostNewModel;
 import com.punuo.sys.sdk.httplib.BaseRequest;
 
 import java.util.List;

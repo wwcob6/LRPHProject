@@ -1,4 +1,4 @@
-package com.punuo.sys.app.home.model;
+package com.punuo.sys.app.message.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.punuo.sys.app.home.model.PostNewModel;
+import com.punuo.sys.app.message.model.PostNewModel;
 import com.punuo.sys.sdk.httplib.HttpConfig;
 
 import org.greenrobot.eventbus.EventBus;

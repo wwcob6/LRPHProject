@@ -10,13 +10,16 @@
         <activity android:name=".ui.PrivateActivity"/>
         <activity android:name=".ui.message.WeixinActivity" /> <!-- 全面屏适配 -->
         <activity
-            android:name=".ui.AddlikeView"
+            android:name="com.punuo.sys.app.message.AddLikeActivity"
+            android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.CommentView"
+            android:name="com.punuo.sys.app.message.CommentActivity"
+            android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.message.SystemNotifyActivity"
+            android:name="com.punuo.sys.app.message.SystemNotifyActivity"
+            android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.VideoDial"

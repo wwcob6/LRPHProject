@@ -7,11 +7,7 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import com.app.R;
-import com.app.db.DatabaseInfo;
-import com.app.ftp.Ftp;
-import com.app.ftp.FtpListener;
 import com.app.groupvoice.GroupInfo;
-import com.app.model.App;
 import com.app.model.Device;
 import com.app.model.MessageEvent;
 import com.app.model.Msg;
@@ -31,7 +27,6 @@ import org.zoolu.sip.provider.SipProvider;
 import org.zoolu.sip.provider.Transport;
 import org.zoolu.sip.provider.TransportConnId;
 
-import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -408,85 +403,6 @@ public class SipUser extends SipProvider {
                             if (changePWDListener != null) {
                                 changePWDListener.onChangePWD(0);
                             }
-                        }
-                        return true;
-                    case "app_query":
-                        codeElement = (Element) root.getElementsByTagName("code").item(0);
-                        code = codeElement.getFirstChild().getNodeValue();
-                        if (code.equals("200")) {
-                            Element appsElement = (Element) root.getElementsByTagName("apps").item(0);
-                            NodeList apps = appsElement.getElementsByTagName("app");
-                            if (apps.getLength() > 0) {
-                                for (int i = 0; i < apps.getLength(); i++) {
-                                    Element appElement = (Element) apps.item(i);
-                                    Element appidElement = (Element) appElement.getElementsByTagName("appid").item(0);
-                                    Element appnameElement = (Element) appElement.getElementsByTagName("appname").item(0);
-                                    Element sizeElement = (Element) appElement.getElementsByTagName("size").item(0);
-                                    Element urlElement = (Element) appElement.getElementsByTagName("url").item(0);
-                                    Element iconurlElement = (Element) appElement.getElementsByTagName("iconurl").item(0);
-                                    Element descElement = (Element) appElement.getElementsByTagName("desc").item(0);
-                                    Element nameElement = (Element) appElement.getElementsByTagName("name").item(0);
-                                    Element iconnameElement = (Element) appElement.getElementsByTagName("iconname").item(0);
-                                    String appid = appidElement.getFirstChild().getNodeValue();
-                                    String appname = appnameElement.getFirstChild().getNodeValue();
-                                    long size = Long.parseLong(sizeElement.getFirstChild().getNodeValue());
-                                    String url = urlElement.getFirstChild().getNodeValue();
-                                    String iconurl = iconurlElement.getFirstChild().getNodeValue();
-                                    String desc = descElement.getFirstChild().getNodeValue();
-                                    String apkname = nameElement.getFirstChild().getNodeValue();
-                                    String iconname = iconnameElement.getFirstChild().getNodeValue();
-                                    App app = new App();
-                                    app.setAppid(appid);
-                                    app.setAppname(appname);
-                                    app.setSize(size);
-                                    app.setUrl(url);
-                                    app.setIconUrl(iconurl);
-                                    app.setDesc(desc);
-                                    app.setApkname(apkname);
-                                    app.setIconname(iconname);
-                                    SipInfo.applist.add(app);
-                                    DatabaseInfo.sqLiteManager.insertAppInfo(appid, appname, size, "", 0);
-                                }
-                                for (int i = 0; i < SipInfo.applist.size(); i++) {
-                                    final Ftp mFtp = new Ftp(SipInfo.serverIp, 21, "ftpaller", "123456", new FtpListener() {
-                                        @Override
-                                        public void onStateChange(String currentStep) {
-                                            Log.d(TAG, currentStep);
-                                        }
-
-                                        @Override
-                                        public void onUploadProgress(String currentStep, long uploadSize, File targetFile) {
-
-                                        }
-
-                                        @Override
-                                        public void onDownLoadProgress(String currentStep, long downProcess, File targetFile) {
-
-                                        }
-
-                                        @Override
-                                        public void onDeleteProgress(String currentStep) {
-
-                                        }
-                                    });
-                                    final int finalI = i;
-                                    Thread thread = new Thread() {
-                                        @Override
-                                        public void run() {
-                                            File file = new File(sdPath + SipInfo.applist.get(finalI).getIconname());
-                                            if (!file.exists()) {
-                                                try {
-                                                    mFtp.download(SipInfo.applist.get(finalI).getIconUrl(), sdPath);
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        }
-                                    };
-                                    thread.start();
-                                }
-                            }
-
                         }
                         return true;
                     case "query_response":
