@@ -43,8 +43,6 @@ public class SipInfo {
     public static String REGISTER_ID = "330100000010000190";
     //服务器ip
     public static String serverIp = "sip.qinqingonline.com";
-    public static String serverIptest = "sip.qinqingonline.com";
-    public static String serverIptest1 = "118.31.71.150";
 
     //验证码
     public static String code;

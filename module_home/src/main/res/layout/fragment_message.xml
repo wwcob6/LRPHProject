@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/newbackground1">
+    android:background="@color/newbackground1"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/status_bar"
@@ -21,7 +21,7 @@
         android:layout_marginTop="2dp"
         android:background="@color/white">
 
-        <com.app.view.CircleImageView
+        <ImageView
             android:id="@+id/iv_huifu"
             android:layout_width="44dp"
             android:layout_height="44dp"
@@ -33,10 +33,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="44dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/iv_huifu"
             android:gravity="center_vertical"
-            android:layout_centerVertical="true"
             android:text="评论/回复"
             android:textSize="16sp" />
 
@@ -45,23 +45,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dp_40"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_40"
             android:background="@drawable/redrect"
             android:gravity="center"
             android:text="3"
             android:textColor="#ffffff"
             android:textSize="@dimen/sp_14"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="24dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/rightarrow"
-            />
+            android:src="@drawable/rightarrow" />
 
     </RelativeLayout>
 
@@ -71,7 +70,8 @@
         android:layout_height="80dp"
         android:layout_marginTop="2dp"
         android:background="@color/white">
-        <com.app.view.CircleImageView
+
+        <ImageView
             android:id="@+id/iv_zan"
             android:layout_width="44dp"
             android:layout_height="44dp"
@@ -83,42 +83,44 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:text="收到的赞"
+            android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/iv_zan"
-            android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:textSize="16sp"/>
+            android:text="收到的赞"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/count2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/dp_40"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/dp_40"
             android:background="@drawable/redrect"
             android:gravity="center"
             android:text="1"
             android:textColor="#ffffff"
             android:textSize="@dimen/sp_14"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="24dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/rightarrow"
-            />
+            android:src="@drawable/rightarrow" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_systemNotify"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="2dp"
         android:background="@color/white">
-        <com.app.view.CircleImageView
+
+        <ImageView
             android:id="@+id/iv_tongzhi"
             android:layout_width="44dp"
             android:layout_height="44dp"
@@ -131,33 +133,32 @@
             android:id="@+id/system_notify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="系统通知"
             android:layout_alignTop="@+id/iv_tongzhi"
-            android:layout_toEndOf="@+id/iv_tongzhi"
             android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/iv_tongzhi"
             android:gravity="center_vertical"
-            android:textSize="16sp"/>
+            android:text="系统通知"
+            android:textSize="16sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="24dp"
-            android:text="Hi,亲爱的薇薇，欢迎你登录亲情视线!"
-            android:layout_toEndOf="@+id/iv_tongzhi"
-            android:layout_marginStart="10dp"
             android:layout_below="@+id/system_notify"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/iv_tongzhi"
             android:gravity="center_vertical"
-            android:textSize="12sp"/>
+            android:text="Hi,亲爱的薇薇，欢迎你登录亲情视线!"
+            android:textSize="12sp" />
 
         <ImageView
             android:layout_width="16dp"
             android:layout_height="24dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/rightarrow"
-            />
+            android:src="@drawable/rightarrow" />
 
     </RelativeLayout>
-
 
 
 </LinearLayout>

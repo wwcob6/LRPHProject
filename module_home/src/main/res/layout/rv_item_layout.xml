@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <com.app.view.CircleImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/iv_item"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        app:riv_corner_radius="50dp" />
+
     <LinearLayout
-        android:layout_marginStart="20dp"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:orientation="horizontal">
+
         <TextView
-            android:layout_gravity="center_horizontal"
             android:id="@+id/iv_name"
-            android:textSize="16sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="5"
             android:gravity="center"
-            android:layout_weight="5"/>
+            android:textSize="16sp" />
+
         <ImageView
-            android:layout_gravity="center_vertical"
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:src="@drawable/ic_popmenu"
-            android:layout_weight="1" />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/ic_popmenu" />
     </LinearLayout>
 
 </LinearLayout>

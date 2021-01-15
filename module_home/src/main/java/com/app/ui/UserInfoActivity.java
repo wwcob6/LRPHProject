@@ -41,7 +41,6 @@ import com.app.request.UploadAvatarRequest;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
 import com.app.sip.SipMessageFactory;
-import com.app.view.CircleImageView;
 import com.bumptech.glide.Glide;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
@@ -74,7 +73,7 @@ public class UserInfoActivity extends BaseSwipeBackActivity implements View.OnCl
     private TextView tv_sex1;
     private ImageView back;
     private TextView title;
-    private CircleImageView iv_avatar;
+    private ImageView iv_avatar;
     private TextView tv_name;
     private static String imageName;
     private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
@@ -106,7 +105,7 @@ public class UserInfoActivity extends BaseSwipeBackActivity implements View.OnCl
         re_avatar = (RelativeLayout) findViewById(R.id.re_avatar);
         re_name = (RelativeLayout) findViewById(R.id.re_name);
         re_sex = (RelativeLayout) findViewById(R.id.re_sex);
-        iv_avatar = (CircleImageView) findViewById(R.id.iv_avatar);
+        iv_avatar = (ImageView) findViewById(R.id.iv_avatar);
         tv_name = (TextView) findViewById(R.id.ttv_name);
         tv_sex1 = (TextView) findViewById(R.id.tv_sex1);
         title = (TextView) findViewById(R.id.title);

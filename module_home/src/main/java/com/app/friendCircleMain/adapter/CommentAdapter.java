@@ -10,9 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.Util;
-import com.punuo.sys.app.message.model.CommentModel;
-import com.app.view.CircleImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.punuo.sys.app.message.model.CommentModel;
 
 import java.util.List;
 
@@ -25,17 +24,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         TextView replyContent;
         TextView replyTime;
         TextView replyAddlikes;
-        CircleImageView replyAvatar;
+        ImageView replyAvatar;
         ImageView commenttedPicture;
 
         public ViewHolder(View view) {
             super(view);
-            replyName = (TextView) view.findViewById(R.id.reply_name);
-            replyContent = (TextView) view.findViewById(R.id.reply_content);
-            replyTime = (TextView) view.findViewById(R.id.reply_time);
-            replyAddlikes = (TextView) view.findViewById(R.id.reply_addlikes);
-            replyAvatar = (CircleImageView) view.findViewById(R.id.reply_avatar);
-            commenttedPicture = (ImageView) view.findViewById(R.id.commentted_picture);
+            replyName = view.findViewById(R.id.reply_name);
+            replyContent = view.findViewById(R.id.reply_content);
+            replyTime = view.findViewById(R.id.reply_time);
+            replyAddlikes = view.findViewById(R.id.reply_addlikes);
+            replyAvatar = view.findViewById(R.id.reply_avatar);
+            commenttedPicture = view.findViewById(R.id.commentted_picture);
         }
     }
 

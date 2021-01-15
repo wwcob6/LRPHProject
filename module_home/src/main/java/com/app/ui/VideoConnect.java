@@ -26,7 +26,6 @@ import com.app.model.MessageEvent;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
 import com.app.sip.SipMessageFactory;
-import com.app.view.CircleImageView;
 import com.punuo.sys.sdk.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,7 +61,6 @@ public class VideoConnect extends BaseActivity implements View.OnClickListener {
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
     private static final int UPDATE_FXID = 4;// 结果
     private static final int UPDATE_NICK = 5;// 结果
-    private CircleImageView CIV_avatar;
 
     String SdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
     String avaPath = SdCard + "/fanxin/Files/Camera/Images/";
@@ -106,16 +104,11 @@ public class VideoConnect extends BaseActivity implements View.OnClickListener {
 
 
     public void init() {
-//        String vatar_temp = UserInfoManager.getInstance(VideoConnect.this)
-//                .getUserInfo("avatar");
         pref= PreferenceManager.getDefaultSharedPreferences(this);
-//         pref=getSharedPreferences("data",MODE_PRIVATE);
         String vatar_temp=pref.getString("name","");
         Log.w("zzzzzzzzzz.....", "头像为" + vatar_temp);
 
-//        CIV_avatar = (CircleImageView) findViewById(R.id.CIV_avatar);
-//        CIV_avatar.setOnClickListener(this);
-//        showUserAvatar(CIV_avatar, vatar_temp);
+
         ImageView bt1 = (ImageView) findViewById(R.id.bt_accept);
         bt1.setOnClickListener(this);
         ImageView bt2 = (ImageView) findViewById(R.id.bt_refuse);

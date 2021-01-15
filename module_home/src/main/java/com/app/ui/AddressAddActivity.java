@@ -32,7 +32,6 @@ import com.app.R2;
 import com.app.adapter.MyRecyclerViewAdapter;
 import com.app.db.MyDatabaseHelper;
 import com.app.model.MessageEvent;
-import com.app.view.CircleImageView;
 import com.app.views.CleanEditText;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -58,7 +57,7 @@ public class AddressAddActivity extends BaseSwipeBackActivity {
     @BindView(R2.id.add)
     Button add;
     @BindView(R2.id.selectavator)
-    CircleImageView selectavator;
+    ImageView selectavator;
     String type1;
     String call1;
     @BindView(R2.id.edit_name)

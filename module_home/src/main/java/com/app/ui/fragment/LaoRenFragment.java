@@ -5,20 +5,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.app.R;
 import com.app.friendCircleMain.domain.UserList;
-import com.app.model.MessageEvent;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
 import com.app.sip.SipMessageFactory;
@@ -30,14 +26,10 @@ import com.app.ui.message.WeixinActivity;
 import com.app.video.RtpVideo;
 import com.app.video.SendActivePacket;
 import com.app.video.VideoInfo;
-import com.app.view.CircleImageView;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.address.SipURL;
 
@@ -50,18 +42,14 @@ import static com.app.model.Constant.devid1;
 
 public class LaoRenFragment extends BaseFragment implements View.OnClickListener {
 
-    TextView title;
-    private Boolean shan = true;
     private Handler handlervideo = new Handler();
-    String SdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
-    private static final String TAG = "MicroActivity";
+    private static final String TAG = "LaoRenFragment";
     private List<UserList> userList = new ArrayList<UserList>();
-    private CircleImageView alarm;
+    private ImageView alarm;
     private ImageView camera;
     private RelativeLayout re_background;
     private RelativeLayout re_funcation;
     private View mStatusBar;
-    //private static String res="";//json数据
 
 
     @Override
@@ -79,50 +67,7 @@ public class LaoRenFragment extends BaseFragment implements View.OnClickListener
         return view;
     }
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 666) {
-                alarm.setVisibility(View.INVISIBLE);
-            } else if (msg.what == 888) {
-                alarm.setVisibility(View.VISIBLE);
-            }
-        }
-    };
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                while (shan) {
-                    handler.sendEmptyMessage(666);
-                    Thread.sleep(500);
-                    handler.sendEmptyMessage(888);
-                    Thread.sleep(500);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void aaa(MessageEvent messageEvent) {
-        if (messageEvent.getMessage().equals("警报")) {
-            Log.d("111111   ", "111111111");
-            /*修改xml中某一区域的背景*/
-            //方法一：
-//            Resources resources = getActivity().getResources();
-//            Drawable btnDrawable = resources.getDrawable(R.drawable.background2);
-//            re_background.setBackgroundDrawable(btnDrawable);
-            //方法二：
-            re_background.setBackgroundResource(R.drawable.background2);
-            shan = true;
-            new Thread(runnable).start();
-        }
-    }
-
     private void init(View view) {
-        EventBus.getDefault().register(this);  //注册
         re_background = view.findViewById(R.id.re_background);
         re_funcation = view.findViewById(R.id.re_funcation);
         camera = re_background.findViewById(R.id.iv_camera);
@@ -130,14 +75,6 @@ public class LaoRenFragment extends BaseFragment implements View.OnClickListener
         camera.setOnClickListener(this);
 
         alarm = re_background.findViewById(R.id.alarm1);
-        alarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shan = false;
-                alarm.setVisibility(View.VISIBLE);
-                re_background.setBackgroundResource(R.drawable.background1);
-            }
-        });
         ImageView application =re_funcation.findViewById(R.id.application);
         ImageView video = re_funcation.findViewById(R.id.video);
         ImageView browse = re_funcation.findViewById(R.id.browse);
@@ -147,18 +84,6 @@ public class LaoRenFragment extends BaseFragment implements View.OnClickListener
         browse.setOnClickListener(this);
         chat.setOnClickListener(this);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);//取消注册
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
 
     public void onClick(View v) {
         int id = v.getId();

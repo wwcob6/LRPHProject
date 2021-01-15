@@ -20,7 +20,7 @@
         android:layout_height="290dp"
         android:background="@drawable/background1">
 
-        <com.app.view.CircleImageView
+        <ImageView
             android:id="@+id/alarm1"
             android:layout_width="60dp"
             android:layout_height="60dp"

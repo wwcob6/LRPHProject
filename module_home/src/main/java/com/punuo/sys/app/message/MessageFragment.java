@@ -1,4 +1,4 @@
-package com.app.ui.fragment;
+package com.punuo.sys.app.message;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.view.CircleImageView;
 import com.punuo.sys.app.message.badge.BadgeHelper;
 import com.punuo.sys.app.message.badge.MessageBadgeCnt;
 import com.punuo.sys.sdk.router.HomeRouter;
@@ -33,12 +32,6 @@ import butterknife.OnClick;
 
 public class MessageFragment extends Fragment {
     private static final String TAG = "MessageFragment";
-    @BindView(R2.id.iv_huifu)
-    CircleImageView ivHuifu;
-    @BindView(R2.id.iv_zan)
-    CircleImageView ivZan;
-    @BindView(R2.id.iv_tongzhi)
-    CircleImageView ivTongzhi;
     @BindView(R2.id.title)
     TextView title;
     @BindView(R2.id.back)

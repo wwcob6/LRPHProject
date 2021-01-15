@@ -8,15 +8,6 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp" />
 
-                <!--<com.app.view.CircleImageView-->
-                <!--android:id="@+id/icon"-->
-                <!--android:layout_width="60dp"-->
-                <!--android:layout_height="60dp"-->
-                <!--android:layout_margin="5dp"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:src="@drawable/default_avatar"-->
-                <!--/>-->
-
                 <TextView
                     android:id="@+id/nickName"
                     android:layout_width="wrap_content"

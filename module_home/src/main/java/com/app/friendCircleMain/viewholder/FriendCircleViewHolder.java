@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +22,6 @@ import com.app.friendCircleMain.domain.FirstMicroListDatasFirendimage;
 import com.app.friendCircleMain.domain.FirstMicroListDatasFirendpraise;
 import com.app.friendCircleMain.domain.FriendMicroListDatas;
 import com.app.friendCircleMain.util.PopupWindowUtil;
-import com.app.view.CircleImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.punuo.sys.sdk.recyclerview.BaseViewHolder;
@@ -41,7 +41,7 @@ import java.util.Locale;
 public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas> {
     private NineGridTestLayout layout9;
     private TextView mTime;
-    private CircleImageView mAvatar;
+    private ImageView mAvatar;
     private TextView mName;
     private TextView mContent;
     private Button btnIgnore;

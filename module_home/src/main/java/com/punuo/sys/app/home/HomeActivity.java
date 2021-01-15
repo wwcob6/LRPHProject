@@ -21,7 +21,7 @@ import com.app.model.MessageEvent;
 import com.app.service.NewsService;
 import com.app.sip.SipInfo;
 import com.app.ui.fragment.LaoRenFragment;
-import com.app.ui.fragment.MessageFragment;
+import com.punuo.sys.app.message.MessageFragment;
 import com.app.ui.fragment.MyFragmentManager;
 import com.app.ui.fragment.PersonFragment;
 import com.punuo.sip.AccountUtil;
