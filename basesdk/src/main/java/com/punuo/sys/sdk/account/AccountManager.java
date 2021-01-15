@@ -11,9 +11,36 @@ import com.punuo.sys.sdk.util.MMKVUtil;
  **/
 public class AccountManager {
     private static String userAccount;
-    private static String userId;
-    private static String devId;
+    private static String userId; //用户id
+    private static String devId; //用户设备id
+    private static String bindDevId; //绑定设备id
+    private static String bindUserId; //绑定设备的userId
+    private static String groupId;
     private static boolean login = false;
+
+    public static void setBindUserId(String bindUserId) {
+        AccountManager.bindUserId = bindUserId;
+    }
+
+    public static String getBindUserId() {
+        return bindUserId;
+    }
+
+    public static void setBindDevId(String bindDevId) {
+        AccountManager.bindDevId = bindDevId;
+    }
+
+    public static String getBindDevId() {
+        return bindDevId;
+    }
+
+    public static void setGroupId(String groupId) {
+        AccountManager.groupId = groupId;
+    }
+
+    public static String getGroupId() {
+        return groupId;
+    }
 
     public static boolean isLogin() {
         return login;

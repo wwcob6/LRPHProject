@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -32,16 +31,8 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
-import com.app.friendCircleMain.domain.Alldevid;
-import com.app.friendCircleMain.domain.Group;
-import com.app.friendCircleMain.domain.UserFromGroup;
-import com.app.friendCircleMain.domain.UserList;
-import com.app.groupvoice.GroupInfo;
-import com.app.model.Constant;
-import com.app.model.Friend;
+import com.app.friendCircleMain.domain.UserDevModel;
 import com.app.model.PNUserInfo;
-import com.app.request.GetAllGroupFromUserRequest;
-import com.app.request.GetAllUserFromGroupRequest;
 import com.app.request.GetDevIdFromIdRequest;
 import com.app.sip.SipInfo;
 import com.app.tools.PermissionUtils;
@@ -56,13 +47,13 @@ import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UserLoginFailEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
-import com.punuo.sys.app.home.HomeActivity;
 import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.CommonUtil;
+import com.punuo.sys.sdk.util.HandlerExceptionUtils;
 import com.punuo.sys.sdk.util.MMKVUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
@@ -241,8 +232,8 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
             public void onSuccess(PNUserInfo result) {
                 if (result != null && result.isSuccess()) {
                     UserInfoManager.setUserInfo(result.userInfo);
-                    SipInfo.friends.clear();
-                    getGroupInfo();
+                    //获取用户的设备Id注意不是绑定的设备Id
+                    getDevIdInfo();
                 } else {
                     ToastUtils.showToastShort("获取用户数据失败请重试");
                     dismissLoadingDialog();
@@ -258,163 +249,42 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         UserInfoManager.getInstance().refreshUserInfo(listener);
     }
 
-    //群组获取线程
-    private GetAllGroupFromUserRequest mGetAllGroupFromUserRequest;
-
-    //获取组信息
-    private void getGroupInfo() {
-        if (mGetAllGroupFromUserRequest != null && !mGetAllGroupFromUserRequest.isFinish()) {
-            return;
-        }
-        groupname = null;
-        groupid = null;
-        appdevid = null;
-        mGetAllGroupFromUserRequest = new GetAllGroupFromUserRequest();
-        mGetAllGroupFromUserRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mGetAllGroupFromUserRequest.setRequestListener(new RequestListener<Group>() {
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onSuccess(Group result) {
-                if (result != null) {
-                    if (result.groupList != null && !result.groupList.isEmpty()) {
-                        //重构疑问：这个循环的意义
-                        for (int i = 0; i < result.groupList.size(); i++) {
-                            groupname = result.groupList.get(i).getGroup_name();
-                            groupid = result.groupList.get(i).getGroupid();
-                        }
-                        Constant.devid1 = groupname;
-                        Constant.groupid1 = groupid;
-                        Constant.groupid = Constant.groupid1;
-                        if (!TextUtils.isEmpty(Constant.groupid1)) {
-                            SipInfo.paddevId = Constant.devid1;
-                            getDevIdInfo();
-                        } else {
-                            dismissLoadingDialog();
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        }
-                    } else {
-                        dismissLoadingDialog();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    }
-                } else {
-                    ToastUtils.showToastShort("获取用户数据失败请重试");
-                    dismissLoadingDialog();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                ToastUtils.showToastShort("获取用户数据失败请重试");
-                dismissLoadingDialog();
-            }
-        });
-        HttpManager.addRequest(mGetAllGroupFromUserRequest);
-    }
-
-    private GetAllUserFromGroupRequest mGetAllUserFromGroupRequest;
-
-    //获取组内用户
-    private void getAllUserFormGroup() {
-        if (mGetAllUserFromGroupRequest != null && !mGetAllUserFromGroupRequest.isFinish()) {
-            return;
-        }
-        mGetAllUserFromGroupRequest = new GetAllUserFromGroupRequest();
-        mGetAllUserFromGroupRequest.addUrlParam("groupid", Constant.groupid);
-        mGetAllUserFromGroupRequest.setRequestListener(new RequestListener<UserFromGroup>() {
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onSuccess(UserFromGroup result) {
-                if (result != null) {
-                    if (result.userList != null && !result.userList.isEmpty()) {
-                        for (int i = 0; i < result.userList.size(); i++) {
-                            UserList userList = result.userList.get(i);
-                            Friend friend = new Friend();
-                            friend.setNickName(userList.getNickname());
-                            friend.setPhoneNum(userList.getName());
-                            friend.setUserId(userList.getUserid());
-                            friend.setId(userList.getId());
-                            friend.setAvatar(userList.getAvatar());
-                            SipInfo.friends.add(friend);
-                        }
-
-                        GroupInfo.groupNum = "7000";
-//                        String peer = peerElement.getFirstChild().getNodeValue();
-                        GroupInfo.ip = "101.69.255.134";
-//                        GroupInfo.port = 7000;
-                        GroupInfo.level = "1";
-                        SipInfo.devName = UserInfoManager.getUserInfo().nickname;
-                        dismissLoadingDialog();
-//                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    } else {
-                        ToastUtils.showToastShort("获取用户数据失败请重试");
-                        dismissLoadingDialog();
-                    }
-                } else {
-                    ToastUtils.showToastShort("获取用户数据失败请重试");
-                    dismissLoadingDialog();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
-        HttpManager.addRequest(mGetAllUserFromGroupRequest);
-    }
-
     private GetDevIdFromIdRequest mGetDevIdFromIdRequest;
 
-    //获取用户设备信息
+    //获取用户设备id信息
     private void getDevIdInfo() {
         if (mGetDevIdFromIdRequest != null && !mGetDevIdFromIdRequest.isFinish()) {
             return;
         }
         mGetDevIdFromIdRequest = new GetDevIdFromIdRequest();
         mGetDevIdFromIdRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        Log.i(TAG, "getUserId" + UserInfoManager.getUserInfo().id);
-        mGetDevIdFromIdRequest.setRequestListener(new RequestListener<Alldevid>() {
+        mGetDevIdFromIdRequest.setRequestListener(new RequestListener<UserDevModel>() {
             @Override
             public void onComplete() {
 
             }
 
             @Override
-            public void onSuccess(Alldevid result) {
+            public void onSuccess(UserDevModel result) {
                 if (result != null) {
-                    List<String> devIdLists = result.devid;
-                    if (devIdLists.isEmpty()) {
-//                        ToastUtils.showToast("获取设备id失败");
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    List<String> devList = result.devList;
+                    if (devList != null && !devList.isEmpty() && !TextUtils.isEmpty(devList.get(0))) {
+                        //用户分配了设备id
+                        AccountManager.setDevId(devList.get(0));
+                        registerDev();
                     } else {
-                        appdevid = devIdLists.get(0);
-                        Log.i(TAG, "appdevid" + appdevid);
-                        Constant.appdevid1 = appdevid;
-                        //TODO 设备注册
-                        if (!TextUtils.isEmpty(appdevid)) {
-                            AccountManager.setDevId(appdevid);
-                            registerDev();
-                        }
-                        //获取组内用户
-                        getAllUserFormGroup();
+                        //用户未分配设备id
+                        dismissLoadingDialog();
+                        AccountManager.setLogin(true);
+                        ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY).navigation();
+                        finish();
                     }
-                } else {
-//                    ToastUtils.showToast("获取用户devid失败请重试");
-                    dismissLoadingDialog();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-//                ToastUtils.showToastShort("获取用户devid失败请重试");
+                HandlerExceptionUtils.handleException(e);
                 dismissLoadingDialog();
             }
         });

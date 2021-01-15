@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sys.sdk.R;
+import com.punuo.sys.sdk.router.SDKRouter;
 
 import cn.bingoogolapple.qrcode.core.BarcodeType;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
@@ -14,6 +16,7 @@ import cn.bingoogolapple.qrcode.zbar.ZBarView;
  * Created by han.chen.
  * Date on 2021/1/12.
  **/
+@Route(path = SDKRouter.ROUTER_QR_SCAN_ACTIVITY)
 public class QRScanActivity extends BaseSwipeBackActivity implements QRCodeView.Delegate {
     private ZBarView mZBarView;
 

@@ -1,0 +1,265 @@
+package com.app.ui;
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.app.R;
+import com.app.UserInfoManager;
+import com.app.model.PNBaseModel;
+import com.punuo.sys.app.member.request.BindDevRequest;
+import com.punuo.sys.app.member.request.IsDevBindRequest;
+import com.punuo.sys.app.member.request.JoinDevRequest;
+import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
+import com.punuo.sys.sdk.activity.QRScanActivity;
+import com.punuo.sys.sdk.httplib.HttpManager;
+import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.router.HomeRouter;
+import com.punuo.sys.sdk.util.ToastUtils;
+
+public class BindDevActivity extends BaseSwipeBackActivity implements View.OnClickListener {
+    private static final int REQUEST_CODE_SCAN = 1;
+    private View inflate;
+    private TextView saoma;
+    private TextView shoudong;
+    private View back;
+    private TextView title;
+    private Dialog dialog;
+    private TextView cancel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bind_dev);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.white));
+        }
+        title = (TextView) findViewById(R.id.title);
+        title.setText("绑定设备");
+        back = findViewById(R.id.back);
+        back.setOnClickListener(v -> scrollToFinishActivity());
+        Button bindButton = (Button) findViewById(R.id.bt_bind);
+        bindButton.setOnClickListener(v -> {
+            try {
+                show(v);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        if (!TextUtils.isEmpty(AccountManager.getBindDevId())) {
+            ARouter.getInstance().build(HomeRouter.ROUTER_DEV_BIND_SUCCESS_ACTIVITY).navigation();
+            finish();
+        }
+        // Check if we have write PermissionUtils
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have PermissionUtils so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    @Override
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 扫描二维码/条码回传
+        if (resultCode == RESULT_OK) {
+            if (data != null) {
+                String text = data.getStringExtra("result");
+                String[] dataString = text.split(" ");
+                String devId = dataString[0];
+                isDevBind(devId);
+            }
+        }
+    }
+
+    private void isDevBind(String devId) {
+        IsDevBindRequest request = new IsDevBindRequest();
+        request.addUrlParam("devid", devId);
+        request.setRequestListener(new RequestListener<PNBaseModel>() {
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onSuccess(PNBaseModel result) {
+                if (result != null) {
+                    if (TextUtils.equals("已绑定", result.msg)) {
+                        joinDev(devId);
+                    } else if (TextUtils.equals("未绑定", result.msg)) {
+                        bindDev(devId);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+        HttpManager.addRequest(request);
+    }
+
+    private void joinDev(String devId) {
+        JoinDevRequest request = new JoinDevRequest();
+        request.addUrlParam("devid", devId);
+        request.addUrlParam("id", UserInfoManager.getUserInfo().id);
+        request.setRequestListener(new RequestListener<PNBaseModel>() {
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onSuccess(PNBaseModel result) {
+                if (result != null) {
+                    if (result.isSuccess()) {
+                        ToastUtils.showToast("绑定成功");
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+        HttpManager.addRequest(request);
+    }
+
+    private void bindDev(String devId) {
+        BindDevRequest request = new BindDevRequest();
+        request.addUrlParam("devid", devId);
+        request.addUrlParam("id", UserInfoManager.getUserInfo().id);
+        request.setRequestListener(new RequestListener<PNBaseModel>() {
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onSuccess(PNBaseModel result) {
+                if (result != null) {
+                    if (result.isSuccess()) {
+                        ToastUtils.showToast("绑定成功");
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+        HttpManager.addRequest(request);
+    }
+
+    public void show(View view) {
+        dialog = new Dialog(this, R.style.ActionSheetDialogStyle);
+        //填充对话框的布局
+        inflate = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null);
+        //初始化控件
+        saoma = (TextView) inflate.findViewById(R.id.tv_saoma);
+        shoudong = (TextView) inflate.findViewById(R.id.tv_shoudong);
+        cancel = (TextView) inflate.findViewById(R.id.cancel);
+        saoma.setOnClickListener(this);
+        shoudong.setOnClickListener(this);
+        cancel.setOnClickListener(this);
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        Display display = getWindowManager().getDefaultDisplay();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity(Gravity.BOTTOM);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = (int) display.getWidth();
+        lp.y = 20;//设置Dialog距离底部的距离
+//       将属性设置给窗体
+        dialogWindow.setAttributes(lp);
+        dialog.show();//显示对话框
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.tv_saoma) {
+            Intent intent = new Intent(BindDevActivity.this, QRScanActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_SCAN);
+        } else if (id == R.id.tv_shoudong) {
+            final EditText editText = new EditText(this);
+            new AlertDialog.Builder(this).setTitle("请输入设备号").setIcon(
+                    android.R.drawable.ic_dialog_info).setView(editText
+            ).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String devId = editText.getText().toString();
+                    isDevBind(devId);
+                }
+            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
+        } else if (id == R.id.cancel) {
+
+        }
+        dialog.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    private void boolOpenCarmer() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)  //打开相机权限
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)   //可读
+                        != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)  //可写
+                        != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+                            , Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    1);
+        }
+    }
+}
+

@@ -7,13 +7,13 @@ import java.util.List;
  */
 
 public class Group extends MyBaseBean{
-    public List<GroupList> groupList;
+    public List<GroupItem> mGroupItem;
 
-    public List<GroupList> getGroupList() {
-        return groupList;
+    public List<GroupItem> getGroupItem() {
+        return mGroupItem;
     }
 
-    public void setGroupList(List<GroupList> groupList) {
-        this.groupList = groupList;
+    public void setGroupItem(List<GroupItem> groupItem) {
+        this.mGroupItem = groupItem;
     }
 }

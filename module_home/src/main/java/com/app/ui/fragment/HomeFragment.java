@@ -41,7 +41,7 @@ import java.util.List;
 import static com.app.model.Constant.devid1;
 
 
-public class LaoRenFragment extends BaseFragment implements View.OnClickListener {
+public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
     private Handler handlervideo = new Handler();
     private static final String TAG = "LaoRenFragment";

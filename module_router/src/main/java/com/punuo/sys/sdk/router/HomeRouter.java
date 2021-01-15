@@ -28,4 +28,5 @@ public class HomeRouter {
 
 
     public static final String ROUTER_WX_MINIPROGRAM_ENTRY_ACTIVITY = PREFIX + "/WXMiniprogramEntryActivity";
+    public static final String ROUTER_DEV_BIND_SUCCESS_ACTIVITY = PREFIX + "/DevBindSuccessActivity";
 }

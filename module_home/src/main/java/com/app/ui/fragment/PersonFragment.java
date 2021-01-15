@@ -23,7 +23,7 @@ import com.app.model.PNUserInfo;
 import com.app.ui.CloudAlbumActivity;
 import com.app.ui.FamilyCircleActivity;
 import com.app.ui.PrivateActivity;
-import com.app.ui.ScanActivity;
+import com.app.ui.BindDevActivity;
 import com.app.ui.ServiceCallSet;
 import com.app.ui.SettingActivity;
 import com.bumptech.glide.Glide;
@@ -108,7 +108,7 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         if (id == R.id.re_xiangce) {
             startActivity(new Intent(getActivity(), CloudAlbumActivity.class));
         } else if (id == R.id.re_adddev) {
-            startActivity(new Intent(getActivity(), ScanActivity.class));
+            startActivity(new Intent(getActivity(), BindDevActivity.class));
         } else if (id == R.id.re_servicecall) {
             startActivity(new Intent(getActivity(), ServiceCallSet.class));
         } else if (id == R.id.re_settings) {

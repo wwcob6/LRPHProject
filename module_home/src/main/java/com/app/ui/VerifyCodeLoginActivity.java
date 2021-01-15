@@ -16,7 +16,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
-import com.app.friendCircleMain.domain.Alldevid;
+import com.app.friendCircleMain.domain.UserDevModel;
 import com.app.friendCircleMain.domain.Group;
 import com.app.friendCircleMain.domain.UserFromGroup;
 import com.app.friendCircleMain.domain.UserList;
@@ -194,14 +194,14 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
             @Override
             public void onSuccess(Group result) {
                 if (result != null) {
-                    if (result.groupList != null && !result.groupList.isEmpty()) {
+                    if (result.mGroupItem != null && !result.mGroupItem.isEmpty()) {
                         //重构疑问：这个循环的意义
                         groupname = new String[]{null, null, null};
                         groupid = new String[]{null, null, null};
                         appdevid = new String[]{null, null, null};
-                        for (int i = 0; i < result.groupList.size(); i++) {
-                            groupname[i] = result.groupList.get(i).getGroup_name();
-                            groupid[i] = result.groupList.get(i).getGroupid();
+                        for (int i = 0; i < result.mGroupItem.size(); i++) {
+                            groupname[i] = result.mGroupItem.get(i).groupName;
+                            groupid[i] = result.mGroupItem.get(i).groupId;
                         }
                         devid1 = groupname[0];
                         devid2 = groupname[1];
@@ -242,16 +242,16 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
         }
         mGetDevIdFromIdRequest = new GetDevIdFromIdRequest();
         mGetDevIdFromIdRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mGetDevIdFromIdRequest.setRequestListener(new RequestListener<Alldevid>() {
+        mGetDevIdFromIdRequest.setRequestListener(new RequestListener<UserDevModel>() {
             @Override
             public void onComplete() {
 
             }
 
             @Override
-            public void onSuccess(Alldevid result) {
+            public void onSuccess(UserDevModel result) {
                 if (result != null) {
-                    List<String> devIdLists = result.devid;
+                    List<String> devIdLists = result.devList;
                     if (devIdLists.isEmpty()) {
                         ToastUtils.showToast("获取设备id失败");
                         startActivity(new Intent(VerifyCodeLoginActivity.this, HomeActivity.class));
