@@ -13,13 +13,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import static com.app.camera.FileOperateUtil.TAG;
 
 /**
  * Created by maojianhui on 2018/7/11.
  */
 
 public class VideoStartActivity extends BaseActivity {
+    private static final String TAG = "VideoStartActivity";
     private Handler handlervideo = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -108,7 +108,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         init();
         mMyFragmentManager = new MyFragmentManager(this);
         switchFragment(Constant.HOME);
-        StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
+        StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, true);
         startUpdateService();
         if (!mBaseHandler.hasMessages(BadgeHelper.MSG_BADGE_VALUE)) {
             mBaseHandler.sendEmptyMessageDelayed(BadgeHelper.MSG_BADGE_VALUE, BadgeHelper.DELAY);
@@ -200,8 +200,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             @Override
             public void onSuccess(Group result) {
                 if (result != null) {
-                    if (result.mGroupItem != null && !result.mGroupItem.isEmpty()) {
-                        GroupItem groupItem = result.mGroupItem.get(0);
+                    if (result.mGroupItemList != null && !result.mGroupItemList.isEmpty()) {
+                        GroupItem groupItem = result.mGroupItemList.get(0);
                         AccountManager.setGroupId(groupItem.groupId);
                         AccountManager.setBindDevId(groupItem.groupName);
                     }

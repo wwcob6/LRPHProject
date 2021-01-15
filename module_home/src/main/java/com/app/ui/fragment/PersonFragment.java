@@ -1,10 +1,7 @@
 package com.app.ui.fragment;
 
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityCompat;
-
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.UserInfoManager;
 import com.app.Util;
@@ -23,13 +19,13 @@ import com.app.model.PNUserInfo;
 import com.app.ui.CloudAlbumActivity;
 import com.app.ui.FamilyCircleActivity;
 import com.app.ui.PrivateActivity;
-import com.app.ui.BindDevActivity;
 import com.app.ui.ServiceCallSet;
 import com.app.ui.SettingActivity;
 import com.bumptech.glide.Glide;
 import com.punuo.sys.sdk.PnApplication;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.fragment.BaseFragment;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ViewUtil;
 
@@ -38,10 +34,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class PersonFragment extends BaseFragment implements View.OnClickListener {
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private View mView;
     private TextView tv_name;
     private TextView tv_fxid;
@@ -92,23 +84,12 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         }
     }
 
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write PermissionUtils
-        int permission = ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {// We don't have PermissionUtils so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE);
-        }
-    }
-
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.re_xiangce) {
             startActivity(new Intent(getActivity(), CloudAlbumActivity.class));
         } else if (id == R.id.re_adddev) {
-            startActivity(new Intent(getActivity(), BindDevActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_BIND_DEV_ACTIVITY).navigation();
         } else if (id == R.id.re_servicecall) {
             startActivity(new Intent(getActivity(), ServiceCallSet.class));
         } else if (id == R.id.re_settings) {

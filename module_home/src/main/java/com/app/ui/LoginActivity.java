@@ -80,9 +80,6 @@ import rx.subscriptions.CompositeSubscription;
 @Route(path = HomeRouter.ROUTER_LOGIN_ACTIVITY)
 public class LoginActivity extends BaseSwipeBackLoginActivity {
     private static final String TAG = "LoginActivity";
-    private String groupname;
-    private String groupid;
-    private String appdevid;
     protected CompositeSubscription mCompositeSubscription = new CompositeSubscription();
     public static List<Activity> activityList = new LinkedList<>();
 

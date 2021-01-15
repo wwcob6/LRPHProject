@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Display;
@@ -20,8 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.UserInfoManager;
@@ -37,6 +36,7 @@ import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.ToastUtils;
 
+@Route(path = HomeRouter.ROUTER_BIND_DEV_ACTIVITY)
 public class BindDevActivity extends BaseSwipeBackActivity implements View.OnClickListener {
     private static final int REQUEST_CODE_SCAN = 1;
     private View inflate;
@@ -51,11 +51,6 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bind_dev);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.white));
-        }
         title = (TextView) findViewById(R.id.title);
         title.setText("绑定设备");
         back = findViewById(R.id.back);
@@ -219,7 +214,7 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.tv_saoma) {
-            Intent intent = new Intent(BindDevActivity.this, QRScanActivity.class);
+            Intent intent = new Intent(this, QRScanActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SCAN);
         } else if (id == R.id.tv_shoudong) {
             final EditText editText = new EditText(this);
@@ -241,25 +236,6 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
 
         }
         dialog.dismiss();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    private void boolOpenCarmer() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)  //打开相机权限
-                != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)   //可读
-                        != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)  //可写
-                        != PackageManager.PERMISSION_GRANTED) {
-            //申请WRITE_EXTERNAL_STORAGE权限
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
-                            , Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    1);
-        }
     }
 }
 

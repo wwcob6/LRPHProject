@@ -10,7 +10,7 @@ import com.punuo.sys.sdk.router.SDKRouter;
 
 import cn.bingoogolapple.qrcode.core.BarcodeType;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zbar.ZBarView;
+import cn.bingoogolapple.qrcode.zxing.ZXingView;
 
 /**
  * Created by han.chen.
@@ -18,13 +18,13 @@ import cn.bingoogolapple.qrcode.zbar.ZBarView;
  **/
 @Route(path = SDKRouter.ROUTER_QR_SCAN_ACTIVITY)
 public class QRScanActivity extends BaseSwipeBackActivity implements QRCodeView.Delegate {
-    private ZBarView mZBarView;
+    private ZXingView mZBarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qr_scan_activity);
-        mZBarView = (ZBarView) findViewById(R.id.zbarview);
+        mZBarView = (ZXingView) findViewById(R.id.zbarview);
         mZBarView.changeToScanQRCodeStyle(); // 切换成扫描二维码样式
         mZBarView.setType(BarcodeType.ALL, null); // 识别所有类型的码
         mZBarView.setDelegate(this);

@@ -41,7 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.app.camera.FileOperateUtil.TAG;
 import static com.app.sip.SipInfo.devName;
 
 /**
@@ -49,6 +48,7 @@ import static com.app.sip.SipInfo.devName;
  */
 
 public class VideoConnect extends BaseActivity implements View.OnClickListener {
+    private static final String TAG = "VideoConnect";
     private SharedPreferences.Editor editor;
     private SharedPreferences pref;
     private SoundPool soundPool;

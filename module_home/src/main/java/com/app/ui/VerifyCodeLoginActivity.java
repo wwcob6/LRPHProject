@@ -194,14 +194,14 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
             @Override
             public void onSuccess(Group result) {
                 if (result != null) {
-                    if (result.mGroupItem != null && !result.mGroupItem.isEmpty()) {
+                    if (result.mGroupItemList != null && !result.mGroupItemList.isEmpty()) {
                         //重构疑问：这个循环的意义
                         groupname = new String[]{null, null, null};
                         groupid = new String[]{null, null, null};
                         appdevid = new String[]{null, null, null};
-                        for (int i = 0; i < result.mGroupItem.size(); i++) {
-                            groupname[i] = result.mGroupItem.get(i).groupName;
-                            groupid[i] = result.mGroupItem.get(i).groupId;
+                        for (int i = 0; i < result.mGroupItemList.size(); i++) {
+                            groupname[i] = result.mGroupItemList.get(i).groupName;
+                            groupid[i] = result.mGroupItemList.get(i).groupId;
                         }
                         devid1 = groupname[0];
                         devid2 = groupname[1];

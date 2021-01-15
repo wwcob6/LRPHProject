@@ -103,6 +103,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.DevBindSuccessActivity"
+            android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BindDevActivity"

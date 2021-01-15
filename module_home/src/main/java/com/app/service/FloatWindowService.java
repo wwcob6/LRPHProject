@@ -25,8 +25,8 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.app.camera.FileOperateUtil;
 import com.app.R;
+import com.app.camera.FileOperateUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
