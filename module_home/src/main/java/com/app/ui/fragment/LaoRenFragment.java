@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.friendCircleMain.domain.UserList;
 import com.app.sip.BodyFactory;
@@ -22,11 +23,11 @@ import com.app.ui.FamilyCircleActivity;
 import com.app.ui.FriendCallActivity;
 import com.app.ui.VideoDial;
 import com.app.ui.VideoPlay;
-import com.app.ui.message.WeixinActivity;
 import com.app.video.RtpVideo;
 import com.app.video.SendActivePacket;
 import com.app.video.VideoInfo;
 import com.punuo.sys.sdk.fragment.BaseFragment;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
@@ -191,14 +192,13 @@ public class LaoRenFragment extends BaseFragment implements View.OnClickListener
             }
         } else if (id == R.id.chat) {
             IntentUtil.jumpActivity(getActivity(), FriendCallActivity.class);
-        } else if (id == R.id.application) {/*                String url = "http://pet.qinqingonline.com:9000";
-                IntentUtil.openWebViewActivity(getActivity(), url);*/
-            startActivity(new Intent(getActivity(), WeixinActivity.class));
+        } else if (id == R.id.application) {
+            ARouter.getInstance().build(HomeRouter.ROUTER_WX_MINIPROGRAM_ENTRY_ACTIVITY).navigation();
         } else if (id == R.id.video) {
             SipInfo.single = false;
             String devId1 = SipInfo.paddevId;
-//                    devId = devId1.substring(0, devId1.length() - 4).concat("0160");
-// 设备id后4位替换成0160
+            //devId = devId1.substring(0, devId1.length() - 4).concat("0160");
+            //设备id后4位替换成0160
             String devName1 = "pad";
             final String devType1 = "2";
             SipURL sipURL1 = new SipURL(devId1, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);

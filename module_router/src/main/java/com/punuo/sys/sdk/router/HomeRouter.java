@@ -25,4 +25,7 @@ public class HomeRouter {
     public static final String ROUTER_SYSTEM_NOTIFY_ACTIVITY = PREFIX + "/SystemNotifyActivity";
     public static final String ROUTER_COMMENT_ACTIVITY = PREFIX + "/CommentActivity";
     public static final String ROUTER_ADD_LIKE_ACTIVITY = PREFIX + "/AddLikeActivity";
+
+
+    public static final String ROUTER_WX_MINIPROGRAM_ENTRY_ACTIVITY = PREFIX + "/WXMiniprogramEntryActivity";
 }

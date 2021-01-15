@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application>
         <activity android:name=".ui.PrivateActivity"/>
-        <activity android:name=".ui.message.WeixinActivity" /> <!-- 全面屏适配 -->
+        <activity android:name=".ui.message.WXMiniprogramEntryActivity" /> <!-- 全面屏适配 -->
         <activity
             android:name="com.punuo.sys.app.message.AddLikeActivity"
             android:theme="@style/Theme.Pn.Translucent"
