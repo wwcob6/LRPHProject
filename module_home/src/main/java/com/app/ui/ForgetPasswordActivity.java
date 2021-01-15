@@ -44,6 +44,7 @@ public class ForgetPasswordActivity extends BaseSwipeBackLoginActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password1);
         ButterKnife.bind(this);
+        targetView = verificodeGet;
         initViews();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
             Window window = getWindow();

@@ -92,11 +92,8 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
     private String groupname;
     private String groupid;
     private String appdevid;
-    private Handler handler = new Handler();
-    //网络连接失败窗口
-    private AlertDialog newWorkConnectedDialog;
     protected CompositeSubscription mCompositeSubscription = new CompositeSubscription();
-    public static List<Activity> activityList = new LinkedList();
+    public static List<Activity> activityList = new LinkedList<>();
 
     @BindView(R2.id.num_input2)
     CleanEditText numInput2;
@@ -403,11 +400,6 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
                         Constant.appdevid1 = appdevid;
                         //TODO 设备注册
                         if (!TextUtils.isEmpty(appdevid)) {
-//                            SipInfo.devId = appdevid;
-//                            Log.i(TAG, "SipInfodevid"+SipInfo.devId);
-//                            SipURL local_dev = new SipURL(SipInfo.devId, SipInfo.serverIp, SipInfo.SERVER_PORT_DEV);
-//                            SipInfo.dev_from = new NameAddress(SipInfo.devId, local_dev);
-//                            new Thread(devConnecting).start();
                             AccountManager.setDevId(appdevid);
                             registerDev();
                         }

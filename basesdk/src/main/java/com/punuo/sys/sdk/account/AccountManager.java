@@ -13,7 +13,6 @@ public class AccountManager {
     private static String userAccount;
     private static String userId;
     private static String devId;
-    private static String password;
 
     public static void setUserAccount(CharSequence userAccount) {
         if (!TextUtils.isEmpty(userAccount)) {
@@ -46,17 +45,13 @@ public class AccountManager {
     }
 
     public static void setPassword(CharSequence password) {
-        if (!TextUtils.isEmpty(password)) {
-            AccountManager.password = password.toString();
+        if (!TextUtils.isEmpty(password) && !TextUtils.equals(password, "pass")) {
             MMKVUtil.setString("password", password.toString());
         }
     }
 
     public static String getPassword() {
-        if (TextUtils.isEmpty(password)) {
-            password = MMKVUtil.getString("password", "");
-        }
-        return password;
+        return MMKVUtil.getString("password", "");
     }
 
     public static void clearAccountData() {

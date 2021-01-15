@@ -11,6 +11,7 @@ import com.app.R;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mob.MobSDK;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.util.RegexUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
@@ -62,6 +63,14 @@ public abstract class BaseSwipeBackLoginActivity extends BaseSwipeBackActivity {
         return true;
     }
 
+    public boolean checkOldPassword(CharSequence oldPassword) {
+        if (!TextUtils.equals(oldPassword.toString(),AccountManager.getPassword())) {
+            ToastUtils.showToast(R.string.tip_password_not_same);
+            return false;
+        }
+        return true;
+    }
+
     public boolean checkCode(CharSequence code) {
         if (TextUtils.isEmpty(code)) { // 验证码不正确
             ToastUtils.showToast(R.string.tip_please_input_code);
@@ -79,10 +88,10 @@ public abstract class BaseSwipeBackLoginActivity extends BaseSwipeBackActivity {
     }
 
     public boolean checkPassWordValid(CharSequence pwd, CharSequence pwdAgain) {
-        if (TextUtils.isEmpty(pwd) || pwd.length() < 6 || pwd.length() > 32) {
+        if (TextUtils.isEmpty(pwd) || pwd.length() < 6 || pwd.length() > 32 || TextUtils.isEmpty(pwdAgain) || pwdAgain.length() < 6 || pwdAgain.length() > 32) {
             ToastUtils.showToast(R.string.tip_please_input_6_32_password);
             return false;
-        } else if (!pwd.equals(pwdAgain)) {
+        } else if (!TextUtils.equals(pwd.toString(), pwdAgain.toString())) {
             ToastUtils.showToast("两次密码不一致");
             return false;
         }

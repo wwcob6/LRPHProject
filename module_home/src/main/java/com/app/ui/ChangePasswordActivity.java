@@ -1,6 +1,5 @@
 package com.app.ui;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,9 +17,9 @@ import com.app.R;
 import com.app.R2;
 import com.app.model.PNBaseModel;
 import com.app.request.ChangePwdRequest;
-import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;
-import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
+import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.util.ToastUtils;
@@ -34,7 +33,7 @@ import butterknife.ButterKnife;
  * 修改密码页
  */
 
-public class ChangePasswordActivity extends BaseSwipeBackActivity {
+public class ChangePasswordActivity extends BaseSwipeBackLoginActivity {
     @BindView(R2.id.back)
     ImageView back;
     @BindView(R2.id.title)
@@ -99,10 +98,10 @@ public class ChangePasswordActivity extends BaseSwipeBackActivity {
     //注册回调监听接口
     private void commit() {
         final String old = oldpasswordInput.getText().toString().trim();
-        SipInfo.passWord2 = newpasswordInput.getText().toString().trim();
+        final String newPassword = newpasswordInput.getText().toString().trim();
         final String again = newpasswordAgain.getText().toString().trim();
-        if (checkInput(old, SipInfo.passWord2, again)) {
-            changePwd(SipInfo.userAccount, SipInfo.passWord2);
+        if (checkOldPassword(old) && checkPassWordValid(newPassword, again)) {
+            changePwd(AccountManager.getUserAccount(), newPassword);
         }
     }
 
@@ -125,7 +124,8 @@ public class ChangePasswordActivity extends BaseSwipeBackActivity {
             public void onSuccess(PNBaseModel result) {
                 if (result.isSuccess()) {
                     ToastUtils.showToast("密码修改成功");
-                    startActivity(new Intent(ChangePasswordActivity.this, LoginActivity.class));
+                    AccountManager.setPassword(newPwd);
+                    finish();
                 } else {
                     if (!TextUtils.isEmpty(result.msg)) {
                         ToastUtils.showToast(result.msg);
@@ -139,28 +139,5 @@ public class ChangePasswordActivity extends BaseSwipeBackActivity {
             }
         });
         HttpManager.addRequest(mChangePwdRequest);
-    }
-
-    private boolean checkInput(String old, String password, String again) {
-        if (SipInfo.isVericodeLogin) {
-            if (password.length() < 6 || password.length() > 32
-                    || TextUtils.isEmpty(password)) {
-                ToastUtils.showToast(R.string.tip_please_input_6_32_password);
-            } else if (!password.equals(again)) {
-                ToastUtils.showToast("两次密码不一致");
-            } else {
-                return true;
-            }
-        } else if (!(old.equals(SipInfo.passWord))) { // 旧密码输入错误
-            ToastUtils.showToast(R.string.tip_password_not_same);
-        } else if (password.length() < 6 || password.length() > 32
-                || TextUtils.isEmpty(password)) { // 密码格式
-            ToastUtils.showToast(R.string.tip_please_input_6_32_password);
-        } else if (!password.equals(again)) {
-            ToastUtils.showToast("两次密码不一致");
-        } else {
-            return true;
-        }
-        return false;
     }
 }

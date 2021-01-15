@@ -1,83 +1,70 @@
 package com.app.ui;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
-import com.app.db.DatabaseInfo;
-import com.app.db.MyDatabaseHelper;
-import com.app.db.SQLiteManager;
 import com.app.friendCircleMain.domain.Alldevid;
 import com.app.friendCircleMain.domain.Group;
-import com.app.friendCircleMain.domain.GroupList;
 import com.app.friendCircleMain.domain.UserFromGroup;
 import com.app.friendCircleMain.domain.UserList;
 import com.app.groupvoice.GroupInfo;
-import com.app.http.VerifyCodeManager;
-import com.app.http.VerifyCodeManager1;
 import com.app.model.Constant;
 import com.app.model.Friend;
 import com.app.model.PNUserInfo;
 import com.app.request.GetAllGroupFromUserRequest;
 import com.app.request.GetAllUserFromGroupRequest;
 import com.app.request.GetDevIdFromIdRequest;
-import com.app.sip.KeepAlive;
-import com.app.sip.SipDev;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
-import com.app.sip.SipUser;
 import com.app.views.CleanEditText;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.mob.MobSDK;
+import com.punuo.sip.dev.SipDevManager;
+import com.punuo.sip.dev.event.DevLoginFailEvent;
+import com.punuo.sip.dev.event.ReRegisterDevEvent;
+import com.punuo.sip.dev.model.LoginResponseDev;
+import com.punuo.sip.dev.request.SipDevRegisterRequest;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.event.ReRegisterUserEvent;
+import com.punuo.sip.user.event.UserLoginFailEvent;
+import com.punuo.sip.user.model.LoginResponseUser;
+import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.app.home.HomeActivity;
-import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
+import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.RegexUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
 
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 import static com.app.model.Constant.devid1;
 import static com.app.model.Constant.devid2;
 import static com.app.model.Constant.devid3;
-import static java.lang.Thread.sleep;
 
 @Route(path = HomeRouter.ROUTER_VERIFY_CODE_LOGIN_ACTIVITY)
-public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
+public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
     @BindView(R2.id.num_input4)
     CleanEditText numInput4;
     @BindView(R2.id.vericode_input)
@@ -92,84 +79,52 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
     ImageView ivBack5;
     @BindView(R2.id.newAccount_register)
     TextView newAccountRegister;
-    private VerifyCodeManager1 codeManager1;
-    private EventHandler eventHandler;
-    //前一次的账号
-    private String lastUserAccount;
-    //密码错误次数
-    private int errorTime = 0;
-    //网络连接失败窗口
-    private AlertDialog newWorkConnectedDialog;
-
-    private String TAG = getClass().getSimpleName();
-    //账号不存在
-    private AlertDialog accountNotExistDialog;
-    //登陆超时
-    private AlertDialog timeOutDialog;
-    private List<String> list = new ArrayList<String>();
-    private List<UserList> userList = new ArrayList<UserList>();
-    private List<GroupList> groupList = new ArrayList<GroupList>();
     private String[] groupname = new String[3];
     private String[] groupid = new String[3];
     private String[] appdevid = new String[3];
-    private Handler handler = new Handler();
+
+    private boolean userLoginFailed = false;
+    private boolean devLoginFailed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verificode_login);
         ButterKnife.bind(this);
+        targetView = getVerificode;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.newbackground));
         }
         initData();
-        codeManager1 = new VerifyCodeManager1(this, numInput4, getVerificode);
+        EventBus.getDefault().register(this);
     }
 
     private void initData() {
         numInput4.setImeOptions(EditorInfo.IME_ACTION_NEXT);// 下一步
         getVerificode.setImeOptions(EditorInfo.IME_ACTION_NEXT);// 下一步
-        getVerificode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId,
-                                          KeyEvent event) {
-                // 点击虚拟键盘的done
-                if (actionId == EditorInfo.IME_ACTION_DONE
-                        || actionId == EditorInfo.IME_ACTION_GO) {
-                    login();
-                }
-                return false;
+        getVerificode.setOnEditorActionListener((v, actionId, event) -> {
+            // 点击虚拟键盘的done
+            if (actionId == EditorInfo.IME_ACTION_DONE
+                    || actionId == EditorInfo.IME_ACTION_GO) {
+                login();
             }
+            return false;
         });
-        MobSDK.init(this, "213c5d90b2394", "793f08e685abc8a57563a8652face144");
-        eventHandler = new EventHandler() {
-            @Override
-            public void afterEvent(int event, int result, Object data) {
-                android.os.Message msg = new android.os.Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
-                mHandler.sendMessage(msg);
-            }
-        };
-        //注册回调监听接口
-        SMSSDK.registerEventHandler(eventHandler);
     }
 
 
     @OnClick({R2.id.get_verificode, R2.id.password_login, R2.id.btn_login2, R2.id.newAccount_register})
     public void onClick(View v) {
         int id = v.getId();
+        String phone = numInput4.getText().toString().trim();
         if (id == R.id.get_verificode) {
-            codeManager1.getVerifyCode(VerifyCodeManager.REGISTER);
+            getVerifyCode(phone);
         } else if (id == R.id.password_login) {
             startActivity(new Intent(this, LoginActivity.class));
         } else if (id == R.id.btn_login2) {
             SipInfo.passWord = null;//验证码登录没有设置密码，将密码设置为空
-            final String phone = numInput4.getText().toString().trim();
             final String code = vericodeinput.getText().toString().trim();
             if (checkInput(phone, code)) {
                 SMSSDK.submitVerificationCode("86", phone, code);
@@ -182,208 +137,19 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
     }
 
     private void login() {
-        if (SipInfo.isNetworkConnected) {
-            SipInfo.userAccount = numInput4.getText().toString();
-            SipInfo.code = getVerificode.getText().toString();
-            if (checkInput(SipInfo.userAccount, SipInfo.code)) {
-                // TODO: 请求服务器登录账号
-                if (!SipInfo.userAccount.equals(lastUserAccount)) {
-                    errorTime = 0;
-                }
-                beforeLogin();
-                showLoadingDialog();
-                SipInfo.isVericodeLogin = true;
-                new Thread(connecting).start();
-            }
-        } else {
-            //弹出网络连接失败窗口
-            handler.post(networkConnectedFailed);
-        }
-
-    }
-
-
-    private void beforeLogin() {
-        SipInfo.isAccountExist = true;
-        SipInfo.passwordError = false;
-        SipInfo.userLogined = false;
-        SipInfo.loginTimeout = true;
-        SipURL local = new SipURL(SipInfo.REGISTER_ID, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-        SipURL remote = new SipURL(SipInfo.SERVER_ID, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-        SipInfo.user_from = new NameAddress(SipInfo.userAccount, local);
-        SipInfo.user_to = new NameAddress(SipInfo.SERVER_NAME, remote);
-        SipInfo.devLogined = false;
-        SipInfo.dev_loginTimeout = true;
-
-        SipURL remote_dev = new SipURL(SipInfo.SERVER_ID, SipInfo.serverIp, SipInfo.SERVER_PORT_DEV);
-
-        SipInfo.dev_to = new NameAddress(SipInfo.SERVER_NAME, remote_dev);
-    }
-
-    // 网络是否连接
-    private Runnable networkConnectedFailed = new Runnable() {
-        @Override
-        public void run() {
-            if (newWorkConnectedDialog == null || !newWorkConnectedDialog.isShowing()) {
-                newWorkConnectedDialog = new AlertDialog.Builder(VerifyCodeLoginActivity.this)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Intent mIntent = new Intent(Settings.ACTION_SETTINGS);
-                                startActivity(mIntent);
-                            }
-                        })
-                        .setTitle("当前无网络,请检查网络连接")
-                        .create();
-                newWorkConnectedDialog.setCancelable(false);
-                newWorkConnectedDialog.setCanceledOnTouchOutside(false);
-                newWorkConnectedDialog.show();
-            }
-        }
-    };
-
-    private Runnable accountNotExist = new Runnable() {
-        @Override
-        public void run() {
-            if (accountNotExistDialog == null || !accountNotExistDialog.isShowing()) {
-                accountNotExistDialog = new AlertDialog.Builder(VerifyCodeLoginActivity.this)
-                        .setTitle("不存在该账号")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .create();
-                accountNotExistDialog.show();
-                accountNotExistDialog.setCancelable(false);
-                accountNotExistDialog.setCanceledOnTouchOutside(false);
-            }
-        }
-    };
-    private Runnable timeOut = new Runnable() {
-        @Override
-        public void run() {
-            if (timeOutDialog == null || !timeOutDialog.isShowing()) {
-                timeOutDialog = new AlertDialog.Builder(VerifyCodeLoginActivity.this)
-                        .setTitle("连接超时,请检查网络")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .create();
-                timeOutDialog.show();
-                timeOutDialog.setCancelable(false);
-                timeOutDialog.setCanceledOnTouchOutside(false);
-            }
-        }
-    };
-
-    private void showDialogTip(final int errorTime) {
-        if (errorTime < 2) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog dialog = new AlertDialog.Builder(VerifyCodeLoginActivity.this)
-                            .setTitle("密码输入错误/还有" + (2 - errorTime) + "次输入机会")
-                            .setPositiveButton("确定", null)
-                            .create();
-                    dialog.show();
-                    dialog.setCanceledOnTouchOutside(false);
-                }
-            });
-        } else {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog dialog = new AlertDialog.Builder(VerifyCodeLoginActivity.this)
-                            .setTitle("由于密码输入错误过多,该账号已被冻结")
-                            .setPositiveButton("确定", null)//锁账号暂未完成
-                            .create();
-                    dialog.show();
-                    dialog.setCanceledOnTouchOutside(false);
-                    Toast.makeText(getApplicationContext(), "该账号已被冻结", Toast.LENGTH_SHORT).show();
-                }
-            });
+        CharSequence userAccount = numInput4.getText();
+        CharSequence code = getVerificode.getText();
+        if (checkPhoneNumber(userAccount) && checkCode(code)) {
+            AccountManager.setUserAccount(userAccount);
+            AccountManager.setPassword("pass");
+            showLoadingDialog();
+            SipInfo.isVericodeLogin = true;
+            getUserId();
         }
     }
-
-    Runnable connecting = new Runnable() {
-        @Override
-        public void run() {
-            try {
-
-                int hostPort = new Random().nextInt(5000) + 2000;
-                SipInfo.sipUser = new SipUser(null, hostPort, VerifyCodeLoginActivity.this);
-                org.zoolu.sip.message.Message register = SipMessageFactory.createRegisterRequest(
-                        SipInfo.sipUser, SipInfo.user_to, SipInfo.user_from);
-                SipInfo.sipUser.sendMessage(register);
-                sleep(1000);
-                for (int i = 0; i < 2; i++) {
-                    if (!SipInfo.isAccountExist) {
-                        //用户账号不存在
-                        break;
-                    }
-                    if (SipInfo.passwordError) {
-                        //密码错误
-                        break;
-                    }
-                    if (!SipInfo.loginTimeout) {
-                        //没有超时
-                        break;
-                    }
-                    SipInfo.sipUser.sendMessage(register);
-                    sleep(1000);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-
-                if (!SipInfo.isAccountExist) {
-                    dismissLoadingDialog();
-                    /**账号不存在提示*/
-                    handler.post(accountNotExist);
-                } else if (SipInfo.passwordError) {
-                    //密码错误提示
-                    dismissLoadingDialog();
-                    showDialogTip(errorTime++);
-                    lastUserAccount = SipInfo.userAccount;
-                } else if (SipInfo.loginTimeout) {
-                    dismissLoadingDialog();
-                    //超时
-                    handler.post(timeOut);
-                } else {
-
-                    if (SipInfo.userLogined) {
-                        Log.i(TAG, "用户登录成功!");
-                        //开启用户保活心跳包
-                        SipInfo.keepUserAlive = new KeepAlive();
-                        SipInfo.keepUserAlive.setType(0);
-                        SipInfo.keepUserAlive.startThread();
-                        //数据库
-                        String dbPath = SipInfo.userId + ".db";
-//                        deleteDatabase(dbPath);
-                        MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(VerifyCodeLoginActivity.this, dbPath, null, 1);
-                        DatabaseInfo.sqLiteManager = new SQLiteManager(myDatabaseHelper);
-
-//                        SipInfo.applist.clear();
-//                        //请求服务器上的app列表
-//                        SipInfo.sipUser.sendMessage(SipMessageFactory.createSubscribeRequest(SipInfo.sipUser,
-//                                SipInfo.user_to, SipInfo.user_from, BodyFactory.createAppsQueryBody()));
-                        //启动设备注册线程
-//                        new Thread(getuserinfo).start();
-                        getUserInfo();
-                    }
-                }
-            }
-        }
-    };
     //获取用户信息
     private void getUserInfo() {
-        RequestListener listener = new RequestListener<PNUserInfo>() {
+        RequestListener<PNUserInfo> listener = new RequestListener<PNUserInfo>() {
             @Override
             public void onComplete() {
 
@@ -490,13 +256,11 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
                         ToastUtils.showToast("获取设备id失败");
                         startActivity(new Intent(VerifyCodeLoginActivity.this, HomeActivity.class));
                     } else {
-                        appdevid[0] = devIdLists.get(0);
+                        String appDevId = devIdLists.get(0);
                         Constant.appdevid1 = appdevid[0];
-                        if (!TextUtils.isEmpty(appdevid[0])) {
-                            SipInfo.devId = appdevid[0];
-                            SipURL local_dev = new SipURL(SipInfo.devId, SipInfo.serverIp, SipInfo.SERVER_PORT_DEV);
-                            SipInfo.dev_from = new NameAddress(SipInfo.devId, local_dev);
-                            new Thread(devConnecting).start();
+                        if (!TextUtils.isEmpty(appDevId)) {
+                            AccountManager.setDevId(appDevId);
+                            registerDev();
                         }
                         //获取组内用户
                         getAllUserFormGroup();
@@ -571,54 +335,11 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
         });
         HttpManager.addRequest(mGetAllUserFromGroupRequest);
     }
-
-    //设备注册线程
-    private Runnable devConnecting = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                int hostPort = new Random().nextInt(5000) + 2000;
-                SipInfo.sipDev = new SipDev(VerifyCodeLoginActivity.this, null, hostPort);//无网络时在主线程操作会报异常
-                org.zoolu.sip.message.Message register = SipMessageFactory.createRegisterRequest(
-                        SipInfo.sipDev, SipInfo.dev_to, SipInfo.dev_from);
-
-                for (int i = 0; i < 3; i++) {//如果没有回应,最多重发2次
-                    SipInfo.sipDev.sendMessage(register);
-                    sleep(2000);
-                    if (!SipInfo.dev_loginTimeout) {
-                        break;
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } finally {
-                if (SipInfo.devLogined) {
-                    Log.d(TAG, "设备注册成功!");
-                    Log.d(TAG, "设备心跳包发送!");
-
-                    //启动设备心跳线程
-                    SipInfo.keepDevAlive = new KeepAlive();
-                    SipInfo.keepDevAlive.setSipDev(SipInfo.sipDev);
-                    SipInfo.keepDevAlive.setDev_from(SipInfo.dev_from);
-                    SipInfo.keepDevAlive.setType(1);
-                    SipInfo.keepDevAlive.startThread();
-
-                } else {
-                    Log.e(TAG, "设备注册失败!");
-                    Looper.prepare();
-                    ToastUtils.showToastShort("设备注册失败请重新登录");
-                    dismissLoadingDialog();
-                    Looper.loop();
-                }
-            }
-        }
-    };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         dismissLoadingDialog();
-        SMSSDK.unregisterEventHandler(eventHandler);
+        EventBus.getDefault().unregister(this);
     }
 
     private boolean checkInput(String phone, String code) {
@@ -635,36 +356,104 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackActivity {
         }
         return false;
     }
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            int event = msg.arg1;
-            int result = msg.arg2;
-            Object data = msg.obj;
-            Log.e("event", "event=" + event);
-            Log.e("result", "result=" + result);
-            // 短信注册成功后，返回LoginActivity,然后提示
-            if (result == SMSSDK.RESULT_COMPLETE) {
-                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
-//                    Toast.makeText(RegisterAccountActivity.this, "验证成功",
-//                            Toast.LENGTH_SHORT).show();
-                    login();
-                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                    Toast.makeText(getApplicationContext(), "验证码已经发送",
-                            Toast.LENGTH_SHORT).show();
-                }
-            } else if (result == SMSSDK.RESULT_ERROR) {
-                Throwable throwable = (Throwable) data;
-                throwable.printStackTrace();
-                JsonObject obj = new JsonParser().parse(throwable.getMessage()).getAsJsonObject();
-                String des = obj.get("detail").getAsString();//错误描述
-                int status = obj.get("status").getAsInt();//错误代码
-                if (status > 0 && !TextUtils.isEmpty(des)) {
-                    Toast.makeText(VerifyCodeLoginActivity.this, des, Toast.LENGTH_SHORT).show();
-                }
-            }
-            return true;
-        }
-    });
 
+    @Override
+    public void onVerifyCodeSuccess() {
+        super.onVerifyCodeSuccess();
+        login();
+    }
+
+    /** sip注册相关该页面只进行sip的注册不启动心跳包 心跳包在
+     * {@link com.punuo.sys.app.home.HomeActivity}
+     * 上开启
+     */
+    /**
+     * 用户注册第一步
+     */
+    private void getUserId() {
+        SipGetUserIdRequest getUserIdRequest = new SipGetUserIdRequest();
+        SipUserManager.getInstance().addRequest(getUserIdRequest);
+    }
+
+    /**
+     * 设备注册第一步
+     */
+    private void registerDev() {
+        SipDevRegisterRequest sipDevRegisterRequest = new SipDevRegisterRequest();
+        SipDevManager.getInstance().addRequest(sipDevRegisterRequest);
+    }
+
+    /**
+     * 用户注册成功
+     *
+     * @param model
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(final LoginResponseUser model) {
+        getUserInfo();
+    }
+
+    /**
+     * 设备注册成功
+     *
+     * @param model
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(final LoginResponseDev model) {
+        ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY)
+                .navigation();
+        finish();
+    }
+
+    /**
+     * 设备Sip服务重新注册事件
+     *
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ReRegisterDevEvent event) {
+        if (devLoginFailed) {
+            devLoginFailed = false;
+            return;
+        }
+        registerDev();
+    }
+
+    /**
+     * 设备Sip服务注册失败事件
+     *
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(DevLoginFailEvent event) {
+        devLoginFailed = true;
+    }
+
+    /**
+     * 用户Sip服务重新注册事件
+     *
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(ReRegisterUserEvent event) {
+        if (userLoginFailed) {
+            userLoginFailed = false;
+            return;
+        }
+        getUserId();
+    }
+
+    /**
+     * 用户Sip服务注册失败事件
+     *
+     * @param event event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(UserLoginFailEvent event) {
+        userLoginFailed = true;
+    }
+    /** sip注册相关该页面只进行sip的注册不启动心跳包 心跳包在
+     * {@link com.punuo.sys.app.home.HomeActivity}
+     * 上开启
+     */
 }

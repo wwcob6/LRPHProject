@@ -1,5 +1,7 @@
 package com.punuo.sip.user.request;
 
+import android.text.TextUtils;
+
 import com.punuo.sip.user.model.NegotiateResponse;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.sercet.SHA1;
@@ -27,8 +29,11 @@ public class SipRegisterRequest extends BaseUserSipRequest {
         if (mNegotiateResponse == null) {
             return null;
         }
-        String password = SHA1.getInstance().hashData(mNegotiateResponse.salt + AccountManager.getPassword());
-        password = SHA1.getInstance().hashData(mNegotiateResponse.seed + password);
+        String password = AccountManager.getPassword();
+        if (!TextUtils.equals(AccountManager.getPassword(), "pass")) {
+            password = SHA1.getInstance().hashData(mNegotiateResponse.salt + password);
+            password = SHA1.getInstance().hashData(mNegotiateResponse.seed + password);
+        }
         JSONObject body = new JSONObject();
         JSONObject value = new JSONObject();
         try {
