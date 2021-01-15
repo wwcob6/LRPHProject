@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,11 +16,9 @@ import com.app.R;
 import com.app.R2;
 import com.app.UserInfoManager;
 import com.app.model.Constant;
-import com.app.model.MessageEvent;
 import com.app.service.NewsService;
 import com.app.sip.SipInfo;
 import com.app.ui.fragment.LaoRenFragment;
-import com.punuo.sys.app.message.MessageFragment;
 import com.app.ui.fragment.MyFragmentManager;
 import com.app.ui.fragment.PersonFragment;
 import com.punuo.sip.AccountUtil;
@@ -41,6 +38,7 @@ import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorDev;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorUser;
+import com.punuo.sys.app.message.MessageFragment;
 import com.punuo.sys.app.message.badge.BadgeHelper;
 import com.punuo.sys.app.message.badge.MessageBadgeCnt;
 import com.punuo.sys.sdk.account.AccountManager;
@@ -150,31 +148,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             mTabBars[i].setOnClickListener(this);
         }
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event ){
-        if(event.getMessage().equals("小红点出来吧")){
-            handler.sendEmptyMessage(0x11);
-        }else
-            if(event.getMessage().equals("取消新评论提示")){
-                handler.sendEmptyMessage(0x22);
-            }
-    }
-
-     Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message message){
-            super.handleMessage(message);
-            switch(message.what){
-                case 0x11:
-                    newMessageNotify.setVisibility(View.VISIBLE);
-                    break;
-                case 0x22:
-                    newMessageNotify.setVisibility(View.INVISIBLE);
-                    break;
-            }
-        }
-    };
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -189,6 +162,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         mBaseHandler.removeMessages(BadgeHelper.MSG_BADGE_VALUE);
+        AccountManager.setLogin(false);
         SipInfo.userLogined = false;
         SipInfo.devLogined = false;
         //停止语音电话服务

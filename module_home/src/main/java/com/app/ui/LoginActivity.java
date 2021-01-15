@@ -529,6 +529,10 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(final LoginResponseDev model) {
+        if (AccountManager.isLogin()) {
+            return;
+        }
+        AccountManager.setLogin(true);
         ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY)
                 .navigation();
         finish();

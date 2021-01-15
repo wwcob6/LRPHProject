@@ -13,6 +13,15 @@ public class AccountManager {
     private static String userAccount;
     private static String userId;
     private static String devId;
+    private static boolean login = false;
+
+    public static boolean isLogin() {
+        return login;
+    }
+
+    public static void setLogin(boolean login) {
+        AccountManager.login = login;
+    }
 
     public static void setUserAccount(CharSequence userAccount) {
         if (!TextUtils.isEmpty(userAccount)) {
