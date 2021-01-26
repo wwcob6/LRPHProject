@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.R;
-import com.app.UserInfoManager;
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.account.UserInfoManager;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.request.UpdateNickRequest;
 import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;

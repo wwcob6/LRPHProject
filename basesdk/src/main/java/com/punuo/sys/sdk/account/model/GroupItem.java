@@ -1,4 +1,4 @@
-package com.app.friendCircleMain.domain;
+package com.punuo.sys.sdk.account.model;
 
 import com.google.gson.annotations.SerializedName;
 

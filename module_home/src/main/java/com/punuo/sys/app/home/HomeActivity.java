@@ -14,11 +14,8 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
-import com.app.friendCircleMain.domain.Group;
-import com.app.friendCircleMain.domain.GroupItem;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.model.Constant;
-import com.app.request.GetAllGroupFromUserRequest;
 import com.app.service.NewsService;
 import com.app.sip.SipInfo;
 import com.app.ui.fragment.HomeFragment;
@@ -47,13 +44,10 @@ import com.punuo.sys.app.message.badge.MessageBadgeCnt;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.fragment.WebViewFragment;
-import com.punuo.sys.sdk.httplib.HttpManager;
-import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.update.AutoUpdateService;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
-import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -104,7 +98,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         initHeartBeat();
-        getBindDevInfo();
+        AccountManager.getBindDevInfo();
         init();
         mMyFragmentManager = new MyFragmentManager(this);
         switchFragment(Constant.HOME);
@@ -182,41 +176,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         running = false;
     }
 
-    private GetAllGroupFromUserRequest mGetAllGroupFromUserRequest;
 
-    //获取用户绑定设备
-    private void getBindDevInfo() {
-        if (mGetAllGroupFromUserRequest != null && !mGetAllGroupFromUserRequest.isFinish()) {
-            return;
-        }
-        mGetAllGroupFromUserRequest = new GetAllGroupFromUserRequest();
-        mGetAllGroupFromUserRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mGetAllGroupFromUserRequest.setRequestListener(new RequestListener<Group>() {
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onSuccess(Group result) {
-                if (result != null) {
-                    if (result.mGroupItemList != null && !result.mGroupItemList.isEmpty()) {
-                        GroupItem groupItem = result.mGroupItemList.get(0);
-                        AccountManager.setGroupId(groupItem.groupId);
-                        AccountManager.setBindDevId(groupItem.groupName);
-                    }
-                } else {
-                    onError(null);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                ToastUtils.showToastShort("获取用户数据失败请重试");
-            }
-        });
-        HttpManager.addRequest(mGetAllGroupFromUserRequest);
-    }
 
     /**
      * 显示Fragment

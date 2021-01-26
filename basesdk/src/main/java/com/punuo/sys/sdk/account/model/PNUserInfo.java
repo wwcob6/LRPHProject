@@ -1,9 +1,10 @@
-package com.app.model;
+package com.punuo.sys.sdk.account.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+import com.punuo.sys.sdk.model.PNBaseModel;
 
 /**
  * Created by han.chen.

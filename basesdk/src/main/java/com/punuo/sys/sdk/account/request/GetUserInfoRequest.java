@@ -1,6 +1,6 @@
-package com.app.request;
+package com.punuo.sys.sdk.account.request;
 
-import com.app.model.PNUserInfo;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.punuo.sys.sdk.httplib.BaseRequest;
 
 /**

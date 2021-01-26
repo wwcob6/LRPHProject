@@ -16,7 +16,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.request.ChangePwdRequest;
 import com.app.views.CleanEditText;
 import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;

@@ -20,9 +20,9 @@ import android.widget.Toast;
 
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.model.MessageEvent;
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.request.AddAddressRequest;
 import com.app.request.DeleteAddressRequest;
 import com.app.request.UpdateAddressRequest;

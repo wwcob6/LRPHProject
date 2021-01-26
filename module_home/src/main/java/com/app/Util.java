@@ -1,5 +1,6 @@
 package com.app;
 
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.httplib.HttpConfig;
 
 /**

@@ -2,7 +2,15 @@ package com.punuo.sys.sdk.account;
 
 import android.text.TextUtils;
 
+import com.punuo.sys.sdk.account.model.Group;
+import com.punuo.sys.sdk.account.model.GroupItem;
+import com.punuo.sys.sdk.account.request.GetAllGroupFromUserRequest;
+import com.punuo.sys.sdk.httplib.HttpManager;
+import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.util.MMKVUtil;
+import com.punuo.sys.sdk.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 /**
@@ -95,6 +103,43 @@ public class AccountManager {
         userId = null;
         devId = null;
         MMKVUtil.removeData("userAccount");
+    }
+
+    private static GetAllGroupFromUserRequest mGetAllGroupFromUserRequest;
+
+    //获取用户绑定设备
+    public static void getBindDevInfo() {
+        if (mGetAllGroupFromUserRequest != null && !mGetAllGroupFromUserRequest.isFinish()) {
+            return;
+        }
+        mGetAllGroupFromUserRequest = new GetAllGroupFromUserRequest();
+        mGetAllGroupFromUserRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
+        mGetAllGroupFromUserRequest.setRequestListener(new RequestListener<Group>() {
+            @Override
+            public void onComplete() {
+
+            }
+
+            @Override
+            public void onSuccess(Group result) {
+                if (result != null) {
+                    if (result.mGroupItemList != null && !result.mGroupItemList.isEmpty()) {
+                        GroupItem groupItem = result.mGroupItemList.get(0);
+                        AccountManager.setGroupId(groupItem.groupId);
+                        AccountManager.setBindDevId(groupItem.groupName);
+                        EventBus.getDefault().post(result);
+                    }
+                } else {
+                    onError(null);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                ToastUtils.showToastShort("获取用户数据失败请重试");
+            }
+        });
+        HttpManager.addRequest(mGetAllGroupFromUserRequest);
     }
 
 

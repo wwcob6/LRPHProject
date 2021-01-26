@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.adapter.AddressItemAdapter;
 import com.app.model.AddressResult;
 import com.app.model.MessageEvent;

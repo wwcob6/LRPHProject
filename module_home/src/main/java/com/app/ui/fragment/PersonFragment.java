@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.Util;
-import com.app.model.PNUserInfo;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.app.ui.CloudAlbumActivity;
 import com.app.ui.FamilyCircleActivity;
 import com.app.ui.PrivateActivity;

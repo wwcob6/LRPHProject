@@ -24,7 +24,7 @@ import com.app.R;
 import com.app.R2;
 import com.app.http.VerifyCodeManager;
 import com.app.http.VerifyCodeManager1;
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.request.RegisterRequest;
 import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;

@@ -1,6 +1,6 @@
 package com.punuo.sys.app.message.badge;
 
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.app.message.model.CountModel;
 import com.punuo.sys.app.message.request.GetNewCommentCountRequest;
 import com.punuo.sys.app.message.request.GetNewLikeCountRequest;

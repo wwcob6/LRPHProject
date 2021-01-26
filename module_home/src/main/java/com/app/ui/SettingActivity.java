@@ -16,7 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.sip.SipInfo;
 import com.app.ui.address.AddressManagerActivity;
 import com.punuo.sip.AccountUtil;

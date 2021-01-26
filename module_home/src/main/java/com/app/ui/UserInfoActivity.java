@@ -31,10 +31,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.app.R;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.Util;
-import com.app.model.PNBaseModel;
-import com.app.model.PNUserInfo;
+import com.punuo.sys.sdk.model.PNBaseModel;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.app.model.UploadAvatarResult;
 import com.app.request.UpdateSexRequest;
 import com.app.request.UploadAvatarRequest;

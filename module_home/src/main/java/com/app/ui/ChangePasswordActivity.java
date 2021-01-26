@@ -15,7 +15,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.app.R;
 import com.app.R2;
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.request.ChangePwdRequest;
 import com.app.views.CleanEditText;
 import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;

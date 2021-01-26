@@ -1,4 +1,4 @@
-package com.app.model;
+package com.punuo.sys.sdk.model;
 
 import android.text.TextUtils;
 

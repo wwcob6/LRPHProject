@@ -12,7 +12,7 @@ import android.widget.PopupWindow;
 
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.friendCircleMain.domain.FirstMicroListDatasFirendcomment;
 import com.app.friendCircleMain.domain.FirstMicroListDatasFirendpraise;
 import com.app.friendCircleMain.domain.FirstMicroListDatasFirendpraiseType;

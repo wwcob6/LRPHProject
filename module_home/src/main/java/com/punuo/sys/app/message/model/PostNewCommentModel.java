@@ -1,6 +1,6 @@
 package com.punuo.sys.app.message.model;
 
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

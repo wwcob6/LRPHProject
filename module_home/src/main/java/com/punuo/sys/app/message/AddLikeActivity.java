@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.friendCircleMain.adapter.CommentAdapter;
 import com.app.model.MessageEvent;
 import com.punuo.sys.app.message.model.PostNewLikeModel;

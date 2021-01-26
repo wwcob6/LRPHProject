@@ -1,6 +1,6 @@
 package com.punuo.sys.app.member.request;
 
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.punuo.sys.sdk.httplib.BaseRequest;
 
 /**

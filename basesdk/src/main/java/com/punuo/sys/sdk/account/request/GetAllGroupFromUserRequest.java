@@ -1,6 +1,7 @@
-package com.app.request;
+package com.punuo.sys.sdk.account.request;
 
-import com.app.friendCircleMain.domain.Group;
+
+import com.punuo.sys.sdk.account.model.Group;
 import com.punuo.sys.sdk.httplib.BaseRequest;
 
 /**

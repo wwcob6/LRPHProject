@@ -23,18 +23,23 @@ import androidx.core.app.ActivityCompat;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.app.UserInfoManager;
-import com.app.model.PNBaseModel;
 import com.punuo.sys.app.member.request.BindDevRequest;
 import com.punuo.sys.app.member.request.IsDevBindRequest;
 import com.punuo.sys.app.member.request.JoinDevRequest;
 import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
+import com.punuo.sys.sdk.account.model.Group;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.activity.QRScanActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 @Route(path = HomeRouter.ROUTER_BIND_DEV_ACTIVITY)
 public class BindDevActivity extends BaseSwipeBackActivity implements View.OnClickListener {
@@ -78,6 +83,7 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
                     REQUEST_EXTERNAL_STORAGE
             );
         }
+        EventBus.getDefault().register(this);
     }
 
     // Storage Permissions
@@ -144,6 +150,9 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
                 if (result != null) {
                     if (result.isSuccess()) {
                         ToastUtils.showToast("绑定成功");
+                        AccountManager.getBindDevInfo();
+                    } else {
+                        ToastUtils.showToast(result.msg);
                     }
                 }
             }
@@ -171,6 +180,9 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
                 if (result != null) {
                     if (result.isSuccess()) {
                         ToastUtils.showToast("绑定成功");
+                        AccountManager.getBindDevInfo();
+                    } else {
+                        ToastUtils.showToast(result.msg);
                     }
                 }
             }
@@ -236,6 +248,18 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
 
         }
         dialog.dismiss();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Group event) {
+        ARouter.getInstance().build(HomeRouter.ROUTER_DEV_BIND_SUCCESS_ACTIVITY).navigation();
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
 

@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.R2;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.friendCircleMain.adapter.FriendCircleAdapter;
 import com.app.friendCircleMain.domain.FriendMicroList;
 import com.app.friendCircleMain.domain.FriendMicroListDatas;

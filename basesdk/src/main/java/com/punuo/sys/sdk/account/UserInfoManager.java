@@ -1,12 +1,11 @@
-package com.app;
+package com.punuo.sys.sdk.account;
 
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.app.model.PNUserInfo;
-import com.app.request.GetUserInfoRequest;
 import com.punuo.sys.sdk.PnApplication;
-import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
+import com.punuo.sys.sdk.account.request.GetUserInfoRequest;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.JsonUtil;
 import com.punuo.sys.sdk.httplib.RequestListener;

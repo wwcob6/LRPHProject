@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
-import com.app.UserInfoManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.friendCircleMain.event.FriendReLoadEvent;
 import com.app.friendcircle.FileUtils;
-import com.app.model.PNBaseModel;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.publish.adapter.GridImageAdapter;
 import com.app.publish.event.ChooseImageResultEvent;
 import com.app.publish.event.EditImageEvent;

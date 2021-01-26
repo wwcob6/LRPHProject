@@ -1,6 +1,7 @@
 package com.app.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.punuo.sys.sdk.model.PNBaseModel;
 
 /**
  * Created by han.chen.
