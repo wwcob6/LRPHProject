@@ -3,6 +3,7 @@ package com.punuo.sys.app.home;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
@@ -380,6 +381,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         } else {
             newMessageNotify.setVisibility(View.GONE);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NetworkInfo info) {
+        getUserId();
     }
 
     @Override

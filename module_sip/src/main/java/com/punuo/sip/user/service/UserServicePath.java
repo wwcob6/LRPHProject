@@ -14,4 +14,5 @@ public class UserServicePath {
     public static final String PATH_DEV_NOTIFY = "/user/dev_notify";
     public static final String PATH_SESSION_NOTIFY = "/user/session_notify";
     public static final String PATH_ERROR = "/user/error";
+    public static final String PATH_IMAGE_SHARE = "/user/image_share";
 }

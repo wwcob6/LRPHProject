@@ -185,13 +185,8 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
     }
 
     private void initViews() {
-        numInput2.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-        numInput2.setTransformationMethod(HideReturnsTransformationMethod
-                .getInstance());
+        numInput2.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
         numInput2.setText(AccountManager.getUserAccount());
-
-        passwordInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        passwordInput.setImeOptions(EditorInfo.IME_ACTION_GO);
         passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
         passwordInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE

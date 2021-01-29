@@ -1,8 +1,6 @@
 package com.app.friendCircleMain.adapter;
 
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.PopupMenu;
@@ -14,14 +12,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.app.R;
-import com.app.sip.BodyFactory;
-import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
-
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
-import org.zoolu.sip.message.Message;
 
 import java.util.ArrayList;
 
@@ -56,38 +47,6 @@ public class ImagePagerActivity extends BaseSwipeBackActivity {
 
 		ImagePagerAdapter mAdapter = new ImagePagerAdapter(getSupportFragmentManager(), urls);
 		mPager.setAdapter(mAdapter);
-		mPager.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-//                showPopMenu(v);
-				popup = new PopupMenu(ImagePagerActivity.this, v);
-				// 将R.menu.popup_menu菜单资源加载到popup菜单中
-				popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-				// 为popup菜单的菜单项单击事件绑定事件监听器
-				popup.setOnMenuItemClickListener(
-						new PopupMenu.OnMenuItemClickListener()
-						{
-							@Override
-							public boolean onMenuItemClick(MenuItem item)
-							{
-								if (item.getItemId() == R.id.share) {//发送图片url分享图片
-									String devId = SipInfo.paddevId;
-									String devName = "pad";
-									final String devType2 = "2";
-									SipURL sipURL = new SipURL(devId, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-									SipInfo.toDev = new NameAddress(devName, sipURL);
-									Message query = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-											SipInfo.user_from, BodyFactory.createImageShareNotify(EXTRA_IMAGE_URLS));
-									SipInfo.sipUser.sendMessage(query);
-								}
-								return true;
-							}
-						});
-				popup.show();
-
-				return false;
-			}
-		});
 		indicator = (TextView) findViewById(R.id.indicator);
 
 		CharSequence text = getString(R.string.viewpager_indicator, 1, mPager.getAdapter().getCount());
@@ -124,7 +83,7 @@ public class ImagePagerActivity extends BaseSwipeBackActivity {
 		outState.putInt(STATE_POSITION, mPager.getCurrentItem());
 	}
 
-	private class ImagePagerAdapter extends FragmentStatePagerAdapter {
+	private static class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
 		public ArrayList<String> fileList;
 

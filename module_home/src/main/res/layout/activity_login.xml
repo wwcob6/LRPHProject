@@ -49,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="49dp"
             android:layout_gravity="center"
+            android:imeOptions="actionNext"
             android:gravity="center_vertical"
             android:hint="输入手机号码"
             android:textSize="16sp" />
@@ -67,9 +68,9 @@
             <com.app.views.CleanEditText
                 android:id="@+id/password_input"
                 style="@style/login_edit_style2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:imeOptions="actionDone|actionGo"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/showpassword"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:hint="输入密码"

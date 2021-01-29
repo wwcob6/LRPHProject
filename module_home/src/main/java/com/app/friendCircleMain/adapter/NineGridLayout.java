@@ -12,13 +12,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.app.R;
-import com.app.sip.BodyFactory;
-import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
-
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
-import org.zoolu.sip.message.Message;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipImageShareRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,14 +212,8 @@ public abstract class NineGridLayout extends ViewGroup {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
                                 if (item.getItemId() == R.id.share) {//发送图片url分享图片
-                                    String devId = SipInfo.paddevId;
-                                    String devName = "pad";
-                                    final String devType2 = "2";
-                                    SipURL sipURL = new SipURL(devId, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-                                    SipInfo.toDev = new NameAddress(devName, sipURL);
-                                    Message query = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                                            SipInfo.user_from, BodyFactory.createImageShareNotify(url));
-                                    SipInfo.sipUser.sendMessage(query);
+                                    SipImageShareRequest request = new SipImageShareRequest(url);
+                                    SipUserManager.getInstance().addRequest(request);
                                 }
                                 return true;
                             }

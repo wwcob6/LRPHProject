@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +19,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.friendCircleMain.adapter.FriendCircleAdapter;
 import com.app.friendCircleMain.domain.FriendMicroList;
 import com.app.friendCircleMain.domain.FriendMicroListDatas;
 import com.app.friendCircleMain.domain.FriendsMicro;
 import com.app.friendCircleMain.event.FriendReLoadEvent;
 import com.app.friendCircleMain.event.FriendRefreshEvent;
-import com.app.model.Constant;
 import com.app.publish.PublishedActivity;
 import com.app.request.GetPostListFromGroupRequest;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshRecyclerView;
+import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
@@ -47,10 +48,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.app.model.Constant.devid1;
-
 public class FamilyCircleActivity extends BaseSwipeBackActivity {
-    private static final String TAG = "MicroActivity";
+    private static final String TAG = "FamilyCircleActivity";
 
     @BindView(R2.id.back)
     ImageView ivBack7;
@@ -86,7 +85,7 @@ public class FamilyCircleActivity extends BaseSwipeBackActivity {
         mGetPostListFromGroupRequest = new GetPostListFromGroupRequest();
         mGetPostListFromGroupRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
         mGetPostListFromGroupRequest.addUrlParam("currentPage", page);
-        mGetPostListFromGroupRequest.addUrlParam("groupid", Constant.groupid);
+        mGetPostListFromGroupRequest.addUrlParam("groupid", AccountManager.getGroupId());
         mGetPostListFromGroupRequest.setRequestListener(new RequestListener<FriendsMicro>() {
             @Override
             public void onComplete() {
@@ -169,7 +168,7 @@ public class FamilyCircleActivity extends BaseSwipeBackActivity {
             }
         });
         recyclerView.setAdapter(mFriendCircleAdapter);
-        if ((devid1 == null) || ("".equals(devid1))) {
+        if (TextUtils.isEmpty(AccountManager.getBindDevId())) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this)
                     .setTitle("请先绑定设备")
                     .setCancelable(false)
@@ -180,7 +179,6 @@ public class FamilyCircleActivity extends BaseSwipeBackActivity {
                         }
                     });
             dialog.show();
-
         } else {
             refresh();
         }

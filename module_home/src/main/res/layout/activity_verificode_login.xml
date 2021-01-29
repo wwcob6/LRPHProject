@@ -55,6 +55,7 @@
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:hint="输入手机号码"
+            android:imeOptions="actionNext"
             android:textSize="16sp" />
 
         <View
@@ -75,6 +76,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
+                android:imeOptions="actionDone"
                 android:hint="输入验证码"
                 android:textSize="16sp" />
 

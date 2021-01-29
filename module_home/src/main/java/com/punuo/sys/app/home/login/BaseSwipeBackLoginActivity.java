@@ -127,7 +127,7 @@ public abstract class BaseSwipeBackLoginActivity extends BaseSwipeBackActivity {
         targetView.setText(String.format(
                 getResources().getString(R.string.count_down), recLen-- + ""));
         targetView.setClickable(false);
-        targetView.setTextColor(Color.parseColor("#f3f4f8"));
+        targetView.setTextColor(Color.parseColor("#999999"));
         targetView.setBackgroundColor(Color.parseColor("#ffffff"));
 
     }

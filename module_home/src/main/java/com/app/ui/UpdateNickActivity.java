@@ -11,22 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.R;
-import com.punuo.sys.sdk.account.UserInfoManager;
-import com.punuo.sys.sdk.model.PNBaseModel;
 import com.app.request.UpdateNickRequest;
-import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
 import com.app.views.CleanEditText;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipListUpdateRequest;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.punuo.sys.sdk.util.ToastUtils;
-
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
-
-import static com.app.sip.SipInfo.devName;
 
 
 public class UpdateNickActivity extends BaseActivity {
@@ -90,12 +85,8 @@ public class UpdateNickActivity extends BaseActivity {
                     ToastUtils.showToast("更新成功");
                     UserInfoManager.getInstance().refreshUserInfo();
                     //通知平板更新昵称
-                    String devId = SipInfo.paddevId;
-                    SipURL sipURL = new SipURL(devId, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-                    SipInfo.toDev = new NameAddress(devName, sipURL);
-                    org.zoolu.sip.message.Message query = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                            SipInfo.user_from, BodyFactory.createListUpdate("addsuccess"));
-                    SipInfo.sipUser.sendMessage(query);
+                    SipListUpdateRequest request = new SipListUpdateRequest();
+                    SipUserManager.getInstance().addRequest(request);
                     finish();
                 }
             }
