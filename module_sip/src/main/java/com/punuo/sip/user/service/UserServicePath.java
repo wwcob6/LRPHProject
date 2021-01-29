@@ -15,4 +15,6 @@ public class UserServicePath {
     public static final String PATH_SESSION_NOTIFY = "/user/session_notify";
     public static final String PATH_ERROR = "/user/error";
     public static final String PATH_IMAGE_SHARE = "/user/image_share";
+    public static final String PATH_IS_MONITOR = "/user/is_monitor";
+    public static final String PATH_QUERY = "/user/query_response";
 }

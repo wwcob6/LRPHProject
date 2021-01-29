@@ -36,7 +36,31 @@ public class H264Config {
     public static byte[] magic;
 
     public static void initQueryData(QueryResponse queryData) {
+        switch (queryData.resolution) {
+            case "CIF":
+                H264Config.VIDEO_WIDTH = 352;
+                H264Config.VIDEO_HEIGHT = 288;
+                H264Config.VIDEO_TYPE = 2;
 
+                break;
+            case "QCIF_MOBILE_SOFT":
+                H264Config.VIDEO_WIDTH = 176;
+                H264Config.VIDEO_HEIGHT = 144;
+                H264Config.VIDEO_TYPE = 3;
+                break;
+            case "MOBILE_S6":
+                H264Config.VIDEO_WIDTH = 320;
+                H264Config.VIDEO_HEIGHT = 240;
+                H264Config.VIDEO_TYPE = 4;
+                break;
+            case "MOBILE_S9":
+                H264Config.VIDEO_WIDTH = 320;
+                H264Config.VIDEO_HEIGHT = 240;
+                H264Config.VIDEO_TYPE = 5;
+                break;
+            default:
+                break;
+        }
     }
 
     public static void initMediaData(MediaData mediaData) {

@@ -41,6 +41,7 @@ public class SipService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG, "SipService 开启");
         initializeManager();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_INCOMING_CALL);
@@ -51,7 +52,7 @@ public class SipService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("SipService", "destroy");
+        Log.d(TAG, "destroy");
         unregister();
         closeLocalProfile();
         if (callReceiver != null) {
@@ -192,7 +193,7 @@ public class SipService extends Service {
             closeLocalProfile();
         }
         try {
-            SipProfile.Builder builder = new SipProfile.Builder(SipInfo.userPhoneNumber, SipInfo.serverIp);
+            SipProfile.Builder builder = new SipProfile.Builder("7001", SipInfo.serverIp);
             builder.setPort(5000);
             localSipProfile = builder.build();
             Intent i = new Intent();
@@ -204,6 +205,7 @@ public class SipService extends Service {
                 public void onRegistrationFailed(String localProfileUri, int errorCode,
                                                  String errorMessage) {
                     Log.d(TAG, "注册失败");
+                    Log.d(TAG, localProfileUri);
                     Log.d(TAG, errorCode + "");
                     Log.d(TAG, errorMessage);
                     registrated = false;

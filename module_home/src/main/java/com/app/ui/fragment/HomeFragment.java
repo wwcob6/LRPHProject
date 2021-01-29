@@ -1,12 +1,9 @@
 package com.app.ui.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +19,8 @@ import com.app.sip.SipMessageFactory;
 import com.app.ui.FamilyCircleActivity;
 import com.app.ui.FriendCallActivity;
 import com.app.ui.VideoDial;
-import com.app.ui.VideoPlay;
-import com.app.video.RtpVideo;
-import com.app.video.SendActivePacket;
-import com.app.video.VideoInfo;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipIsMonitorRequest;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.IntentUtil;
@@ -34,11 +29,8 @@ import com.punuo.sys.sdk.util.StatusBarUtil;
 import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.address.SipURL;
 
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.app.model.Constant.devid1;
 
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
@@ -91,104 +83,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         if (id == R.id.iv_camera) {
             startActivity(new Intent(getActivity(), FamilyCircleActivity.class));
         } else if (id == R.id.browse) {
-            if ((devid1 == null) || ("".equals(devid1))) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity())
-                        .setTitle("请先绑定设备")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        });
-                dialog.show();
-
-            } else {
+            if (checkDevBind()) {
                 SipInfo.single = true;
-                String devId = SipInfo.paddevId;
-                devId = devId.substring(0, devId.length() - 4).concat("0160");//设备id后4位替换成0160
-                String devName = "pad";
-                final String devType = "2";
-                SipURL sipURL = new SipURL(devId, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-                SipInfo.toDev = new NameAddress(devName, sipURL);
-                org.zoolu.sip.message.Message response = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                        SipInfo.user_from, BodyFactory.createStartMonitor(true, SipInfo.devId, SipInfo.userId));
-                SipInfo.sipUser.sendMessage(response);
-                SipInfo.queryResponse = false;
-                SipInfo.inviteResponse = false;
-                showLoadingDialog();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            org.zoolu.sip.message.Message query = SipMessageFactory.createOptionsRequest(SipInfo.sipUser, SipInfo.toDev,
-                                    SipInfo.user_from, BodyFactory.createQueryBody(devType));
-                            outer:
-                            for (int i = 0; i < 3; i++) {
-                                SipInfo.sipUser.sendMessage(query);
-                                for (int j = 0; j < 20; j++) {
-                                    sleep(100);
-                                    if (SipInfo.queryResponse) {
-                                        break outer;
-                                    }
-                                }
-                                if (SipInfo.queryResponse) {
-                                    break;
-                                }
-                            }
-                            if (SipInfo.queryResponse) {
-                                org.zoolu.sip.message.Message invite = SipMessageFactory.createInviteRequest(SipInfo.sipUser,
-                                        SipInfo.toDev, SipInfo.user_from, BodyFactory.createMediaBody(VideoInfo.resultion, "H.264", "G.711", devType));
-                                outer2:
-                                for (int i = 0; i < 3; i++) {
-                                    SipInfo.sipUser.sendMessage(invite);
-                                    for (int j = 0; j < 20; j++) {
-                                        sleep(100);
-                                        if (SipInfo.inviteResponse) {
-                                            break outer2;
-                                        }
-                                    }
-                                    if (SipInfo.inviteResponse) {
-                                        break;
-                                    }
-                                }
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } finally {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dismissLoadingDialog();
-                                }
-                            });
-                            if (SipInfo.queryResponse && SipInfo.inviteResponse) {
-                                Log.i("DevAdapter", "视频请求成功");
-                                SipInfo.decoding = true;
-                                try {
-                                    VideoInfo.rtpVideo = new RtpVideo(VideoInfo.rtpIp, VideoInfo.rtpPort);
-                                    VideoInfo.sendActivePacket = new SendActivePacket();
-                                    VideoInfo.sendActivePacket.startThread();
-                                    getActivity().startActivity(new Intent(getActivity(), VideoPlay.class));
-                                } catch (SocketException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                Log.i("DevAdapter", "视频请求失败");
-                                handlervideo.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        new AlertDialog.Builder(getActivity())
-                                                .setTitle("视频请求失败！")
-                                                .setMessage("请重新尝试")
-                                                .setPositiveButton("确定", null).show();
-
-                                    }
-                                });
-                            }
-                        }
-                    }
-                }.start();
+                SipIsMonitorRequest request = new SipIsMonitorRequest(true);
+                SipUserManager.getInstance().addRequest(request);
             }
         } else if (id == R.id.chat) {
             IntentUtil.jumpActivity(getActivity(), FriendCallActivity.class);

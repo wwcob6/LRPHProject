@@ -2,13 +2,17 @@ package com.punuo.sys.sdk.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.sdk.util.ToastUtils;
 import com.punuo.sys.sdk.view.PNLoadingDialog;
 
 /**
@@ -70,5 +74,13 @@ public class BaseFragment extends Fragment {
                 mLoadingDialog.dismiss();
             }
         }
+    }
+
+    public boolean checkDevBind() {
+        if (TextUtils.isEmpty(AccountManager.getBindDevId())) {
+            ToastUtils.showToast("请先绑定设备");
+            return false;
+        }
+        return true;
     }
 }

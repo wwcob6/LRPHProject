@@ -31,20 +31,19 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.app.R;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.Util;
-import com.punuo.sys.sdk.model.PNBaseModel;
-import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.app.model.UploadAvatarResult;
 import com.app.request.UpdateSexRequest;
 import com.app.request.UploadAvatarRequest;
-import com.app.sip.BodyFactory;
-import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
 import com.bumptech.glide.Glide;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipListUpdateRequest;
+import com.punuo.sys.sdk.account.UserInfoManager;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.model.PNBaseModel;
 import com.punuo.sys.sdk.util.ProviderUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 import com.punuo.sys.sdk.util.ViewUtil;
@@ -52,16 +51,12 @@ import com.punuo.sys.sdk.util.ViewUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.app.sip.SipInfo.devName;
 
 @SuppressLint("SdCardPath")
 public class UserInfoActivity extends BaseSwipeBackActivity implements View.OnClickListener {
@@ -381,14 +376,9 @@ public class UserInfoActivity extends BaseSwipeBackActivity implements View.OnCl
                     Uri uri = Uri.fromFile(newfile);
                     intent.setData(uri);
                     sendBroadcast(intent);
-
                     ToastUtils.showToast("头像上传成功");
-                    String devId = SipInfo.paddevId;
-                    SipURL sipURL = new SipURL(devId, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-                    SipInfo.toDev = new NameAddress(devName, sipURL);
-                    org.zoolu.sip.message.Message query = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                            SipInfo.user_from, BodyFactory.createListUpdate("addsuccess"));
-                    SipInfo.sipUser.sendMessage(query);
+                    SipListUpdateRequest request = new SipListUpdateRequest();
+                    SipUserManager.getInstance().addRequest(request);
                     finish();
                 } else {
                     ToastUtils.showToast("头像上传失败");

@@ -97,10 +97,6 @@ public class SipInfo {
     public static SipUser sipUser;
     //设备sip对象
     public static SipDev sipDev;
-    //用户心跳保活
-    public static KeepAlive keepUserAlive;
-    //设备心跳保活
-    public static KeepAlive keepDevAlive;
     //用户IP电话号码
     public static String userPhoneNumber;
     //一次加密种子

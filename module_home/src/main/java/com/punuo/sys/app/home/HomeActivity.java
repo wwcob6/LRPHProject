@@ -15,9 +15,9 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.model.Constant;
 import com.app.service.NewsService;
+import com.app.service.SipService;
 import com.app.sip.SipInfo;
 import com.app.ui.fragment.HomeFragment;
 import com.app.ui.fragment.MyFragmentManager;
@@ -43,6 +43,7 @@ import com.punuo.sys.app.message.MessageFragment;
 import com.punuo.sys.app.message.badge.BadgeHelper;
 import com.punuo.sys.app.message.badge.MessageBadgeCnt;
 import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.fragment.WebViewFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
@@ -135,7 +136,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private void init() {
         initTabBars();
         //启动语音电话服务
-        //startService(new Intent(HomeActivity.this, SipService.class));
+        startService(new Intent(HomeActivity.this, SipService.class));
         //启动监听服务
         startService(new Intent(this, NewsService.class));
     }
@@ -168,11 +169,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         SipInfo.userLogined = false;
         SipInfo.devLogined = false;
         //停止语音电话服务
-        //stopService(new Intent(HomeActivity.this, SipService.class));
+        stopService(new Intent(HomeActivity.this, SipService.class));
         //关闭监听服务
         stopService(new Intent(HomeActivity.this, NewsService.class));
-        //停止PPT监听服务
-//        stopService(new Intent(this, PTTService.class));
         //关闭线程池
         running = false;
     }
