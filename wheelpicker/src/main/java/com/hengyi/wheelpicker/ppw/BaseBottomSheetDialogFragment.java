@@ -2,8 +2,8 @@ package com.hengyi.wheelpicker.ppw;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
-import android.widget.PopupWindow;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.hengyi.wheelpicker.model.CityModel;
 import com.hengyi.wheelpicker.model.DistrictModel;
 import com.hengyi.wheelpicker.model.ProvinceModel;
@@ -21,7 +21,7 @@ import javax.xml.parsers.SAXParserFactory;
  * Created by Administrator on 2018/1/3.
  */
 
-public class BasePopupWindow extends PopupWindow {
+public class BaseBottomSheetDialogFragment extends BottomSheetDialogFragment {
     /**
      * 所有省
      */

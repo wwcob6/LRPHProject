@@ -1,12 +1,16 @@
 package com.app.model;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by maojianhui on 2019/3/20.
  */
 
-public class AddressItem {
+public class AddressItem implements Parcelable {
     @SerializedName("address_id")
     public String addressId;
     @SerializedName("userAddress")
@@ -22,7 +26,45 @@ public class AddressItem {
     @SerializedName("isDefault")
     private int isDefault;
 
-    public boolean isDefult() {
+    protected AddressItem(Parcel in) {
+        addressId = in.readString();
+        userAddress = in.readString();
+        detailAddress = in.readString();
+        userName = in.readString();
+        userPhoneNum = in.readString();
+        position = in.readInt();
+        isDefault = in.readInt();
+    }
+
+    public static final Creator<AddressItem> CREATOR = new Creator<AddressItem>() {
+        @Override
+        public AddressItem createFromParcel(Parcel in) {
+            return new AddressItem(in);
+        }
+
+        @Override
+        public AddressItem[] newArray(int size) {
+            return new AddressItem[size];
+        }
+    };
+
+    public boolean isDefault() {
         return isDefault == 1;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(addressId);
+        dest.writeString(userAddress);
+        dest.writeString(detailAddress);
+        dest.writeString(userName);
+        dest.writeString(userPhoneNum);
+        dest.writeInt(position);
+        dest.writeInt(isDefault);
     }
 }

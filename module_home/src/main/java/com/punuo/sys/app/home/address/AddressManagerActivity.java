@@ -1,6 +1,5 @@
 package com.punuo.sys.app.home.address;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,17 +12,18 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.adapter.AddressItemAdapter;
 import com.app.model.AddressResult;
-import com.app.model.MessageEvent;
 import com.app.request.GetAddressListRequest;
 import com.app.sip.SipInfo;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.router.HomeRouter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -124,8 +124,9 @@ public class AddressManagerActivity extends BaseSwipeBackActivity {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_newAddress) {
-            SipInfo.isEditor = false;
-            startActivity(new Intent(this, AddressDetailActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_ADDRESS_DETAIL_ACTIVITY)
+                    .withBoolean("isEdit", false)
+                    .navigation();
         } else if (id == R.id.back) {
             scrollToFinishActivity();
         }
@@ -138,12 +139,7 @@ public class AddressManagerActivity extends BaseSwipeBackActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
-        if (event.getMessage().equals("编辑")) {
-            SipInfo.isEditor = true;
-            startActivity(new Intent(this, AddressDetailActivity.class));
-        } else if (event.getMessage().equals("刷新")) {
-            getAddressList();
-        }
+    public void onMessageEvent(AddressUpdateEvent event) {
+        getAddressList();
     }
 }

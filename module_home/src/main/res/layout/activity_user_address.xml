@@ -17,13 +17,14 @@
         android:id="@+id/Rl_address"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:background="@color/white">
 
         <TextView
             android:id="@+id/tv_addressSelect"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginStart="15dp"
             android:gravity="center_vertical"
             android:hint="省份、城市、区县"
             android:textSize="14sp" />
@@ -36,6 +37,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="55dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:background="@color/white">
 
         <com.app.views.CleanEditText
@@ -43,7 +46,6 @@
             style="@style/login_edit_style2"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:hint="详细地址"
             android:textSize="14sp" />
@@ -57,6 +59,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="55dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:background="@color/white">
 
         <com.app.views.CleanEditText
@@ -64,7 +68,6 @@
             style="@style/login_edit_style2"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:hint="姓名"
             android:textSize="14sp" />
@@ -78,6 +81,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="55dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:background="@color/white">
 
         <com.app.views.CleanEditText
@@ -85,7 +90,6 @@
             style="@style/login_edit_style2"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginStart="10dp"
             android:gravity="center_vertical"
             android:hint="手机号码"
             android:textSize="14sp" />
@@ -126,7 +130,9 @@
 
     <Button
         android:id="@+id/bt_addressSave"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_height="44dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"

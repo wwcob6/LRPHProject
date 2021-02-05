@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,23 +15,25 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
-import com.app.model.MessageEvent;
-import com.punuo.sys.sdk.model.PNBaseModel;
+import com.app.model.AddressItem;
 import com.app.request.AddAddressRequest;
 import com.app.request.DeleteAddressRequest;
 import com.app.request.UpdateAddressRequest;
-import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;
 import com.hengyi.wheelpicker.listener.OnCityWheelComfirmListener;
-import com.hengyi.wheelpicker.ppw.CityWheelPickerPopupWindow;
+import com.hengyi.wheelpicker.ppw.CityWheelPickerBottomSheetDialogFragment;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.model.PNBaseModel;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.RegexUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
 
@@ -42,9 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.app.sip.SipInfo.addressList;
-
-
+@Route(path = HomeRouter.ROUTER_ADDRESS_DETAIL_ACTIVITY)
 public class AddressDetailActivity extends BaseSwipeBackActivity {
     @BindView(R2.id.back)
     ImageView back;
@@ -68,28 +67,36 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
     RelativeLayout rlAddressDelete;
     private boolean isDefault;
 
+    @Autowired(name = "isEdit")
+    boolean isEdit;
+
+    @Autowired(name = "addressItem")
+    AddressItem mAddressItem;
+
+    private String userName;
+    private String userPhoneNum;
+    private String userAddress;
+    private String detailAddress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_address);
         ButterKnife.bind(this);
+        ARouter.getInstance().inject(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.white));
         }
-        if (SipInfo.isEditor) {
+        if (isEdit) {
             title.setText("编辑地址");
-            etUserName.setText(addressList.get(SipInfo.listPosition).userName);
-            etUserPhoneNum.setText(addressList.get(SipInfo.listPosition).userPhoneNum);
-            etDetailAddress.setText(addressList.get(SipInfo.listPosition).detailAddress);
-            tvAddressSelect.setText(addressList.get(SipInfo.listPosition).userAddress);
-            if (SipInfo.isDefault == 1) {
-                isDefault = true;
-            } else if (SipInfo.isDefault == 2) {
-                isDefault = false;
-            }
+            etUserName.setText(mAddressItem.userName);
+            etUserPhoneNum.setText(mAddressItem.userPhoneNum);
+            etDetailAddress.setText(mAddressItem.detailAddress);
+            tvAddressSelect.setText(mAddressItem.userAddress);
+            isDefault = mAddressItem.isDefault();
             box1.setChecked(isDefault);
         } else {
             title.setText("新增地址");
@@ -98,28 +105,22 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
         box1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    SipInfo.isDefault = 1;
-                    Log.d("是否默认", SipInfo.isDefault + "-----");
-                } else
-                    SipInfo.isDefault = 2;
-                Log.d("是否默认", SipInfo.isDefault + "-----");
+                isDefault = isChecked;
             }
         });
 
-        final CityWheelPickerPopupWindow wheelPickerPopupWindow = new CityWheelPickerPopupWindow(this);
+        final CityWheelPickerBottomSheetDialogFragment wheelPickerPopupWindow = new CityWheelPickerBottomSheetDialogFragment();
         wheelPickerPopupWindow.setListener(new OnCityWheelComfirmListener() {
             @Override
             public void onSelected(String Province, String City, String District, String PostCode) {
                 tvAddressSelect.setText(Province + " " + City + " " + District);
-                Toast.makeText(getApplicationContext(), Province + City + District, Toast.LENGTH_LONG).show();
             }
         });
 
         RlAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wheelPickerPopupWindow.show();
+                wheelPickerPopupWindow.show(getSupportFragmentManager(), "CityWheelPickerBottomSheetDialogFragment");
             }
         });
     }
@@ -128,16 +129,17 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
             R2.id.back, R2.id.bt_addressSave, R2.id.rl_addressDelete})
     public void onClick(View view) {
         int id = view.getId();
+        userName = etUserName.getText().toString();
+        userPhoneNum = etUserPhoneNum.getText().toString();
+        userAddress = tvAddressSelect.getText().toString();
+        detailAddress = etDetailAddress.getText().toString();
         if (id == R.id.et_detailAddress) {
+            //nothing
         } else if (id == R.id.bt_addressSave) {
-            SipInfo.userName = etUserName.getText().toString();
-            SipInfo.userPhoneNum = etUserPhoneNum.getText().toString();
-            SipInfo.userAddress = tvAddressSelect.getText().toString();
-            SipInfo.detailAddress = etDetailAddress.getText().toString();
-            if (!checkInput(SipInfo.userAddress, SipInfo.detailAddress, SipInfo.userName, SipInfo.userPhoneNum)) {
+            if (!checkInput(userAddress, detailAddress, userName, userPhoneNum)) {
                 return;
             }
-            if (SipInfo.isEditor) {
+            if (isEdit) {
                 updateAddress();
             } else {
                 saveAddress();
@@ -171,7 +173,7 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
         }
         mDeleteAddressRequest = new DeleteAddressRequest();
         mDeleteAddressRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mDeleteAddressRequest.addUrlParam("position", SipInfo.addressPosition);
+        mDeleteAddressRequest.addUrlParam("position", mAddressItem.position);
         mDeleteAddressRequest.setRequestListener(new RequestListener<PNBaseModel>() {
             @Override
             public void onComplete() {
@@ -184,7 +186,7 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
                     return;
                 }
                 if (result.isSuccess()) {
-                    EventBus.getDefault().post(new MessageEvent("刷新"));
+                    EventBus.getDefault().post(new AddressUpdateEvent());
                     finish();
                 } else {
                     ToastUtils.showToast("删除失败，请重试");
@@ -207,12 +209,12 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
         }
         mUpdateAddressRequest = new UpdateAddressRequest();
         mUpdateAddressRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mUpdateAddressRequest.addUrlParam("userAddress", SipInfo.userAddress);
-        mUpdateAddressRequest.addUrlParam("detailAddress", SipInfo.detailAddress);
-        mUpdateAddressRequest.addUrlParam("userName", SipInfo.userName);
-        mUpdateAddressRequest.addUrlParam("userPhoneNum", SipInfo.userPhoneNum);
-        mUpdateAddressRequest.addUrlParam("position", SipInfo.addressPosition);
-        mUpdateAddressRequest.addUrlParam("isDefault", SipInfo.isDefault);
+        mUpdateAddressRequest.addUrlParam("userAddress", userAddress);
+        mUpdateAddressRequest.addUrlParam("detailAddress", detailAddress);
+        mUpdateAddressRequest.addUrlParam("userName", userName);
+        mUpdateAddressRequest.addUrlParam("userPhoneNum", userPhoneNum);
+        mUpdateAddressRequest.addUrlParam("position", mAddressItem.position);
+        mUpdateAddressRequest.addUrlParam("isDefault", isDefault ? 1 : 2);
         mUpdateAddressRequest.setRequestListener(new RequestListener<PNBaseModel>() {
             @Override
             public void onComplete() {
@@ -225,7 +227,7 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
                     return;
                 }
                 if (result.isSuccess()) {
-                    EventBus.getDefault().post(new MessageEvent("刷新"));
+                    EventBus.getDefault().post(new AddressUpdateEvent());
                     finish();
                 } else {
                     ToastUtils.showToast("更新失败，请重试");
@@ -248,11 +250,11 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
         }
         mAddAddressRequest = new AddAddressRequest();
         mAddAddressRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mAddAddressRequest.addUrlParam("userAddress", SipInfo.userAddress);
-        mAddAddressRequest.addUrlParam("detailAddress", SipInfo.detailAddress);
-        mAddAddressRequest.addUrlParam("userName", SipInfo.userName);
-        mAddAddressRequest.addUrlParam("userPhoneNum", SipInfo.userPhoneNum);
-        mAddAddressRequest.addUrlParam("isDefault", SipInfo.isDefault);
+        mAddAddressRequest.addUrlParam("userAddress", userAddress);
+        mAddAddressRequest.addUrlParam("detailAddress", detailAddress);
+        mAddAddressRequest.addUrlParam("userName", userName);
+        mAddAddressRequest.addUrlParam("userPhoneNum", userPhoneNum);
+        mAddAddressRequest.addUrlParam("isDefault", isDefault ? 1 : 2);
         mAddAddressRequest.setRequestListener(new RequestListener<PNBaseModel>() {
             @Override
             public void onComplete() {
@@ -265,7 +267,7 @@ public class AddressDetailActivity extends BaseSwipeBackActivity {
                     return;
                 }
                 if (result.isSuccess()) {
-                    EventBus.getDefault().post(new MessageEvent("刷新"));
+                    EventBus.getDefault().post(new AddressUpdateEvent());
                     finish();
                 } else {
                     ToastUtils.showToast("保存失败，请重试");

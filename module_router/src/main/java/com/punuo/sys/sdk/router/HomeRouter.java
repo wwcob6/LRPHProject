@@ -35,4 +35,5 @@ public class HomeRouter {
     public static final String ROUTER_VIDEO_CONNECT = PREFIX + "/VideoConnect";
 
     public static final String ROUTER_CONTRACT_MANAGER_ACTIVITY = PREFIX + "/ContractManagerActivity";
+    public static final String ROUTER_ADDRESS_DETAIL_ACTIVITY = PREFIX + "/AddressDetailActivity";
 }
