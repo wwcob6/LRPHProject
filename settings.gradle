@@ -5,6 +5,7 @@ include ':module_sip'
 include ':module_home'
 include ':wheelpicker'
 include ':basesdk'
+include ':linphonesdk'
 apply from: './base.gradle'
 gradle.ext {
     sdk = sdk

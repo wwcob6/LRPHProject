@@ -21,19 +21,20 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.model.MessageEvent;
-import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
+import com.punuo.sip.dev.H264ConfigDev;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipCallReplyRequest;
 import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.sdk.router.HomeRouter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.address.SipURL;
-import org.zoolu.sip.message.Message;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -41,12 +42,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static com.app.sip.SipInfo.devName;
-
 /**
  * Created by maojianhui on 2018/6/27.
  */
-
+@Route(path = HomeRouter.ROUTER_VIDEO_CONNECT)
 public class VideoConnect extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "VideoConnect";
     private SharedPreferences.Editor editor;
@@ -144,17 +143,13 @@ public class VideoConnect extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.bt_accept) {
-            SipInfo.toDev = new NameAddress(devName, sipURL);
-            Message response1 = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                    SipInfo.user_from, BodyFactory.createCallReply("agree"));
-            SipInfo.sipUser.sendMessage(response1);
+            SipCallReplyRequest replyRequest = new SipCallReplyRequest("agree", H264ConfigDev.targetDevId);
+            SipUserManager.getInstance().addRequest(replyRequest);
         } else if (id == R.id.bt_refuse) {
-            SipInfo.toDev = new NameAddress(devName, sipURL);
-            Message response2 = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                    SipInfo.user_from, BodyFactory.createCallReply("refuse"));
-            SipInfo.sipUser.sendMessage(response2);
-            finish();
+            SipCallReplyRequest replyRequest = new SipCallReplyRequest("refuse", H264ConfigDev.targetDevId);
+            SipUserManager.getInstance().addRequest(replyRequest);
         }
+        finish();
     }
 
     private void showPhotoDialog() {

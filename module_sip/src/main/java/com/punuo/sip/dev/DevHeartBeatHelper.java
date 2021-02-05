@@ -1,6 +1,7 @@
 package com.punuo.sip.dev;
 
 import com.punuo.sip.dev.request.SipDevHeartBeatRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 
 /**
  * Created by han.chen.
@@ -12,9 +13,9 @@ public class DevHeartBeatHelper {
     public static final int MSG_HEART_BEAR_VALUE = 0x0002;
 
     public static void heartBeat() {
-//        if (!AccountManager.isLoginned()) {
-//            return;
-//        }
+        if (!AccountManager.isLogin()) {
+            return;
+        }
         SipDevHeartBeatRequest heartBeatRequest = new SipDevHeartBeatRequest();
         SipDevManager.getInstance().addRequest(heartBeatRequest);
     }

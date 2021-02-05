@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -16,20 +18,27 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.model.Constant;
-import com.app.service.NewsService;
-import com.app.service.SipService;
 import com.app.sip.SipInfo;
+import com.app.ui.VideoCallActivity;
+import com.app.ui.VideoPlay;
 import com.app.ui.fragment.HomeFragment;
 import com.app.ui.fragment.MyFragmentManager;
 import com.app.ui.fragment.PersonFragment;
+import com.app.video.RtpVideo;
+import com.app.video.SendActivePacket;
+import com.app.video.VideoInfo;
 import com.punuo.sip.AccountUtil;
+import com.punuo.sip.H264Config;
 import com.punuo.sip.SipConfig;
 import com.punuo.sip.dev.DevHeartBeatHelper;
 import com.punuo.sip.dev.SipDevManager;
 import com.punuo.sip.dev.event.DevLoginFailEvent;
+import com.punuo.sip.dev.event.MonitorEvent;
 import com.punuo.sip.dev.event.ReRegisterDevEvent;
 import com.punuo.sip.dev.model.LoginResponseDev;
+import com.punuo.sip.dev.model.OperationData;
 import com.punuo.sip.dev.request.SipDevRegisterRequest;
+import com.punuo.sip.user.H264ConfigUser;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.UserHeartBeatHelper;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
@@ -39,21 +48,26 @@ import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorDev;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorUser;
+import com.punuo.sys.app.linphone.LinphoneHelper;
 import com.punuo.sys.app.message.MessageFragment;
 import com.punuo.sys.app.message.badge.BadgeHelper;
 import com.punuo.sys.app.message.badge.MessageBadgeCnt;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.sdk.app.AppWakeUpEvent;
 import com.punuo.sys.sdk.fragment.WebViewFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.update.AutoUpdateService;
+import com.punuo.sys.sdk.util.DeviceHelper;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.net.SocketException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -136,9 +150,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     private void init() {
         initTabBars();
         //启动语音电话服务
-        startService(new Intent(HomeActivity.this, SipService.class));
+        startLinphone();
         //启动监听服务
-        startService(new Intent(this, NewsService.class));
+//        startService(new Intent(this, NewsService.class));
+    }
+
+    private void startLinphone() {
+        Log.i(TAG, "startLinphone: ");
+        LinphoneHelper.getInstance().setDebug(DeviceHelper.isApkInDebug());
+        LinphoneHelper.getInstance().startVoip(this);
+        if (!TextUtils.isEmpty(AccountManager.getUserIpPhoneNum())) {
+            LinphoneHelper.getInstance().register(AccountManager.getUserIpPhoneNum(), "123456", SipConfig.getServerIp() + ":5000");
+        }
     }
 
     private void initTabBars() {
@@ -156,24 +179,28 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         super.onDestroy();
         EventBus.getDefault().unregister(this);
         SipConfig.reset();
+        releaseHeartBeat();
+        mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
+        mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
+        mBaseHandler.removeMessages(BadgeHelper.MSG_BADGE_VALUE);
+        SipInfo.userLogined = false;
+        SipInfo.devLogined = false;
+        //停止语音电话服务
+        LinphoneHelper.getInstance().unRegister();
+        LinphoneHelper.getInstance().stopVoip(this);
+//        //关闭监听服务
+//        stopService(new Intent(HomeActivity.this, NewsService.class));
+        //关闭线程池
+        running = false;
+    }
+
+    public void releaseHeartBeat() {
         if (mHeartBeatTaskResumeProcessorDev != null) {
             mHeartBeatTaskResumeProcessorDev.onDestroy();
         }
         if (mHeartBeatTaskResumeProcessorUser != null) {
             mHeartBeatTaskResumeProcessorUser.onDestroy();
         }
-        mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
-        mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
-        mBaseHandler.removeMessages(BadgeHelper.MSG_BADGE_VALUE);
-        AccountManager.setLogin(false);
-        SipInfo.userLogined = false;
-        SipInfo.devLogined = false;
-        //停止语音电话服务
-        stopService(new Intent(HomeActivity.this, SipService.class));
-        //关闭监听服务
-        stopService(new Intent(HomeActivity.this, NewsService.class));
-        //关闭线程池
-        running = false;
     }
 
 
@@ -244,6 +271,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
             // logout 为 1，强制到登录页
             if (bundle.getInt("logout", 0) == 1) {
+                releaseHeartBeat();
                 ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY).navigation();
                 finish();
             }
@@ -387,9 +415,64 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         getUserId();
     }
 
+    /**
+     * 收到设备发来的双向视频请求
+     * @param data
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OperationData data) {
+        ARouter.getInstance().build(HomeRouter.ROUTER_VIDEO_CONNECT).navigation();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AppWakeUpEvent event) {
+        startLinphone();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         BadgeHelper.refreshBadge();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MonitorEvent event) {
+        switch (event.monitorType) {
+            case H264Config.SINGLE_MONITOR:
+                try {
+                    SipInfo.decoding = true;
+                    VideoInfo.rtpVideo = new RtpVideo(VideoInfo.rtpIp, VideoInfo.rtpPort);
+                    VideoInfo.sendActivePacket = new SendActivePacket();
+                    VideoInfo.sendActivePacket.startThread();
+                    startActivity(new Intent(this, VideoPlay.class));
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case H264Config.DOUBLE_MONITOR_NEGATIVE:
+                try {
+                    SipInfo.decoding = true;
+                    VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
+                    VideoInfo.sendActivePacket = new SendActivePacket();
+                    VideoInfo.sendActivePacket.startThread();
+                    startActivity(new Intent(this, VideoCallActivity.class));
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case H264Config.DOUBLE_MONITOR_POSITIVE:
+                try {
+                    SipInfo.decoding = true;
+                    VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
+                    VideoInfo.sendActivePacket = new SendActivePacket();
+                    VideoInfo.sendActivePacket.startThread();
+                    startActivity(new Intent(this, VideoCallActivity.class));
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
     }
 }

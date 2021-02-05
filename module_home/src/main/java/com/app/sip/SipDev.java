@@ -213,7 +213,7 @@ public class SipDev extends SipProvider {
                             SipInfo.notifymedia.sendEmptyMessage(0x1111);
                             Log.e(TAG + "_echo" , "SipInfo.notifymedia.sendEmptyMessage(0x1111)");
 //                        }
-                        EventBus.getDefault().post(new MessageEvent("关闭"));
+                        EventBus.getDefault().post(new MessageEvent("关闭")); //关闭 VideoDial
                         return true;
                     case "recvaddr":
                         VideoInfo.endView = true;

@@ -68,7 +68,7 @@ public class SipUserServiceManager implements BaseHandler.MessageHandler {
                     String key = bundle.getString("key");
                     String jsonStr = bundle.getString("jsonStr", "{}");
                     JsonElement jsonElement = new JsonParser().parse(jsonStr);
-                    if (!TextUtils.isEmpty(key)) {
+                    if (!TextUtils.isEmpty(key) && UserServicePath.sMapping.contains("/user/" + key)) {
                         NormalUserRequestService<?> service = (NormalUserRequestService<?>) ARouter.getInstance()
                                 .build("/user/" + key).navigation();
                         if (service != null) {
@@ -82,7 +82,7 @@ public class SipUserServiceManager implements BaseHandler.MessageHandler {
             case MSG_HANDLER_TIME_OUT:
                 Bundle bundle = msg.getData();
                 String key = bundle.getString("key");
-                if (!TextUtils.isEmpty(key)) {
+                if (!TextUtils.isEmpty(key) && UserServicePath.sMapping.contains("/user/" + key)) {
                     NormalUserRequestService<?> service = (NormalUserRequestService<?>) ARouter.getInstance()
                             .build("/user/" + key).navigation();
                     if (service != null) {

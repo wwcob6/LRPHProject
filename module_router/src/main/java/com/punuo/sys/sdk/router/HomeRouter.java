@@ -30,4 +30,8 @@ public class HomeRouter {
     public static final String ROUTER_WX_MINIPROGRAM_ENTRY_ACTIVITY = PREFIX + "/WXMiniprogramEntryActivity";
     public static final String ROUTER_DEV_BIND_SUCCESS_ACTIVITY = PREFIX + "/DevBindSuccessActivity";
     public static final String ROUTER_BIND_DEV_ACTIVITY = PREFIX + "/BinDevActivity";
+
+    public static final String ROUTER_VIDEO_CONNECT = PREFIX + "/VideoConnect";
+
+    public static final String ROUTER_CONTRACT_MANAGER_ACTIVITY = PREFIX + "/ContractManagerActivity";
 }

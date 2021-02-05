@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Surface;
@@ -28,20 +27,18 @@ import com.app.R2;
 import com.app.audio.AudioRecordManager;
 import com.app.model.MessageEvent;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
-import com.app.sip.SipUser;
 import com.app.tools.H264decoder;
 import com.app.video.H264SendingManager;
 import com.app.video.VideoInfo;
+import com.punuo.sip.H264Config;
+import com.punuo.sip.dev.H264ConfigDev;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipByeRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
-import org.zoolu.sip.message.Message;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,9 +49,9 @@ import butterknife.ButterKnife;
  * Author chzjy
  * Date 2016/12/19.
  */
-public class VideoCallActivity extends BaseActivity implements SipUser.StopMonitor {
+public class VideoCallActivity extends BaseActivity {
     public static final String TAG = "VideoCallActivity";
-    private BufferedOutputStream outputStream;
+//    private BufferedOutputStream outputStream;
     @BindView(R2.id.mute)
     ImageView mute;
     @BindView(R2.id.hangup)
@@ -80,7 +77,7 @@ public class VideoCallActivity extends BaseActivity implements SipUser.StopMonit
     BroadcastReceiver mReceiver;
     private boolean isSpeakerMode = false;
     private boolean ismute=false;
-    File f = new File(Environment.getExternalStorageDirectory(), "DCIM/video_encoded1.264");
+//    File f = new File(Environment.getExternalStorageDirectory(), "DCIM/video_encoded1.264");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +86,6 @@ public class VideoCallActivity extends BaseActivity implements SipUser.StopMonit
         ButterKnife.bind(this);
         //防止锁屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        SipInfo.sipUser.setMonitor(this);
 
         shBack = svBack.getHolder();
 
@@ -253,17 +249,17 @@ public class VideoCallActivity extends BaseActivity implements SipUser.StopMonit
                 while (SipInfo.decoding) {
                     if (SipInfo.isNetworkConnected) {
                         byte[] nal = VideoInfo.nalBuffers[getNum].getReadableNalBuf();
-                        try {
-                            outputStream = new BufferedOutputStream(new FileOutputStream(f));
-                            Log.i("AvcEncoder", "outputStream initialized");
-                        } catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        try {
-                            outputStream.write(nal,0,nal.length);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            outputStream = new BufferedOutputStream(new FileOutputStream(f));
+//                            Log.i("AvcEncoder", "outputStream initialized");
+//                        } catch (Exception e){
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            outputStream.write(nal,0,nal.length);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
                         if (nal != null) {
                             Log.i(TAG, "nalLen:" + nal.length);
 
@@ -308,29 +304,15 @@ public class VideoCallActivity extends BaseActivity implements SipUser.StopMonit
     }
 
     private void closeVideo() {
-        Message bye = SipMessageFactory.createByeRequest(SipInfo.sipUser, SipInfo.toDev, SipInfo.user_from);
-        //创建结束视频请求
-        SipInfo.sipUser.sendMessage(bye);
+        SipByeRequest request;
+        if (H264Config.monitorType == H264Config.DOUBLE_MONITOR_NEGATIVE) {
+            request = new SipByeRequest(H264ConfigDev.targetDevId);
+        } else {
+            request = new SipByeRequest(AccountManager.getBindDevId());
+        }
+        SipUserManager.getInstance().addRequest(request);
         finish();
     }
-
-    @Override
-    public void stopVideo() {
-        closeVideo();
-    }
-
-//    private AudioManager audioManager =
-//            (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-    /**
-     * 扬声器与听筒切换
-     * @param isSpeakerphoneOn
-     */
-//    public void setSpeakerphoneOn(boolean isSpeakerphoneOn){
-//        audioManager.setSpeakerphoneOn(isSpeakerphoneOn);
-//        if(!isSpeakerphoneOn){
-//            audioManager.setMode(AudioManager.MODE_NORMAL);
-//        }
-//    }
 
 
     /**

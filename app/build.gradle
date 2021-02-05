@@ -19,10 +19,8 @@ android {
         targetSdkVersion gradle.sdk.targetSdkVersion
         versionCode gradle.sdk.versionCode
         versionName gradle.sdk.versionName
-        ndk {
-            moduleName "serial_port"
-            ldLibs "log"
-            abiFilters "armeabi","x86"
+        ndk{
+            abiFilters 'armeabi-v7a'
         }
     }
     buildTypes {

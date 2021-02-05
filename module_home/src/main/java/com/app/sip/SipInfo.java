@@ -1,19 +1,14 @@
 package com.app.sip;
 
-import android.app.NotificationManager;
 import android.net.sip.SipAudioCall;
 import android.os.Handler;
 
-import com.app.db.MyDatabaseHelper;
 import com.app.model.AddressItem;
 import com.app.model.App;
 import com.app.model.Device;
 import com.app.model.Device1;
-import com.app.model.Familymember;
 import com.app.model.Friend;
-import com.app.model.MailInfo;
 import com.app.model.MessageNotify;
-import com.app.model.TaskInfo;
 import com.app.service.SipService;
 
 import org.zoolu.sip.address.NameAddress;
@@ -158,15 +153,6 @@ public class SipInfo {
     public static Message msg;
 
     public static Handler notifymedia;
-
-    public static List<TaskInfo> tasklist = new ArrayList<>();
-    //邮件列表
-    public static List<MailInfo> maillist = new ArrayList<>();
-
-    public static List<Familymember> farmilymemberList = new ArrayList<>();
-    public static MyDatabaseHelper dbHelper;
-
-    public static NotificationManager notificationManager;
 
     public static boolean Recording = false;
 

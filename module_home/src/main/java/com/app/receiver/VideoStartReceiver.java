@@ -9,6 +9,7 @@ import com.app.ui.VideoStartActivity;
 
 /**
  * Created by maojianhui on 2018/7/11.
+ * 对方接受
  */
 
 public class VideoStartReceiver extends BroadcastReceiver {

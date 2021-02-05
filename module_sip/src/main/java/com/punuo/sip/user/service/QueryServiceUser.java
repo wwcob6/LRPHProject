@@ -1,9 +1,12 @@
 package com.punuo.sip.user.service;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.punuo.sip.H264Config;
+import com.punuo.sip.user.H264ConfigUser;
+import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.model.QueryResponse;
 import com.punuo.sip.user.request.BaseUserSipRequest;
+import com.punuo.sip.user.request.SipMediaRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
 
@@ -22,7 +25,9 @@ public class QueryServiceUser extends NormalUserRequestService<QueryResponse> {
 
     @Override
     protected void onSuccess(Message msg, QueryResponse result) {
-        H264Config.initQueryData(result);
+        H264ConfigUser.initQueryData(result);
+        SipMediaRequest request = new SipMediaRequest(AccountManager.getBindDevId());
+        SipUserManager.getInstance().addRequest(request);
     }
 
     @Override

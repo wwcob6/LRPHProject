@@ -36,10 +36,11 @@ public class NewsService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.i(TAG, "News Service 开启");
-        SipInfo.notifymedia = new Handler() {
+        SipInfo. notifymedia = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == 0x1111) {
+                    //主动双向视频
                    /* System.out.println("收到了 视频邀请");
                     VideoInfo.rtpIp = VideoInfo.media_info_ip;
                     VideoInfo.rtpPort = VideoInfo.media_info_port;

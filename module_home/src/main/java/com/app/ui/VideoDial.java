@@ -17,23 +17,21 @@ import android.widget.TextView;
 
 import com.app.R;
 import com.app.model.MessageEvent;
-import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipCallReplyRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.address.SipURL;
-import org.zoolu.sip.message.Message;
-
-import static com.app.sip.SipInfo.devName;
 
 
 /**
  * Created by maojianhui on 2018/6/27.
+ * 双向视频第一个页面
  */
 
 public class VideoDial extends BaseActivity implements View.OnClickListener{
@@ -137,10 +135,8 @@ public class VideoDial extends BaseActivity implements View.OnClickListener{
     @Override
     public void onClick(View v){
         if (v.getId() == R.id.iv_hangup) {
-            SipInfo.toDev = new NameAddress(devName, sipURL);
-            Message response = SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                    SipInfo.user_from, BodyFactory.createCallReply("cancel"));
-            SipInfo.sipUser.sendMessage(response);
+            SipCallReplyRequest replyRequest = new SipCallReplyRequest("cancel", AccountManager.getBindDevId());
+            SipUserManager.getInstance().addRequest(replyRequest);
             finish();
         }
 

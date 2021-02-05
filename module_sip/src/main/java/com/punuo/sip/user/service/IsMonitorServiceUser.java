@@ -7,7 +7,8 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.model.IsMonitor;
 import com.punuo.sip.user.request.BaseUserSipRequest;
-import com.punuo.sip.user.request.SipOptionsRequest;
+import com.punuo.sip.user.request.SipQueryRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 
 import org.zoolu.sip.message.Message;
 
@@ -26,7 +27,7 @@ public class IsMonitorServiceUser extends NormalUserRequestService<IsMonitor> {
     protected void onSuccess(Message msg, IsMonitor result) {
         if (TextUtils.equals("200", result.code)) {
             Log.v(TAG, "is monitor success");
-            SipOptionsRequest request = new SipOptionsRequest();
+            SipQueryRequest request = new SipQueryRequest(AccountManager.getBindDevId());
             SipUserManager.getInstance().addRequest(request);
         } else {
             Log.v(TAG, "is monitor failed");

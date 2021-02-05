@@ -16,10 +16,11 @@ import androidx.appcompat.app.AlertDialog;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.sip.SipInfo;
 import com.app.ui.address.AddressManagerActivity;
 import com.punuo.sip.AccountUtil;
+import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.DataClearUtil;
@@ -108,6 +109,7 @@ public class SettingActivity extends BaseSwipeBackActivity {
                 .setMessage("确认退出登陆?")
                 .setNegativeButton("否", (dialog1, which) -> dialog1.dismiss())
                 .setPositiveButton("是", (dialog12, which) -> {
+                    AccountManager.setLogin(false);
                     UserInfoManager.clearUserData();
                     SipInfo.running = false;
                     AccountUtil.logout();

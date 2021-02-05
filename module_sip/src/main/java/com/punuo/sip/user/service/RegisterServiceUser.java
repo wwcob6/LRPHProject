@@ -29,6 +29,7 @@ public class RegisterServiceUser extends NormalUserRequestService<NegotiateRespo
     @Override
     protected void onSuccess(Message msg, NegotiateResponse result) {
         AccountManager.setUserId(result.userId);
+//        AccountManager.setUserIpPhoneNum(result.phoneNum);
         SipRegisterRequest sipRegisterRequest = new SipRegisterRequest(result);
         SipUserManager.getInstance().addRequest(sipRegisterRequest);
     }

@@ -13,21 +13,19 @@ import android.widget.RelativeLayout;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.friendCircleMain.domain.UserList;
-import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
-import com.app.sip.SipMessageFactory;
 import com.app.ui.FamilyCircleActivity;
 import com.app.ui.FriendCallActivity;
 import com.app.ui.VideoDial;
+import com.punuo.sys.app.linphone.LinphoneHelper;
+import com.punuo.sip.H264Config;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipIsMonitorRequest;
+import com.punuo.sip.user.request.SipOperationRequest;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
-
-import org.zoolu.sip.address.NameAddress;
-import org.zoolu.sip.address.SipURL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +74,12 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         video.setOnClickListener(this);
         browse.setOnClickListener(this);
         chat.setOnClickListener(this);
+        alarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinphoneHelper.getInstance().register("7001", "123456", "sip.qinqingonline.com:5000");
+            }
+        });
     }
 
     public void onClick(View v) {
@@ -84,6 +88,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             startActivity(new Intent(getActivity(), FamilyCircleActivity.class));
         } else if (id == R.id.browse) {
             if (checkDevBind()) {
+                H264Config.monitorType = H264Config.SINGLE_MONITOR;
                 SipInfo.single = true;
                 SipIsMonitorRequest request = new SipIsMonitorRequest(true);
                 SipUserManager.getInstance().addRequest(request);
@@ -93,21 +98,10 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (id == R.id.application) {
             ARouter.getInstance().build(HomeRouter.ROUTER_WX_MINIPROGRAM_ENTRY_ACTIVITY).navigation();
         } else if (id == R.id.video) {
+            H264Config.monitorType = H264Config.DOUBLE_MONITOR_POSITIVE;
             SipInfo.single = false;
-            String devId1 = SipInfo.paddevId;
-            //devId = devId1.substring(0, devId1.length() - 4).concat("0160");
-            //设备id后4位替换成0160
-            String devName1 = "pad";
-            final String devType1 = "2";
-            SipURL sipURL1 = new SipURL(devId1, SipInfo.serverIp, SipInfo.SERVER_PORT_USER);
-            SipInfo.toDev = new NameAddress(devName1, sipURL1);
-            //视频
-            org.zoolu.sip.message.Message query1 =
-                    SipMessageFactory.createNotifyRequest(SipInfo.sipUser, SipInfo.toDev,
-                            SipInfo.user_from, BodyFactory.createCallRequest("request", SipInfo.devId
-                                    , SipInfo.userId));
-            SipInfo.sipUser.sendMessage(query1);
-
+            SipOperationRequest request = new SipOperationRequest();
+            SipUserManager.getInstance().addRequest(request);
             startActivity(new Intent(getActivity(), VideoDial.class));
         }
     }

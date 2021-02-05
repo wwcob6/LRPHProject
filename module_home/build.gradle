@@ -49,4 +49,5 @@ dependencies {
     kapt 'com.jakewharton:butterknife-compiler:10.0.0'
     kapt 'org.permissionsdispatcher:permissionsdispatcher-processor:4.6.0'
     implementation project(':module_sip')
+    implementation project(':linphonesdk')
 }
