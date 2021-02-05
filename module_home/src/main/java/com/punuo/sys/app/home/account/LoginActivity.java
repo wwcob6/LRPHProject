@@ -1,4 +1,4 @@
-package com.app.ui;
+package com.punuo.sys.app.home.account;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,7 +47,6 @@ import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UserLoginFailEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
-import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;

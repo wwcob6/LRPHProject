@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.PrivateActivity"
+    tools:context="com.punuo.sys.app.home.activity.PrivateActivity"
     android:orientation="vertical">
     <include layout="@layout/layout_title_bar" />
     <RelativeLayout

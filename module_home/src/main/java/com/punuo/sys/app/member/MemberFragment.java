@@ -1,4 +1,4 @@
-package com.app.ui.fragment;
+package com.punuo.sys.app.member;
 
 
 import android.content.Intent;
@@ -16,11 +16,11 @@ import com.app.R;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.Util;
 import com.punuo.sys.sdk.account.model.PNUserInfo;
-import com.app.ui.CloudAlbumActivity;
-import com.app.ui.FamilyCircleActivity;
-import com.app.ui.PrivateActivity;
-import com.app.ui.ServiceCallSet;
-import com.app.ui.SettingActivity;
+import com.punuo.sys.app.home.activity.CloudAlbumActivity;
+import com.punuo.sys.app.home.activity.FamilyCircleActivity;
+import com.punuo.sys.app.home.activity.PrivateActivity;
+import com.app.ui.ServiceManagerActivity;
+import com.punuo.sys.app.home.account.SettingActivity;
 import com.bumptech.glide.Glide;
 import com.punuo.sys.sdk.PnApplication;
 import com.punuo.sys.sdk.account.AccountManager;
@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class PersonFragment extends BaseFragment implements View.OnClickListener {
+public class MemberFragment extends BaseFragment implements View.OnClickListener {
     private View mView;
     private TextView tv_name;
     private TextView tv_fxid;
@@ -91,7 +91,7 @@ public class PersonFragment extends BaseFragment implements View.OnClickListener
         } else if (id == R.id.re_adddev) {
             ARouter.getInstance().build(HomeRouter.ROUTER_BIND_DEV_ACTIVITY).navigation();
         } else if (id == R.id.re_servicecall) {
-            startActivity(new Intent(getActivity(), ServiceCallSet.class));
+            startActivity(new Intent(getActivity(), ServiceManagerActivity.class));
         } else if (id == R.id.re_settings) {
             startActivity(new Intent(getActivity(), SettingActivity.class));
         } else if (id == R.id.re_private) {

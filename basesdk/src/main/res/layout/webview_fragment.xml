@@ -11,6 +11,8 @@
         android:background="#FFFFFF"
         android:visibility="gone" />
 
+    <include layout="@layout/module_title_layout"/>
+
     <com.handmark.pulltorefresh.library.PullToRefreshWebView
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"

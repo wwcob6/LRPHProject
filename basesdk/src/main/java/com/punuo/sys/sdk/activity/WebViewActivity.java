@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.os.Message;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sys.sdk.R;
 import com.punuo.sys.sdk.fragment.WebViewFragment;
+import com.punuo.sys.sdk.router.SDKRouter;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
 /**
  * Created by han.chen.
  * Date on 2019/4/4.
  **/
+@Route(path = SDKRouter.ROUTER_WEB_VIEW_ACTIVITY)
 public class WebViewActivity extends BaseSwipeBackActivity {
     private WebViewFragment mWebViewFragment;
     @Override

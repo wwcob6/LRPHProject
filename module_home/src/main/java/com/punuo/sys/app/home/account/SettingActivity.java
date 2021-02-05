@@ -1,4 +1,4 @@
-package com.app.ui;
+package com.punuo.sys.app.home.account;
 
 import android.content.Intent;
 import android.os.Build;
@@ -17,9 +17,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.sip.SipInfo;
-import com.app.ui.address.AddressManagerActivity;
+import com.punuo.sys.app.home.activity.MessageNotifyActivity;
+import com.app.ui.SoftwareInstructActivity;
+import com.punuo.sys.app.home.activity.UserInfoActivity;
+import com.punuo.sys.app.home.address.AddressManagerActivity;
 import com.punuo.sip.AccountUtil;
-import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.router.HomeRouter;

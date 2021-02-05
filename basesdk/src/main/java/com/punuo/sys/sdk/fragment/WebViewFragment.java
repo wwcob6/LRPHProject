@@ -4,13 +4,15 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
@@ -31,6 +33,7 @@ public class WebViewFragment extends BaseFragment {
     private boolean isRefreshing;
     private BaseHandler mBaseHandler;
     private String mUrl = "";
+    private String mTitle = "";
 
     @Nullable
     @Override
@@ -38,6 +41,9 @@ public class WebViewFragment extends BaseFragment {
         mActivity = (BaseActivity) getActivity();
         mBaseHandler = mActivity.getBaseHandler();
         mFragmentView = inflater.inflate(R.layout.webview_fragment, container, false);
+        View backIcon = mFragmentView.findViewById(R.id.back);
+        backIcon.setOnClickListener(v -> mActivity.finish());
+        TextView title = mFragmentView.findViewById(R.id.title);
         mPullToRefreshWebView = mFragmentView.findViewById(R.id.pull_to_refresh);
         mPullToRefreshWebView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         mStatusBar = mFragmentView.findViewById(R.id.status_bar);
@@ -48,6 +54,8 @@ public class WebViewFragment extends BaseFragment {
             mStatusBar.requestLayout();
         }
         mUrl = getArguments().getString("url", "");
+        mTitle = getArguments().getString("title", "");
+        title.setText(mTitle);
         mWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         WebSettings settings = mWebView.getSettings();
         settings.setBuiltInZoomControls(false);

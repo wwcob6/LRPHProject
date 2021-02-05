@@ -1,4 +1,4 @@
-package com.app.ui;
+package com.punuo.sys.app.home.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;

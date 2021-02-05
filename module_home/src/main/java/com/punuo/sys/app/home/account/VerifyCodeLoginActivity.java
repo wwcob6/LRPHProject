@@ -1,4 +1,4 @@
-package com.app.ui;
+package com.punuo.sys.app.home.account;
 
 import android.content.Intent;
 import android.os.Build;
@@ -29,7 +29,6 @@ import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UserLoginFailEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
-import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.account.model.PNUserInfo;

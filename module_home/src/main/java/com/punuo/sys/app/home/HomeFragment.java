@@ -1,4 +1,4 @@
-package com.app.ui.fragment;
+package com.punuo.sys.app.home;
 
 import android.content.Intent;
 import android.os.Build;
@@ -14,8 +14,8 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.friendCircleMain.domain.UserList;
 import com.app.sip.SipInfo;
-import com.app.ui.FamilyCircleActivity;
-import com.app.ui.FriendCallActivity;
+import com.punuo.sys.app.home.activity.FamilyCircleActivity;
+import com.punuo.sys.app.home.activity.FriendCallActivity;
 import com.app.ui.VideoDial;
 import com.punuo.sys.app.linphone.LinphoneHelper;
 import com.punuo.sip.H264Config;

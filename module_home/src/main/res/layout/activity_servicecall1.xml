@@ -6,9 +6,7 @@
     android:background="@color/Gray">
     <!--android:background="#f3b337">-->
 
-    <include
-        android:id="@+id/main1"
-        layout="@layout/fragment_title2" />
+    <include layout="@layout/layout_title_bar" />
 
     <RelativeLayout
         android:id="@+id/Rl_service1"

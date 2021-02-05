@@ -21,9 +21,7 @@ import com.app.model.Constant;
 import com.app.sip.SipInfo;
 import com.app.ui.VideoCallActivity;
 import com.app.ui.VideoPlay;
-import com.app.ui.fragment.HomeFragment;
-import com.app.ui.fragment.MyFragmentManager;
-import com.app.ui.fragment.PersonFragment;
+import com.punuo.sys.app.member.MemberFragment;
 import com.app.video.RtpVideo;
 import com.app.video.SendActivePacket;
 import com.app.video.VideoInfo;
@@ -228,7 +226,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 mMyFragmentManager.switchFragmentWithCache(MessageFragment.class.getName(), bundle);
                 break;
             case Constant.PERSON:
-                mMyFragmentManager.switchFragmentWithCache(PersonFragment.class.getName(), bundle);
+                mMyFragmentManager.switchFragmentWithCache(MemberFragment.class.getName(), bundle);
                 break;
             default:
                 break;

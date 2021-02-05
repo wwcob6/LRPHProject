@@ -1,4 +1,4 @@
-package com.app.ui.message;
+package com.punuo.sys.app.home.wx;
 
 import android.os.Bundle;
 

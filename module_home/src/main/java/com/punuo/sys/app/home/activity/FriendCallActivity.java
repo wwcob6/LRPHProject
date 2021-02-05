@@ -1,4 +1,4 @@
-package com.app.ui;
+package com.punuo.sys.app.home.activity;
 
 
 import android.content.Context;
@@ -83,7 +83,7 @@ public class FriendCallActivity extends BaseActivity {
         back.setOnClickListener(v -> finish());
         TextView title = findViewById(R.id.title);
         title.setText("通讯录");
-        rv = (RecyclerView) findViewById(R.id.rv);
+        rv = findViewById(R.id.rv);
         GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
         rv.setLayoutManager(glm);
         rv.addItemDecoration(new FriendCallActivity.RecyclerViewItemDecoration(2, 3));//初始化子项距离和列数

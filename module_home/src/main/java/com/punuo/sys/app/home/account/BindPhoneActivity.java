@@ -1,4 +1,4 @@
-package com.app.ui;
+package com.punuo.sys.app.home.account;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import com.app.R2;
 import com.app.request.UpdateUserPhoneRequest;
 import com.app.views.CleanEditText;
 import com.punuo.sip.AccountUtil;
-import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.httplib.HttpManager;

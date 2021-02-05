@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application>
-        <activity android:name=".ui.PrivateActivity"/>
-        <activity android:name=".ui.message.WXMiniprogramEntryActivity"
+        <activity android:name="com.punuo.sys.app.home.activity.PrivateActivity"/>
+        <activity android:name="com.punuo.sys.app.home.wx.WXMiniprogramEntryActivity"
             android:exported="true"/>
         <activity
             android:name="com.punuo.sys.app.message.AddLikeActivity"
@@ -30,7 +30,7 @@
             android:name=".ui.VideoStartActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.punuo.sys.app.home.account.LoginActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -53,14 +53,14 @@
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.UserInfoActivity"
+            android:name="com.punuo.sys.app.home.activity.UserInfoActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.UpdateNickActivity"
+            android:name="com.punuo.sys.app.home.activity.UpdateNickActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ChangePasswordActivity"
+            android:name="com.punuo.sys.app.home.account.ChangePasswordActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
@@ -73,7 +73,7 @@
             android:name=".ui.VideoShow"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ServiceCallSet"
+            android:name=".ui.ServiceManagerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.VideoConnect"
@@ -85,61 +85,58 @@
             android:name="com.punuo.sys.app.home.activity.ContractManagerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.FriendCallActivity"
+            android:name="com.punuo.sys.app.home.activity.FriendCallActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SoftwareInstructActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SettingActivity"
+            android:name="com.punuo.sys.app.home.account.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.MessageNotifyActivity"
+            android:name="com.punuo.sys.app.home.activity.MessageNotifyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.BindPhoneActivity"
+            android:name="com.punuo.sys.app.home.account.BindPhoneActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.DevBindSuccessActivity"
+            android:name="com.punuo.sys.app.home.activity.DevBindSuccessActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.BindDevActivity"
+            android:name="com.punuo.sys.app.home.activity.BindDevActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.RegisterAccountActivity"
+            android:name="com.punuo.sys.app.home.account.RegisterAccountActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ForgetPasswordActivity"
+            android:name="com.punuo.sys.app.home.account.ForgetPasswordActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.VerifyCodeLoginActivity"
+            android:name="com.punuo.sys.app.home.account.VerifyCodeLoginActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ApplyPasswordActivity"
+            android:name="com.punuo.sys.app.home.account.ApplyPasswordActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.FamilyCircleActivity"
+            android:name="com.punuo.sys.app.home.activity.FamilyCircleActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.MyCouponActivity"
+            android:name="com.punuo.sys.app.home.address.AddressDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.address.AddressDetailActivity"
+            android:name="com.punuo.sys.app.home.address.AddressManagerActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.address.AddressManagerActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.CloudAlbumActivity" />
+        <activity android:name="com.punuo.sys.app.home.activity.CloudAlbumActivity" />
         <activity android:name=".publish.PublishedActivity1" />
-        <activity android:name=".ui.AlbumActivity" />
-        <activity android:name=".ui.AlbumSecondActivity" />
+        <activity android:name="com.punuo.sys.app.home.activity.AlbumActivity" />
+        <activity android:name="com.punuo.sys.app.home.activity.AlbumSecondActivity" />
 
         <receiver
             android:name=".receiver.VideoConnectReceiver"
