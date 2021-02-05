@@ -24,17 +24,13 @@ import com.app.R;
 import com.app.friendCircleMain.photoview.PhotoView;
 import com.app.friendCircleMain.photoview.PhotoViewAttacher;
 import com.app.tools.ViewPagerFixed;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//import uk.co.senab.photoview.PhotoView;
-//import uk.co.senab.photoview.PhotoViewAttacher;
 
 
 public class AlbumSecondActivity extends Activity {
@@ -43,7 +39,6 @@ public class AlbumSecondActivity extends Activity {
     private List<ImageView> imageViews=new ArrayList<>();//显示图片的ImageView
     private int position;//从上个页面获取的子项position
     private List<String> urls=new ArrayList<>();//上个页面获取的URL列表
-    private DisplayImageOptions options;
     private MyViewPagerAdapter adapter=new MyViewPagerAdapter();
     private LinearLayout vp_ll;
     private Map<Integer,float[]> xyMap=new HashMap<>();//接收所有图片的坐标
@@ -103,15 +98,6 @@ public class AlbumSecondActivity extends Activity {
         xyMap=(HashMap<Integer,float[]>)getIntent().getExtras().get("xyMap");
     }
     private void initData() {
-        options=new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.pictureloading)
-                .showImageOnLoading(R.drawable.pictureloading)
-                .showImageOnFail(R.drawable.pictureloading)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .displayer(new FadeInBitmapDisplayer(5))
-                .build();
-
         urls=getIntent().getStringArrayListExtra("urls");
         for(int i=0;i<urls.size();i++)//获取图片，设置PhotoView，加到ViewPager当中
         {
@@ -124,20 +110,13 @@ public class AlbumSecondActivity extends Activity {
                 }
             });
 
-            ImageLoader.getInstance().displayImage(urls.get(i), photoView, options);
+            Glide.with(this).load(urls.get(i)).into(photoView);
             imageViews.add(photoView);
 
         }
         vp.setAdapter(adapter);
         vp.setCurrentItem(position, true);
         vp_text.setText((position+1)+"/"+xyMap.size());
-//        back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-
     }
 
     private class MyViewPagerAdapter extends PagerAdapter

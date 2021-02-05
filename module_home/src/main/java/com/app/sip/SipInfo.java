@@ -185,8 +185,5 @@ public class SipInfo {
 
     //是否是验证码登录，在修改密码的时候作区别
     public static boolean  isVericodeLogin=false;
-    //新收到的评论数目
-    public static int commentsItems=0;
-    public static int addLikesItems=0;
-    public static String month;
+
 }

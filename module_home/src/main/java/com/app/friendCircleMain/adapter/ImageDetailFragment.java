@@ -1,23 +1,25 @@
 package com.app.friendCircleMain.adapter;
 
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.app.R;
 import com.app.friendCircleMain.photoview.PhotoViewAttacher;
 import com.app.friendCircleMain.photoview.PhotoViewAttacher.OnPhotoTapListener;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.punuo.sys.sdk.PnApplication;
 
 
 /**
@@ -66,42 +68,20 @@ public class ImageDetailFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		ImageLoader.getInstance().displayImage(mImageUrl, mImageView, new SimpleImageLoadingListener() {
+		progressBar.setVisibility(View.VISIBLE);
+		Glide.with(PnApplication.getInstance()).load(mImageUrl).listener(new RequestListener<Drawable>() {
 			@Override
-			public void onLoadingStarted(String imageUri, View view) {
-				progressBar.setVisibility(View.VISIBLE);
-			}
-
-			@Override
-			public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-				String message = null;
-				switch (failReason.getType()) {
-				case IO_ERROR:
-					message = "下载错误";
-					break;
-				case DECODING_ERROR:
-					message = "图片无法显示";
-					break;
-				case NETWORK_DENIED:
-					message = "网络有问题，无法下载";
-					break;
-				case OUT_OF_MEMORY:
-					message = "图片太大无法显示";
-					break;
-				case UNKNOWN:
-					message = "未知的错误";
-					break;
-				}
-				Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+			public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 				progressBar.setVisibility(View.GONE);
+				return false;
 			}
 
 			@Override
-			public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+			public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 				progressBar.setVisibility(View.GONE);
 				mAttacher.update();
+				return false;
 			}
-		});
+		}).into(mImageView);
 	}
 }

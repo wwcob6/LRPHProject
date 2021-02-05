@@ -11,8 +11,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 import com.punuo.sys.app.message.model.PostNewModel;
+import com.punuo.sys.sdk.PnApplication;
 import com.punuo.sys.sdk.httplib.HttpConfig;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,8 +77,8 @@ public class SystemNotifyAdapter extends RecyclerView.Adapter<SystemNotifyAdapte
         if (mNotifyList.get(position).newId == null) {
             holder.messagePicture.setImageResource(R.drawable.akb1);
         } else {
-            ImageLoader.getInstance().displayImage("http://" + HttpConfig.getHost() + ":" + HttpConfig.getPort() + "/static/news/" + mNotifyList.get(position).image + ".jpg",
-                    holder.messagePicture);
+            Glide.with(PnApplication.getInstance()).load("http://" + HttpConfig.getHost() + ":" + HttpConfig.getPort() + "/static/news/" + mNotifyList.get(position).image + ".jpg")
+                    .into(holder.messagePicture);
         }
 
     }

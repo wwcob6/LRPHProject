@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.Util;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 import com.punuo.sys.app.message.model.CommentModel;
+import com.punuo.sys.sdk.PnApplication;
 
 import java.util.List;
 
@@ -65,12 +66,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         if (commentModel.avatar == null) {
             holder.replyAvatar.setImageResource(R.drawable.defaultavator);
         } else {
-            ImageLoader.getInstance().displayImage(Util.getImageUrl(commentModel.id, commentModel.avatar), holder.replyAvatar);
+            Glide.with(PnApplication.getInstance()).load(Util.getImageUrl(commentModel.id, commentModel.avatar)).into(holder.replyAvatar);
         }
         if (commentModel.pic == null) {
             holder.commenttedPicture.setImageResource(R.drawable.defaultavator);
         } else {
-            ImageLoader.getInstance().displayImage(Util.getImageUrl(commentModel.pic), holder.commenttedPicture);
+            Glide.with(PnApplication.getInstance()).load(Util.getImageUrl(commentModel.id, commentModel.pic)).into(holder.commenttedPicture);
         }
     }
 

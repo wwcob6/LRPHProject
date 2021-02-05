@@ -5,8 +5,6 @@ import android.content.Context;
 import androidx.multidex.MultiDex;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.punuo.sys.sdk.util.DeviceHelper;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mmkv.MMKV;
@@ -36,18 +34,12 @@ public class PnApplication extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        initImageLoader();
         if (DeviceHelper.isApkInDebug()) {
             ARouter.openLog();
             ARouter.openDebug();
         }
         ARouter.init(this);
         initCrashReport();
-    }
-
-    private void initImageLoader() {
-        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
-        ImageLoader.getInstance().init(configuration);
     }
 
     public void initCrashReport() {

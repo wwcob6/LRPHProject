@@ -49,7 +49,6 @@ dependencies {
     api 'com.zhy:okhttputils:2.0.0'
     api 'com.githang:status-bar-compat:0.3'
     api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
-    api 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
 
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$gradle.sdk.kotlin_version"

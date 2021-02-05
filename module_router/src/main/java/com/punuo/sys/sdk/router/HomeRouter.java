@@ -19,6 +19,7 @@ public class HomeRouter {
     public static final String ROUTER_VERIFY_CODE_LOGIN_ACTIVITY = PREFIX + "/VerifyCodeLoginActivity";
     //个人中心/相册
     public static final String ROUTER_CLOUD_ALBUM_ACTIVITY = PREFIX + "/CloudAlbumActivity";
+    public static final String ROUTER_ALBUM_ACTIVITY = PREFIX + "/AlbumActivity";
     //首页
     public static final String ROUTER_HOME_ACTIVITY = PREFIX + "/HomeActivity";
     //系统通知

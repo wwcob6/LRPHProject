@@ -13,24 +13,26 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.adapter.MyRecyclerViewAdapter;
 import com.app.model.CloudPhoto;
 import com.app.request.GetImagesRequest;
-import com.app.sip.SipInfo;
 import com.app.tools.AlbumBitmapCacheHelper;
 import com.app.video.VideoInfo;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.sdk.account.UserInfoManager;
+import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
+import com.punuo.sys.sdk.router.HomeRouter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,11 +40,11 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class AlbumActivity extends BaseActivity {
+@Route(path = HomeRouter.ROUTER_ALBUM_ACTIVITY)
+public class AlbumActivity extends BaseSwipeBackActivity {
     private RecyclerView mRecyclerView;
     private final List<String> images = new ArrayList<>();//图片地址
     private Context mContext;
-    private DisplayImageOptions options;
     private MyRecyclerViewAdapter adapter;
     private final HashMap<Integer, float[]> xyMap = new HashMap<>();//所有子项的坐标
     private int screenWidth;//屏幕宽度
@@ -50,10 +52,14 @@ public class AlbumActivity extends BaseActivity {
     PopupMenu popup;
     private GetImagesRequest mGetImagesRequest;
 
+    @Autowired(name = "month")
+    String month;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_albumactivity);
+        ARouter.getInstance().inject(this);
         mContext = this;
         initView();
         startGetImageThread();
@@ -140,19 +146,17 @@ public class AlbumActivity extends BaseActivity {
     }
 
     private void initView() {
+        View back = findViewById(R.id.back);
+        back.setOnClickListener(v -> {
+            finish();
+        });
+        TextView title = (TextView) findViewById(R.id.title);
+        title.setText("相册");
         mRecyclerView = (RecyclerView) findViewById(R.id.rv);
         GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
         mRecyclerView.setLayoutManager(glm);
         mRecyclerView.addItemDecoration(new RecyclerViewItemDecoration(5, 3));//初始化子项距离和列数
-        options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.pictureloading)
-                .showImageOnLoading(R.drawable.pictureloading)
-                .showImageOnFail(R.drawable.pictureloading)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .displayer(new FadeInBitmapDisplayer(1))
-                .build();
-        adapter = new MyRecyclerViewAdapter(images, mContext, options, glm);
+        adapter = new MyRecyclerViewAdapter(images, mContext, glm);
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -179,7 +183,7 @@ public class AlbumActivity extends BaseActivity {
         }
         mGetImagesRequest = new GetImagesRequest();
         mGetImagesRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mGetImagesRequest.addUrlParam("month", SipInfo.month);
+        mGetImagesRequest.addUrlParam("month", month);
         mGetImagesRequest.setRequestListener(new RequestListener<CloudPhoto>() {
             @Override
             public void onComplete() {
