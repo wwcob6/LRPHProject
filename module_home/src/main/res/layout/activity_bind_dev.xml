@@ -8,7 +8,6 @@
     <include layout="@layout/layout_title_bar"/>
 
     <ImageView
-        android:id="@+id/iv_devbind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

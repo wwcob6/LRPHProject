@@ -13,7 +13,6 @@
 
 
     <!--拨出电话-->
-    <string name="voice_call_fail">呼叫失败！</string>
     <string name="voice_chat_cancel">已取消</string>
     <string name="voice_chat_friend_refused">对方已拒绝</string>
     <string name="voice_chat_no_answer">对方无应答</string>
@@ -31,7 +30,6 @@
     <string name="voice_chat_friend_refused_toast">对方拒绝了您的请求.</string>
     <string name="voice_cha_not_logged_in">对方手机不在身边请稍后重试！</string>
     <string name="voice_chat_busy">对方忙线中</string>
-    <string name="voice_chat_not_found">对方手机不在身边亲稍后重试！</string>
     <string name="voice_chat_busy_toast">对方忙,请稍后再试!</string>
     <string name="voice_chat_setmastkey_err_toast">持有好友公钥不正确,请刷新通讯录列表!</string>
     <string name="voice_chat_err">连接失败</string>
@@ -39,7 +37,6 @@
 
 
     <!--拨打界面-->
-    <string name="voice_chat_invite_call">正在等待对方接收邀请</string>
     <string name="voice_chat_invite">邀请你进行语音聊天&#8230;</string>
     <string name="voice_chat_connect">连接中&#8230;</string>
     <string name="voice_chat_calling">呼叫中&#8230;</string>
@@ -53,12 +50,9 @@
     <string name="voice_chat_tips">温馨提示！</string>
     <string name="voice_chat_tips_content">拨打电话中需要开启悬浮窗权限才可以在界面上显示悬浮窗</string>
     <string name="voice_chat_tips_ok">确定</string>
-    <string name="voice_chat_tips_cancel">取消</string>
 
 
     <string name="voice_voip_is_incall">您正在通话中，请取消通话后重试！</string>
-    <string name="voice_chat_getmastkey">正在解密通话密钥</string>
-    <string name="voice_chat_sendmastkey">正在同步通话密钥</string>
 
 
 </resources>

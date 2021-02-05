@@ -9,14 +9,12 @@
     <include layout="@layout/layout_title_bar" />
 
     <RelativeLayout
-        android:id="@+id/Rl_service1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:layout_marginTop="10dp">
 
         <TextView
-            android:id="@+id/et_type1"
             android:layout_width="80dp"
             android:text="家政电话"
             android:textSize="14sp"
@@ -38,13 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="1dp" />
     <RelativeLayout
-        android:id="@+id/Rl_service2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white">
 
         <TextView
-            android:id="@+id/et_type2"
             android:layout_width="80dp"
             android:layout_height="50dp"
             android:text="订餐电话"
@@ -67,13 +63,11 @@
         android:layout_height="1dp" />
 
     <RelativeLayout
-        android:id="@+id/Rl_service3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/white">
 
         <TextView
-            android:id="@+id/et_type3"
             android:layout_width="80dp"
             android:layout_height="50dp"
             android:text="物业电话"

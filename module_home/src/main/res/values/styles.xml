@@ -49,28 +49,6 @@
     </style>
 
 
-    <style name="title_imButon">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:scaleType">centerInside</item>
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/btn_back1</item>
-        <item name="android:layout_gravity">center_vertical</item>
-    </style>
-
-    <style name="title_text_new">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:textSize">@dimen/contact_text_name</item>
-        <item name="android:textColor">@color/textcolor_gray</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="add_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!-- 边框 -->
         <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
@@ -119,21 +97,6 @@
     <style name="ActionSheetDialogAnimation" parent="@android:style/Animation.Dialog">
         <item name="android:windowEnterAnimation">@anim/actionsheet_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/actionsheet_dialog_out</item>
-    </style>
-
-    <style name="AnimationLeftFade">
-        <item name="android:windowEnterAnimation">@anim/in_lefttoright</item>
-        <item name="android:windowExitAnimation">@anim/out_righttoleft</item>
-    </style>
-
-    <style name="AnimationRightFade">
-        <item name="android:windowEnterAnimation">@anim/in_righttoleft</item>
-        <item name="android:windowExitAnimation">@anim/out_lefttoright</item>
-    </style>
-
-    <style name="AnimationBottomFade">
-        <item name="android:windowEnterAnimation">@anim/in_bottomtotop</item>
-        <item name="android:windowExitAnimation">@anim/out_toptobottom</item>
     </style>
 
 </resources>

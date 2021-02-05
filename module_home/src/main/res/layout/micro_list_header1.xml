@@ -63,7 +63,6 @@
             android:src="@drawable/ic_application" />
 
         <TextView
-            android:id="@+id/old_text"
             android:layout_width="50dp"
             android:layout_height="20dp"
             android:layout_alignEnd="@id/application"
@@ -87,7 +86,6 @@
 
 
         <TextView
-            android:id="@+id/shop_text"
             android:layout_width="57dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/video"
@@ -110,7 +108,6 @@
             android:src="@drawable/ic_browse" />
 
         <TextView
-            android:id="@+id/community_text"
             android:layout_width="57dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/browse"
@@ -132,7 +129,6 @@
             android:src="@drawable/ic_chat" />
 
         <TextView
-            android:id="@+id/message_text"
             android:layout_width="57dp"
             android:layout_height="20dp"
             android:layout_alignStart="@+id/chat"
@@ -144,7 +140,6 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/imageView"
         android:layout_width="330dp"
         android:layout_height="108dp"
         android:layout_gravity="center"

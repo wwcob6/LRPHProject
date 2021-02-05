@@ -51,7 +51,7 @@ public class ServiceManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_servicecall1);
+        setContentView(R.layout.activity_service_manager);
         ButterKnife.bind(this);
         titleset.setText("服务电话");
         ivBack1.setOnClickListener(new View.OnClickListener() {

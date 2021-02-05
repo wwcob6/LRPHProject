@@ -13,7 +13,6 @@
 
 
     <!--拨出电话-->
-    <string name="voice_call_fail">Call failed！</string>
     <string name="voice_chat_cancel">Cancelled</string>
     <string name="voice_chat_friend_refused">declined</string>
     <string name="voice_chat_no_answer">Not Answer</string>
@@ -31,7 +30,6 @@
     <string name="voice_chat_friend_refused_toast">The other party rejected your request.</string>
     <string name="voice_cha_not_logged_in">The other party\'s mobile phone is not around, please try again later!</string>
     <string name="voice_chat_busy">The other party is busy</string>
-    <string name="voice_chat_not_found">The other party is not logged in</string>
     <string name="voice_chat_busy_toast">The other party is busy, please try again later!</string>
     <string name="voice_chat_setmastkey_err_toast">The friend\'s public key is not correct. Please refresh the address book list!</string>
     <string name="voice_chat_err">Connection failed</string>
@@ -39,7 +37,6 @@
 
 
     <!--拨打界面-->
-    <string name="voice_chat_invite_call">Waiting for the other party to receive invitations</string>
     <string name="voice_chat_invite">Invite you to voice chat&#8230;</string>
     <string name="voice_chat_connect">connecting&#8230;</string>
     <string name="voice_chat_calling">In call&#8230;</string>
@@ -53,12 +50,9 @@
     <string name="voice_chat_tips">Tips！</string>
     <string name="voice_chat_tips_content">You need to enable the floating window permission to make a floating window on the interface.</string>
     <string name="voice_chat_tips_ok">OK</string>
-    <string name="voice_chat_tips_cancel">Cancel</string>
 
 
     <string name="voice_voip_is_incall">You are on a call, please cancel the call and try again！</string>
-    <string name="voice_chat_getmastkey">Decrypting the call key</string>
-    <string name="voice_chat_sendmastkey">Syncing call key</string>
 
 
 </resources>

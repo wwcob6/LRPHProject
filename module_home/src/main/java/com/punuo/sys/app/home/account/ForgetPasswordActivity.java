@@ -41,7 +41,7 @@ public class ForgetPasswordActivity extends BaseSwipeBackLoginActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_change_password1);
+        setContentView(R.layout.activity_change_password);
         ButterKnife.bind(this);
         targetView = verificodeGet;
         initViews();
