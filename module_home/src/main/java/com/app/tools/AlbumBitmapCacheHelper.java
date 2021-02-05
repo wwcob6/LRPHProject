@@ -11,7 +11,7 @@ import android.view.WindowManager;
 
 import androidx.collection.LruCache;
 
-import com.app.application.AppContext;
+import com.punuo.sys.sdk.PnApplication;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -137,7 +137,9 @@ public class AlbumBitmapCacheHelper {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;
                     BitmapFactory.decodeFile(path, options);
-                    options.inSampleSize = computeScale(options, ((WindowManager) (AppContext.getInstance().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getWidth(), ((WindowManager) (AppContext.getInstance().getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getWidth());
+                    WindowManager windowService = (WindowManager) PnApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
+                    options.inSampleSize = computeScale(options, windowService.getDefaultDisplay().getWidth(),
+                            windowService.getDefaultDisplay().getWidth());
                     options.inJustDecodeBounds = false;
                     try {
                         bitmap = BitmapFactory.decodeFile(path, options);

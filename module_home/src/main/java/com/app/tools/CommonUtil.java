@@ -3,7 +3,7 @@ package com.app.tools;
 import android.content.Context;
 import android.os.Environment;
 
-import com.app.application.AppContext;
+import com.punuo.sys.sdk.PnApplication;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -72,7 +72,7 @@ public class CommonUtil {
         if (isExistSDcard())
             path = Environment.getExternalStorageDirectory().getPath() + "/albumSelect";
         else
-            path = AppContext.getInstance().getFilesDir().getPath();
+            path = PnApplication.getInstance().getFilesDir().getPath();
         if (!path.endsWith("/"))
             path = path + "/";
         return path;
