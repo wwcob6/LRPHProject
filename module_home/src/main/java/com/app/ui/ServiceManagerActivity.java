@@ -154,7 +154,7 @@ public class ServiceManagerActivity extends BaseActivity {
             HttpManager.addRequest(mChangeCallRequest);
 
 
-        } else if (id == R.id.iv_back1) {
+        } else if (id == R.id.back) {
             finish();
         }
     }

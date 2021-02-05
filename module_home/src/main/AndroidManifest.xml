@@ -41,6 +41,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".friendCircleMain.adapter.ImagePagerActivity"
+            android:theme="@style/Theme.Pn.ImagePager"
             android:screenOrientation="portrait" />
         <activity
             android:name=".publish.PublishedActivity"
@@ -136,7 +137,6 @@
         <activity android:name="com.punuo.sys.app.home.activity.CloudAlbumActivity" />
         <activity android:name=".publish.PublishedActivity1" />
         <activity android:name="com.punuo.sys.app.home.activity.AlbumActivity" />
-        <activity android:name="com.punuo.sys.app.home.activity.AlbumSecondActivity" />
 
         <receiver
             android:name=".receiver.VideoConnectReceiver"

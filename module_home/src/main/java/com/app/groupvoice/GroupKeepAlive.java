@@ -4,7 +4,6 @@ package com.app.groupvoice;
 import com.alibaba.fastjson.JSON;
 import com.app.sip.SipInfo;
 
-import static com.app.R.id.devid;
 
 
 /**

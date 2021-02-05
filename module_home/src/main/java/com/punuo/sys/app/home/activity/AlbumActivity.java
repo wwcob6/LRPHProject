@@ -7,8 +7,6 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -24,9 +22,9 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.adapter.MyRecyclerViewAdapter;
+import com.app.friendCircleMain.adapter.ImagePagerActivity;
 import com.app.model.CloudPhoto;
 import com.app.request.GetImagesRequest;
-import com.app.tools.AlbumBitmapCacheHelper;
 import com.app.video.VideoInfo;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
@@ -34,7 +32,6 @@ import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +44,8 @@ public class AlbumActivity extends BaseSwipeBackActivity {
     private Context mContext;
     private MyRecyclerViewAdapter adapter;
     private final HashMap<Integer, float[]> xyMap = new HashMap<>();//所有子项的坐标
-    private int screenWidth;//屏幕宽度
-    private int screenHeight;//屏幕高度
-    PopupMenu popup;
+
+    private PopupMenu popup;
     private GetImagesRequest mGetImagesRequest;
 
     @Autowired(name = "month")
@@ -58,7 +54,7 @@ public class AlbumActivity extends BaseSwipeBackActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_albumactivity);
+        setContentView(R.layout.activity_album);
         ARouter.getInstance().inject(this);
         mContext = this;
         initView();
@@ -71,76 +67,15 @@ public class AlbumActivity extends BaseSwipeBackActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels;
-    }
-
     /**
      * recyclerView item点击事件
      */
     private void setEvent() {
-        adapter.setmOnLongItemClickListener((view, position) -> {
-            Log.d("onlongclick", "success");
-            popup = new PopupMenu(AlbumActivity.this, view);
-            // 将R.menu.popup_menu菜单资源加载到popup菜单中
-            popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
-            // 为popup菜单的菜单项单击事件绑定事件监听器
-            popup.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.deletepicture) {
-                    AlbumBitmapCacheHelper.getInstance().clearCache();
-                    File file = new File(images.get(position).substring(7));
-                    Log.d("ssssb", position + "");
-                    Log.d("ssssb", images.get(position).substring(7));
-                    if (file.exists()) {
-                        getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{images.get(position).substring(7)});//删除系统缩略图
-                        file.delete();
-                        images.remove(position);
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("ssssb", "文件不存在");
-                    }
-                }
-                return true;
-            });
-            popup.show();
-
-
-        });
         adapter.setmOnItemClickListener((view, position) -> {
-            Intent intent = new Intent(mContext, AlbumSecondActivity.class);
-            intent.putStringArrayListExtra("urls", (ArrayList<String>) images);
-            intent.putExtra("position", position);
-            xyMap.clear();//每一次点击前子项坐标都不一样，所以清空子项坐标
-
-            //子项前置判断，是否在屏幕内，不在的话获取屏幕边缘坐标
-            View view0 = mRecyclerView.getChildAt(0);
-            int position0 = mRecyclerView.getChildAdapterPosition(view0);
-            if (position0 > 0) {
-                for (int j = 0; j < position0; j++) {
-                    float[] xyf = new float[]{(1 / 6.0f + (j % 3) * (1 / 3.0f)) * screenWidth, 0};//每行3张图，每张图的中心点横坐标自然是屏幕宽度的1/6,3/6,5/6
-                    xyMap.put(j, xyf);
-                }
-            }
-            //其余子项判断
-            for (int i = position0; i < mRecyclerView.getAdapter().getItemCount(); i++) {
-                View view1 = mRecyclerView.getChildAt(i - position0);
-                if (mRecyclerView.getChildAdapterPosition(view1) == -1)//子项末尾不在屏幕部分同样赋值屏幕底部边缘
-                {
-                    float[] xyf = new float[]{(1 / 6.0f + (i % 3) * (1 / 3.0f)) * screenWidth, screenHeight};
-                    xyMap.put(i, xyf);
-                } else {
-                    int[] xy = new int[2];
-                    view1.getLocationOnScreen(xy);
-                    float[] xyf = new float[]{xy[0] * 1.0f + view1.getWidth() / 2, xy[1] * 1.0f + view1.getHeight() / 2};
-                    xyMap.put(i, xyf);
-                }
-            }
-            intent.putExtra("xyMap", xyMap);
+            Intent intent = new Intent(mContext, ImagePagerActivity.class);
+            // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
+            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) images);
+            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
             startActivity(intent);
         });
     }

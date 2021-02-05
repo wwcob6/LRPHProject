@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/Gray">
-    <!--app:cardCornerRadius="@dimen/dp_20">-->
 
     <RelativeLayout
         android:id="@+id/rl_cloudPhoto"
-        android:layout_marginTop="@dimen/sp_20"
+        android:layout_marginTop="@dimen/dp_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginEnd="@dimen/dp_10"
         android:background="@color/white">
@@ -29,9 +30,10 @@
             android:id="@+id/iv_photoCover"
             android:layout_width="@dimen/dp_100"
             android:layout_height="@dimen/dp_100"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:layout_marginStart="@dimen/dp_10"
             android:layout_marginEnd="@dimen/dp_10"
+            tools:src="@tools:sample/avatars"
             />
     </RelativeLayout>
 

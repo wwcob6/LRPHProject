@@ -1,9 +1,6 @@
 package com.app.friendCircleMain.adapter;
 
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -20,7 +17,6 @@ import java.util.ArrayList;
  * 图片查看器
  */
 public class ImagePagerActivity extends BaseSwipeBackActivity {
-	PopupMenu popup;
 	private static final String STATE_POSITION = "STATE_POSITION";
 	public static final String EXTRA_IMAGE_INDEX = "image_index";
 	public static final String EXTRA_IMAGE_URLS = "image_urls";
@@ -33,12 +29,6 @@ public class ImagePagerActivity extends BaseSwipeBackActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// 隐藏标题栏
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// 隐藏状态栏
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		setContentView(R.layout.image_detail_pager);
 		pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
 		ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
@@ -52,22 +42,22 @@ public class ImagePagerActivity extends BaseSwipeBackActivity {
 		CharSequence text = getString(R.string.viewpager_indicator, 1, mPager.getAdapter().getCount());
 		indicator.setText(text);
 		// 更新下标
-		mPager.setOnPageChangeListener(new OnPageChangeListener() {
-
+		mPager.addOnPageChangeListener(new OnPageChangeListener() {
 			@Override
-			public void onPageScrollStateChanged(int arg0) {
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
 			}
 
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-
-			@Override
-			public void onPageSelected(int arg0) {
-				CharSequence text = getString(R.string.viewpager_indicator, arg0 + 1, mPager.getAdapter().getCount());
+			public void onPageSelected(int position) {
+				CharSequence text = getString(R.string.viewpager_indicator, position + 1, mPager.getAdapter().getCount());
 				indicator.setText(text);
 			}
 
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
 		});
 		if (savedInstanceState != null) {
 			pagerPosition = savedInstanceState.getInt(STATE_POSITION);

@@ -23,7 +23,6 @@ import com.app.model.CloudPhotoCover;
 import com.app.model.PhotoCoverResult;
 import com.app.publish.PublishedActivity1;
 import com.app.request.GetPhotoCoverRequest;
-import com.punuo.sys.sdk.activity.ActivityCollector;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
@@ -54,7 +53,6 @@ public class CloudAlbumActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cloud_album);
-        ActivityCollector.addActivity(this);
         ButterKnife.bind(this);
         title1.setText("相册");
         RelativeLayout.LayoutParams layoutParams=(RelativeLayout.LayoutParams)title1.getLayoutParams();
@@ -73,7 +71,6 @@ public class CloudAlbumActivity extends Activity {
         }
 
         back1.setOnClickListener(v->{
-            ActivityCollector.removeActivity(this);
             finish();
         });
         add1.setOnClickListener(v->{

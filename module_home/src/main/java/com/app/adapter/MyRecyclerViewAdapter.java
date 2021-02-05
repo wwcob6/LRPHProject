@@ -48,19 +48,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         parm.height = glm.getWidth() / glm.getSpanCount()
                 - 2 * myViewHolder.imageView.getPaddingLeft() - 2 * ((ViewGroup.MarginLayoutParams) parm).leftMargin;
         Glide.with(mContext).load(images.get(i)).apply(new RequestOptions().placeholder(R.drawable.pictureloading)).into(myViewHolder.imageView);
-        if (mOnItemClickListener != null) {
-            myViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        myViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnItemClickListener != null) {
                     mOnItemClickListener.onClick(myViewHolder.imageView, i);
                 }
+            }
 
-            });
-        }
+        });
         myViewHolder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mOnLongItemClickListener.onLongClick(myViewHolder.imageView, i);
+                if (mOnLongItemClickListener != null) {
+                    mOnLongItemClickListener.onLongClick(myViewHolder.imageView, i);
+                }
                 return false;
             }
         });
