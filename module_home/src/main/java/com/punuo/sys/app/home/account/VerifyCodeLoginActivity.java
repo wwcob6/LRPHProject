@@ -26,7 +26,7 @@ import com.punuo.sip.dev.model.LoginResponseDev;
 import com.punuo.sip.dev.request.SipDevRegisterRequest;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
-import com.punuo.sip.user.event.UserLoginFailEvent;
+import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.sdk.account.AccountManager;
@@ -314,8 +314,9 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(UserLoginFailEvent event) {
+    public void onMessageEvent(UnauthorizedEvent event) {
         userLoginFailed = true;
+        dismissLoadingDialog();
     }
     /** sip注册相关该页面只进行sip的注册不启动心跳包 心跳包在
      * {@link com.punuo.sys.app.home.HomeActivity}

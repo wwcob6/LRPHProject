@@ -38,6 +38,7 @@ public class PageFragment extends BaseFragment {
                     ToastUtils.showToast("注册");
                     ARouter.getInstance().build(HomeRouter.ROUTER_REGISTER_ACTIVITY)
                             .navigation();
+                    getActivity().finish();
                 }
             });
             rootView.findViewById(R.id.id_login).setOnClickListener(new View.OnClickListener() {
@@ -46,6 +47,7 @@ public class PageFragment extends BaseFragment {
                     ToastUtils.showToast("登陆");
                     ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY)
                             .navigation();
+                    getActivity().finish();
                 }
             });
         }

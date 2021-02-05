@@ -1,10 +1,11 @@
 package com.punuo.sip.user.service;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.punuo.sip.user.event.UserLoginFailEvent;
+import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.request.BaseUserSipRequest;
 import com.punuo.sys.sdk.httplib.ErrorTipException;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
+import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.zoolu.sip.message.BaseSipResponses;
@@ -28,7 +29,8 @@ public class ErrorServiceUser extends NormalUserRequestService<String> {
         if (code == 100) {
 
         } else if (code == 401) {
-            EventBus.getDefault().post(new UserLoginFailEvent());
+            EventBus.getDefault().post(new UnauthorizedEvent());
+            ToastUtils.showToast("账号密码错误");
         } else if (code == 400) {
 
         } else {

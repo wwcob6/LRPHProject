@@ -20,7 +20,6 @@ public class BaseActivity extends AppCompatActivity implements BaseHandler.Messa
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        ActivityCollector.addActivity(this);
         initLoadingDialog();
         mBaseHandler = new BaseHandler(this);
     }
@@ -80,7 +79,6 @@ public class BaseActivity extends AppCompatActivity implements BaseHandler.Messa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ActivityCollector.removeActivity(this);
         dismissLoadingDialog();
     }
 

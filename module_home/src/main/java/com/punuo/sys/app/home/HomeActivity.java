@@ -40,7 +40,7 @@ import com.punuo.sip.user.H264ConfigUser;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.UserHeartBeatHelper;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
-import com.punuo.sip.user.event.UserLoginFailEvent;
+import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.event.UserReplaceEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
@@ -335,7 +335,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(UserLoginFailEvent event) {
+    public void onMessageEvent(UnauthorizedEvent event) {
         mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         userLoginFailed = true;
     }
