@@ -97,7 +97,7 @@
             android:name=".ui.MessageNotifyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.NumberBind"
+            android:name=".ui.BindPhoneActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.DevBindSuccessActivity"

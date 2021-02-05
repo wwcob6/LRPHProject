@@ -19,9 +19,9 @@ import com.app.R2;
 import com.app.sip.SipInfo;
 import com.app.ui.address.AddressManagerActivity;
 import com.punuo.sip.AccountUtil;
+import com.punuo.sys.app.home.login.BaseSwipeBackLoginActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
-import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.DataClearUtil;
 
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class SettingActivity extends BaseSwipeBackActivity {
+public class SettingActivity extends BaseSwipeBackLoginActivity {
 
 
     @BindView(R2.id.re_psds)
@@ -78,7 +78,7 @@ public class SettingActivity extends BaseSwipeBackActivity {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.re_phonenumber) {
-            startActivity(new Intent(this, NumberBind.class));
+            startActivity(new Intent(this, BindPhoneActivity.class));
         } else if (id == R.id.re_personal) {
             startActivity(new Intent(this, UserInfoActivity.class));
         } else if (id == R.id.logout) {
