@@ -3,8 +3,6 @@ package com.punuo.sys.app.home.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,22 +11,26 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.adapter.PhoneRecyclerViewAdapter;
-import com.app.db.MyDatabaseHelper;
-import com.app.model.FamilyMember;
 import com.app.model.MessageEvent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.punuo.sys.app.home.db.ContractPerson;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.router.HomeRouter;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 
 public class FriendCallActivity extends BaseActivity {
@@ -36,14 +38,12 @@ public class FriendCallActivity extends BaseActivity {
     private RecyclerView rv;
     private Context mContext;
     private PhoneRecyclerViewAdapter adapter;
-    private MyDatabaseHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_call);
         mContext = this;
         EventBus.getDefault().register(this);
-        dbHelper = new MyDatabaseHelper(this, "member.db", null, 2);
         initView();
         getData();
 
@@ -63,19 +63,16 @@ public class FriendCallActivity extends BaseActivity {
 
     private void getData() {
         adapter.clear();
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query("Person", null, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String name = cursor.getString(cursor.getColumnIndex("name"));
-                String phoneNumber = cursor.getString(cursor.getColumnIndex("phonenumber"));
-                String avatarUrl = cursor.getString(cursor.getColumnIndex("avatorurl"));
-                FamilyMember familymember = new FamilyMember(name, phoneNumber, avatarUrl);
-                adapter.addData(familymember);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        adapter.notifyDataSetChanged();
+        SQLite.select()
+                .from(ContractPerson.class)
+                .async()
+                .queryListResultCallback(new QueryTransaction.QueryResultListCallback<ContractPerson>() {
+                    @Override
+                    public void onListQueryResult(QueryTransaction transaction, @NonNull List<ContractPerson> tResult) {
+                        adapter.addAllData(tResult);
+                        adapter.notifyDataSetChanged();
+                    }
+                }).execute();
     }
 
     private void initView() {
@@ -87,7 +84,7 @@ public class FriendCallActivity extends BaseActivity {
         GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
         rv.setLayoutManager(glm);
         rv.addItemDecoration(new FriendCallActivity.RecyclerViewItemDecoration(2, 3));//初始化子项距离和列数
-        adapter = new PhoneRecyclerViewAdapter(mContext, dbHelper);
+        adapter = new PhoneRecyclerViewAdapter(mContext);
         rv.setAdapter(adapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add);

@@ -82,4 +82,9 @@ dependencies {
     api 'com.makeramen:roundedimageview:2.3.0'
     api 'com.github.hanreality:WheelPicker_Component:1.0.1'
 
+    kapt "com.github.Raizlabs.DBFlow:dbflow-processor:$gradle.sdk.dbflow_version"
+    api "com.github.Raizlabs.DBFlow:dbflow-core:$gradle.sdk.dbflow_version"
+    api "com.github.Raizlabs.DBFlow:dbflow:$gradle.sdk.dbflow_version"
+    api "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:$gradle.sdk.dbflow_version"
+
 }
