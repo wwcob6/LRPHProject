@@ -12,17 +12,17 @@ import android.widget.PopupWindow;
 
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
+import com.app.request.AddCommentRequest;
+import com.app.request.AddLikeRequest;
+import com.app.request.DeleteLikeRequest;
+import com.app.request.UpdateLikeRequest;
+import com.punuo.sys.app.home.friendCircle.PraiseConst;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendComment;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendPraise;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendPraiseType;
 import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListDatas;
 import com.punuo.sys.app.home.friendCircle.event.FriendRefreshEvent;
-import com.punuo.sys.app.home.friendCircle.viewholder.FriendPraiseViewHolder;
-import com.app.request.AddCommentRequest;
-import com.app.request.AddLikeRequest;
-import com.app.request.DeleteLikeRequest;
-import com.app.request.UpdateLikeRequest;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.util.CommonUtil;
@@ -101,28 +101,28 @@ public class PopupWindowUtil {
         mBtnPraise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitPraise(FriendPraiseViewHolder.TYPE_DIANZAN);
+                submitPraise(PraiseConst.TYPE_DIANZAN);
             }
         });
 
         mExpress1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitPraise(FriendPraiseViewHolder.TYPE_WEIXIAO);
+                submitPraise(PraiseConst.TYPE_WEIXIAO);
             }
         });
 
         mExpress2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitPraise(FriendPraiseViewHolder.TYPE_DAXIAO);
+                submitPraise(PraiseConst.TYPE_DAXIAO);
             }
         });
 
         mExpress3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitPraise(FriendPraiseViewHolder.TYPE_KUXIAO);
+                submitPraise(PraiseConst.TYPE_KUXIAO);
             }
         });
     }

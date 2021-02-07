@@ -7,6 +7,6 @@
 
     <!--这里设置badge的大小-->
     <size
-        android:width="@dimen/dp_9"
-        android:height="@dimen/dp_9" />
+        android:width="9dp"
+        android:height="9dp" />
 </shape>

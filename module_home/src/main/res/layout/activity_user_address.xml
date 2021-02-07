@@ -116,7 +116,7 @@
         android:id="@+id/rl_addressDelete"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginTop="20dp"
         android:background="@color/white">
 
         <TextView

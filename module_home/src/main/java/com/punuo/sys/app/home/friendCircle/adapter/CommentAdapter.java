@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.app.R;
 import com.app.Util;
 import com.bumptech.glide.Glide;
+import com.punuo.sys.app.home.friendCircle.PraiseConst;
 import com.punuo.sys.app.message.model.CommentModel;
 import com.punuo.sys.sdk.PnApplication;
 
@@ -18,24 +19,24 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-    private List<CommentModel> mCommentModelList;
+    private final List<CommentModel> mCommentModelList;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView replyName;
         TextView replyContent;
         TextView replyTime;
-        TextView replyAddlikes;
+        TextView replyAddLikes;
         ImageView replyAvatar;
-        ImageView commenttedPicture;
+        ImageView commentPicture;
 
         public ViewHolder(View view) {
             super(view);
             replyName = view.findViewById(R.id.reply_name);
             replyContent = view.findViewById(R.id.reply_content);
             replyTime = view.findViewById(R.id.reply_time);
-            replyAddlikes = view.findViewById(R.id.reply_addlikes);
+            replyAddLikes = view.findViewById(R.id.reply_add_likes);
             replyAvatar = view.findViewById(R.id.reply_avatar);
-            commenttedPicture = view.findViewById(R.id.commentted_picture);
+            commentPicture = view.findViewById(R.id.comment_picture);
         }
     }
 
@@ -53,13 +54,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, int position) {
         CommentModel commentModel = mCommentModelList.get(position);
         holder.replyName.setText(commentModel.replyName);
-        if ((commentModel.praisetype != null) && !("".equals(commentModel.praisetype))) {
+        if ((commentModel.praiseType != null) && !("".equals(commentModel.praiseType))) {
             holder.replyContent.setVisibility(View.INVISIBLE);
-            holder.replyAddlikes.setVisibility(View.VISIBLE);
-            holder.replyAddlikes.setText(commentModel.praisetype);
+            holder.replyAddLikes.setVisibility(View.VISIBLE);
+            holder.replyAddLikes.setText(getPraiseText(commentModel.praiseType));
         } else {
             holder.replyContent.setVisibility(View.VISIBLE);
-            holder.replyAddlikes.setVisibility(View.INVISIBLE);
+            holder.replyAddLikes.setVisibility(View.INVISIBLE);
             holder.replyContent.setText(commentModel.comment);
         }
         holder.replyTime.setText(commentModel.createTime);
@@ -69,14 +70,35 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             Glide.with(PnApplication.getInstance()).load(Util.getImageUrl(commentModel.id, commentModel.avatar)).into(holder.replyAvatar);
         }
         if (commentModel.pic == null) {
-            holder.commenttedPicture.setImageResource(R.drawable.defaultavator);
+            holder.commentPicture.setImageResource(R.drawable.defaultavator);
         } else {
-            Glide.with(PnApplication.getInstance()).load(Util.getImageUrl(commentModel.id, commentModel.pic)).into(holder.commenttedPicture);
+            Glide.with(PnApplication.getInstance()).load(Util.getImageUrl(commentModel.id, commentModel.pic)).into(holder.commentPicture);
         }
     }
 
     @Override
     public int getItemCount() {
         return mCommentModelList.size();
+    }
+
+    public String getPraiseText(String pariseType) {
+        String text = "";
+        switch (pariseType) {
+            case PraiseConst.TYPE_DIANZAN:
+                text = PraiseConst.DESC_LIST[0];
+                break;
+            case PraiseConst.TYPE_WEIXIAO:
+                text = PraiseConst.DESC_LIST[1];
+                break;
+            case PraiseConst.TYPE_DAXIAO:
+                text = PraiseConst.DESC_LIST[2];
+                break;
+            case PraiseConst.TYPE_KUXIAO:
+                text = PraiseConst.DESC_LIST[3];
+                break;
+            default:
+                break;
+        }
+        return text;
     }
 }

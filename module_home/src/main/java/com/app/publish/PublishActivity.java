@@ -2,8 +2,6 @@ package com.app.publish;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,14 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
-import com.punuo.sys.app.home.friendCircle.event.FriendReLoadEvent;
-import com.punuo.sys.app.home.utils.FileUtils;
-import com.app.publish.adapter.GridImageAdapter;
+import com.app.publish.adapter.PublishImageAdapter;
 import com.app.request.UploadPostRequest;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.punuo.sys.app.home.friendCircle.adapter.ImagePagerActivity;
+import com.punuo.sys.app.home.friendCircle.event.FriendReLoadEvent;
+import com.punuo.sys.app.home.utils.FileUtils;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
@@ -31,7 +30,6 @@ import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.model.PNBaseModel;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.CommonUtil;
-import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,51 +40,51 @@ import java.util.List;
 
 @Route(path = HomeRouter.ROUTER_PUBLISH_ACTIVITY)
 public class PublishActivity extends BaseSwipeBackActivity {
-    private RecyclerView mGridView;
-    private GridImageAdapter mGridImageAdapter;
+    private RecyclerView mRecyclerView;
+    private PublishImageAdapter mPublishImageAdapter;
     private EditText mEditText;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_layout);
         init();
-        StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
-        View statusBar = findViewById(R.id.status_bar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            statusBar.setVisibility(View.VISIBLE);
-            statusBar.getLayoutParams().height = StatusBarUtil.getStatusBarHeight(this);
-            statusBar.requestLayout();
-        }
     }
 
     public void init() {
         mEditText = (EditText) findViewById(R.id.edit_input);
 
-        mGridView = (RecyclerView) findViewById(R.id.grid_view);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
-        mGridView.setLayoutManager(gridLayoutManager);
-        mGridImageAdapter = new GridImageAdapter(this, new ICallBack() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.grid_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mPublishImageAdapter = new PublishImageAdapter(this, new ICallBack() {
             @Override
             public void itemClick(String path, int position) {
-                CommonUtil.hideKeyboard(PublishActivity.this);
-                PictureSelector.create(PublishActivity.this)
-                        .openGallery(PictureMimeType.ofImage())
-                        .imageSpanCount(4)
-                        .selectionMode(PictureConfig.MULTIPLE)
-                        .maxSelectNum(9 - mGridImageAdapter.size())
-                        .minSelectNum(1)
-                        .imageFormat(PictureMimeType.JPEG)
-                        .forResult(PictureConfig.CHOOSE_REQUEST);
+                if (TextUtils.equals("add", path)) {
+                    CommonUtil.hideKeyboard(PublishActivity.this);
+                    PictureSelector.create(PublishActivity.this)
+                            .openGallery(PictureMimeType.ofImage())
+                            .imageSpanCount(4)
+                            .selectionMode(PictureConfig.MULTIPLE)
+                            .maxSelectNum(9 - mPublishImageAdapter.size())
+                            .minSelectNum(1)
+                            .imageFormat(PictureMimeType.JPEG)
+                            .forResult(PictureConfig.CHOOSE_REQUEST);
+                } else {
+                    Intent intent = new Intent(PublishActivity.this, ImagePagerActivity.class);
+                    intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) mPublishImageAdapter.getImages());
+                    intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                    startActivity(intent);
+                }
             }
         });
-        mGridView.setAdapter(mGridImageAdapter);
-        mGridImageAdapter.resetData(new ArrayList<>());
+        mRecyclerView.setAdapter(mPublishImageAdapter);
+        mPublishImageAdapter.resetData(new ArrayList<>());
         TextView publish = (TextView) findViewById(R.id.activity_selectimg_send);
         publish.setText("发表");
         publish.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String dongTai = mEditText.getText().toString();
-                uploadPost(dongTai, compressBitmap(mGridImageAdapter.getData()));
+                uploadPost(dongTai, compressBitmap(mPublishImageAdapter.getData()));
             }
         });
     }
@@ -173,9 +171,9 @@ public class PublishActivity extends BaseSwipeBackActivity {
                     List<LocalMedia> selectList = PictureSelector.obtainMultipleResult(data);
                     for (LocalMedia localMedia : selectList) {
                         String path = localMedia.getPath();
-                        mGridImageAdapter.addData(path);
+                        mPublishImageAdapter.addData(path);
                     }
-                    mGridImageAdapter.notifyDataSetChanged();
+                    mPublishImageAdapter.notifyDataSetChanged();
                 }
                 break;
             default:

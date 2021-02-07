@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical">
 
-    <View
-        android:id="@+id/status_bar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@color/newbackground"
-        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/newbackground">
+        android:background="@color/white">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,8 +17,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="写动态"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/activity_selectimg_send"
@@ -34,28 +29,28 @@
             android:layout_marginRight="8dp"
             android:gravity="center"
             android:text="发表"
-            android:textColor="@drawable/text_while"
+            android:textColor="#333333"
             android:textSize="16sp" />
     </RelativeLayout>
 
     <EditText
         android:id="@+id/edit_input"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_margin="8dp"
-        android:background="@null"
-        android:gravity="left|top"
-        android:hint="分享您的那点新鲜事儿..." />
+        android:layout_margin="12dp"
+        android:background="#f2f4f6"
+        android:gravity="top"
+        android:hint="分享您的那点新鲜事儿..."
+        android:padding="12dp"
+        android:textSize="15sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/grid_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:horizontalSpacing="3dp"
-        android:numColumns="4"
-        android:scrollbars="none"
-        android:verticalSpacing="5dp" />
+        android:layout_marginRight="7dp"
+        android:layout_marginLeft="7dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp" />
 
 </LinearLayout>

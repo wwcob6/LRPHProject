@@ -3,7 +3,6 @@ package com.punuo.sys.app.home.friendCircle.adapter;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Paint;
-import android.os.Environment;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,8 +45,6 @@ public abstract class NineGridLayout extends ViewGroup {
 
     public NineGridLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        String sdCard = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String avaPath = sdCard + "/fanxin/Files/Camera/Image/";
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.NineGridLayout);
         mSpacing = typedArray.getDimension(R.styleable.NineGridLayout_sapcing, DEFUALT_SPACING);
         typedArray.recycle();
@@ -64,12 +61,10 @@ public abstract class NineGridLayout extends ViewGroup {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        System.out.println("测量。。。");
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        System.out.println("onlayout。。。");
         mTotalWidth = right - left;
         mSingleWidth = (int) ((mTotalWidth - mSpacing * (3 - 1)) / 3);
         if (mIsFirst) {

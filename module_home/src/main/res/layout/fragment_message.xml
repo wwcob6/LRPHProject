@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/newbackground1"
     android:orientation="vertical">
 
     <View
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
+        android:background="@color/white"
         android:visibility="gone" />
 
     <include layout="@layout/layout_title_bar" />
@@ -45,12 +45,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/dp_40"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/redrect"
             android:gravity="center"
             android:text="3"
             android:textColor="#ffffff"
-            android:textSize="@dimen/sp_14"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <ImageView
@@ -95,12 +95,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/dp_40"
+            android:layout_marginEnd="40dp"
             android:background="@drawable/redrect"
             android:gravity="center"
             android:text="1"
             android:textColor="#ffffff"
-            android:textSize="@dimen/sp_14"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <ImageView
@@ -140,6 +140,7 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/welcome_text"
             android:layout_width="match_parent"
             android:layout_height="24dp"
             android:layout_below="@+id/system_notify"

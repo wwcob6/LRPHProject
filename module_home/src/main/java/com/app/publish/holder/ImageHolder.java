@@ -12,6 +12,7 @@ import com.app.R2;
 import com.app.publish.ICallBack;
 import com.bumptech.glide.Glide;
 import com.punuo.sys.sdk.recyclerview.BaseViewHolder;
+import com.punuo.sys.sdk.util.CommonUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,21 +30,16 @@ public class ImageHolder extends BaseViewHolder<String> {
     public ImageHolder(Context context, ViewGroup parent, ICallBack callBack) {
         super(LayoutInflater.from(context).inflate(R.layout.publish_item_image, parent, false));
         ButterKnife.bind(this, itemView);
+        int size = (CommonUtil.getWidth() - CommonUtil.dip2px(14f)) / 4;
+        itemView.getLayoutParams().width = size;
+        itemView.getLayoutParams().height = size;
         mCallBack = callBack;
     }
 
     @Override
     protected void bindData(final String path, int position) {
         if (!TextUtils.equals("add", path)) {
-            if (path != null) {
-                Glide.with(itemView.getContext()).load(path).into(mImage);
-                mImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-            }
+            Glide.with(itemView.getContext()).load(path).into(mImage);
         } else {
             mImage.setImageResource(R.drawable.icon_addpic_unfocused);
         }
@@ -55,6 +51,5 @@ public class ImageHolder extends BaseViewHolder<String> {
                 }
             }
         });
-
     }
 }

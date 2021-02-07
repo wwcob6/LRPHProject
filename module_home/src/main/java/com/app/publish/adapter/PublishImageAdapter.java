@@ -16,10 +16,10 @@ import java.util.List;
  * Created by han.chen.
  * Date on 2019-06-21.
  **/
-public class GridImageAdapter extends BaseRecyclerViewAdapter<String> {
+public class PublishImageAdapter extends BaseRecyclerViewAdapter<String> {
     private ICallBack mCallBack;
     private List<String> images = new ArrayList<>();
-    public GridImageAdapter(Context context, ICallBack callBack) {
+    public PublishImageAdapter(Context context, ICallBack callBack) {
         super(context, new ArrayList<>());
         mCallBack = callBack;
         mData.add("add");
@@ -72,5 +72,9 @@ public class GridImageAdapter extends BaseRecyclerViewAdapter<String> {
 
     public int size() {
         return images.size();
+    }
+
+    public List<String> getImages() {
+        return images;
     }
 }

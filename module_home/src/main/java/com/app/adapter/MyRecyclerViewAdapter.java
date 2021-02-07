@@ -46,7 +46,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         ViewGroup.LayoutParams parm = myViewHolder.imageView.getLayoutParams();
         parm.height = glm.getWidth() / glm.getSpanCount()
                 - 2 * myViewHolder.imageView.getPaddingLeft() - 2 * ((ViewGroup.MarginLayoutParams) parm).leftMargin;
-        Glide.with(mContext).load(images.get(i)).apply(new RequestOptions().placeholder(R.drawable.pictureloading)).into(myViewHolder.imageView);
+        Glide.with(mContext).load(images.get(i))
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.pictureloading))
+                .into(myViewHolder.imageView);
 
         myViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,12 +76,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return images.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView imageView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.iv_item);
+            imageView = itemView.findViewById(R.id.iv_item);
         }
     }
 

@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="12dp"
@@ -31,21 +32,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_toRightOf="@id/avator"
+                android:layout_toRightOf="@+id/avator"
                 android:textColor="#576B95"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="昵称"/>
 
             <TextView
                 android:id="@+id/content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name"
-                android:layout_alignBottom="@+id/avator"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/avator"
+                android:layout_toRightOf="@+id/avator"
                 android:gravity="center_vertical"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:layout_marginTop="6dp"
+                tools:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"/>
+
+            <com.punuo.sys.app.home.friendCircle.adapter.NineGridTestLayout
+                android:id="@+id/layout_nine_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/content"
+                android:layout_toRightOf="@+id/avator"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="6dp"
+                app:sapcing="4dp" />
 
             <TextView
                 android:id="@+id/time"
@@ -53,28 +66,19 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_nine_grid"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/avator"
+                android:layout_marginTop="6dp"
+                android:layout_toRightOf="@+id/avator"
                 android:textColor="@color/gary"
                 android:textSize="10sp" />
 
-            <com.punuo.sys.app.home.friendCircle.adapter.NineGridTestLayout
-                android:id="@+id/layout_nine_grid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="30dp"
-                app:sapcing="4dp" />
-
-            <Button
+            <ImageView
                 android:id="@+id/btnIgnore"
-                android:layout_width="22dp"
-                android:layout_height="15dp"
+                android:layout_width="30dp"
+                android:layout_height="20dp"
                 android:layout_below="@id/layout_nine_grid"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/micro_comment" />
+                android:layout_marginTop="12dp"
+                android:src="@drawable/micro_comment" />
 
         </RelativeLayout>
 
@@ -83,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="48dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="6dp"
             android:background="@color/lightgary" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -91,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="48dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="6dp"
             android:background="@color/lightgary" />
     </LinearLayout>
 </LinearLayout>

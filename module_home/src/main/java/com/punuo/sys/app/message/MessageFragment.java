@@ -15,6 +15,7 @@ import com.app.R;
 import com.app.R2;
 import com.punuo.sys.app.message.badge.BadgeHelper;
 import com.punuo.sys.app.message.badge.MessageBadgeCnt;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
@@ -51,6 +52,9 @@ public class MessageFragment extends Fragment {
     @BindView(R2.id.count2)
     TextView count2;
 
+    @BindView(R2.id.welcome_text)
+    TextView welcomeText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class MessageFragment extends Fragment {
         title.setText("消息");
         back.setVisibility(View.GONE);
         updateCount(BadgeHelper.messageBadgeCnt);
+        welcomeText.setText(String.format("Hi,亲爱的%s，欢迎你登录亲情视线!", UserInfoManager.getUserInfo().nickname));
         EventBus.getDefault().register(this);
         return view;
     }

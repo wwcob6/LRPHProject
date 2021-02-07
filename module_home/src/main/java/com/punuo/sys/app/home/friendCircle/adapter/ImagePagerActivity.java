@@ -1,5 +1,6 @@
 package com.punuo.sys.app.home.friendCircle.adapter;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -10,6 +11,7 @@ import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 
 import com.app.R;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
+import com.punuo.sys.sdk.util.StatusBarUtil;
 
 import java.util.ArrayList;
 
@@ -30,6 +32,7 @@ public class ImagePagerActivity extends BaseSwipeBackActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.image_detail_pager);
+		StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
 		pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
 		ArrayList<String> urls = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
 

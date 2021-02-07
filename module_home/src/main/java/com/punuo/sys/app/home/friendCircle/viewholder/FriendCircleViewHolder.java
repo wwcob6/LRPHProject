@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.R;
 import com.app.Util;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.punuo.sys.app.home.friendCircle.adapter.FriendCommentAdapter;
 import com.punuo.sys.app.home.friendCircle.adapter.FriendPraiseAdapter;
 import com.punuo.sys.app.home.friendCircle.adapter.NineGridTestLayout;
@@ -22,8 +23,6 @@ import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendImage;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendPraise;
 import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListDatas;
 import com.punuo.sys.app.home.friendCircle.util.PopupWindowUtil;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.punuo.sys.sdk.recyclerview.BaseViewHolder;
 import com.punuo.sys.sdk.util.TimeUtils;
 import com.punuo.sys.sdk.util.ViewUtil;
@@ -44,7 +43,7 @@ public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas>
     private ImageView mAvatar;
     private TextView mName;
     private TextView mContent;
-    private Button btnIgnore;
+    private ImageView btnIgnore;
     private Context mContext;
 
     private RecyclerView mPariseList;
@@ -99,7 +98,7 @@ public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas>
          * 服务器返回的时间是：年-月-日 时：分，所以获取的时候应该是yyyy-MM-dd HH:mm
          */
         String strTime = bean.getCreate_time().trim();
-        if (TextUtils.isEmpty(strTime)) {
+        if (!TextUtils.isEmpty(strTime)) {
             SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             String date = sDateFormat.format(new Date());
             String t = TimeUtils.getTimes(date, strTime);

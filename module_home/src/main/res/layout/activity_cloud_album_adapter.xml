@@ -8,13 +8,13 @@
 
     <RelativeLayout
         android:id="@+id/rl_cloudPhoto"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_10"
-        android:paddingBottom="@dimen/dp_10"
-        android:layout_marginStart="@dimen/dp_10"
-        android:layout_marginEnd="@dimen/dp_10"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@color/white">
         <TextView
             android:id="@+id/tv_photoDate"
@@ -24,15 +24,15 @@
             android:text="2019年7月"
             android:gravity="center_vertical"
             android:layout_toRightOf="@+id/iv_photoCover"
-            android:textSize="@dimen/sp_18"
+            android:textSize="18sp"
             android:textColor="@color/black"/>
         <ImageView
             android:id="@+id/iv_photoCover"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="@dimen/dp_100"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
-            android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             tools:src="@tools:sample/avatars"
             />
     </RelativeLayout>

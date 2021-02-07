@@ -1,10 +1,7 @@
 package com.punuo.sys.app.message;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,11 +39,6 @@ public class SystemNotifyActivity extends BaseSwipeBackActivity {
         ButterKnife.bind(this);
         title.setText("系统通知");
         back.setOnClickListener(v -> scrollToFinishActivity());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.newbackground));
-        }
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvSystemNotify.setLayoutManager(layoutManager);
         getData();

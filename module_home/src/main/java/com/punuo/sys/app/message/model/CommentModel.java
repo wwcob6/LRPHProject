@@ -14,12 +14,12 @@ public class CommentModel {
     public String addLikeId;
     @SerializedName("create_time")
     public String createTime;
-    @SerializedName("replayName")
+    @SerializedName("replyName")
     public String replyName;
     @SerializedName("avatar")
     public String avatar;
     @SerializedName("praisetype")
-    public String praisetype;
+    public String praiseType;
     @SerializedName("pic")
     public String pic;
     @SerializedName("nickname")

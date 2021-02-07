@@ -97,8 +97,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/dp_2"
-                android:padding="@dimen/dp_1"
+                android:layout_marginTop="2dp"
+                android:padding="1dp"
                 android:src="@drawable/selector_message" />
 
             <TextView
@@ -111,7 +111,7 @@
                 android:background="@drawable/badge_bg"
                 android:gravity="center"
                 android:textColor="#ffffff"
-                android:textSize="@dimen/sp_6"
+                android:textSize="6sp"
                 android:visibility="gone" />
 
             <TextView
