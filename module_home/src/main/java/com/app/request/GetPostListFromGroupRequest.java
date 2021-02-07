@@ -1,6 +1,6 @@
 package com.app.request;
 
-import com.app.friendCircleMain.domain.FriendsMicro;
+import com.punuo.sys.app.home.friendCircle.domain.FriendsMicro;
 import com.punuo.sys.sdk.httplib.BaseRequest;
 
 /**

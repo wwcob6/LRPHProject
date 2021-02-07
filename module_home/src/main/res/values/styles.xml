@@ -40,14 +40,6 @@
 
     <!-- Base application theme. -->
 
-    <style name="AudioDialog" parent="@android:style/Theme.Dialog"><!--自定义对话框风格-->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
-
 
     <style name="add_dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item><!-- 边框 -->
@@ -56,23 +48,6 @@
         <item name="android:windowNoTitle">false</item><!-- 无标题 -->
         <item name="android:windowBackground">@color/bantouming</item><!-- 自己想要的背景 -->
         <item name="android:backgroundDimEnabled">true</item><!-- 模糊 -->
-    </style>
-
-    <style name="BottomDialog" parent="@android:style/Theme.Dialog">
-
-        <!-- 背景透明 -->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <!-- 浮于Activity之上 -->
-        <item name="android:windowIsFloating">true</item>
-        <!-- 边框 -->
-        <item name="android:windowFrame">@null</item>
-        <!-- Dialog以外的区域模糊效果 -->
-        <item name="android:backgroundDimEnabled">true</item>
-        <!-- 无标题 -->
-        <item name="android:windowNoTitle">true</item>
-        <!-- 半透明 -->
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="ActionSheetDialogStyle" parent="@android:style/Theme.Dialog">

@@ -40,19 +40,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".friendCircleMain.adapter.ImagePagerActivity"
+            android:name="com.punuo.sys.app.home.friendCircle.adapter.ImagePagerActivity"
             android:theme="@style/Theme.Pn.ImagePager"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".publish.PublishedActivity"
+            android:name=".publish.PublishActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".friendcircle.PhotoActivity"
-            android:theme="@style/Theme.Pn.Translucent"
-            android:screenOrientation="portrait" />
         <activity
             android:name="com.punuo.sys.app.home.activity.UserInfoActivity"
             android:theme="@style/Theme.Pn.Translucent"
@@ -125,7 +121,7 @@
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.punuo.sys.app.home.activity.FamilyCircleActivity"
+            android:name="com.punuo.sys.app.home.friendCircle.FamilyCircleActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -134,9 +130,8 @@
         <activity
             android:name="com.punuo.sys.app.home.address.AddressManagerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.punuo.sys.app.home.activity.CloudAlbumActivity" />
-        <activity android:name=".publish.PublishedActivity1" />
-        <activity android:name="com.punuo.sys.app.home.activity.AlbumActivity" />
+        <activity android:name="com.punuo.sys.app.home.album.CloudAlbumActivity" />
+        <activity android:name="com.punuo.sys.app.home.album.AlbumActivity" />
 
         <receiver
             android:name=".receiver.VideoConnectReceiver"
@@ -165,7 +160,6 @@
 
         <service android:name="com.amap.api.location.APSService" />
         <service android:name=".service.SipService" />
-        <service android:name=".service.FloatWindowService" />
     </application>
 
 </manifest>

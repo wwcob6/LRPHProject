@@ -14,7 +14,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
 import com.punuo.sys.sdk.account.UserInfoManager;
-import com.app.friendCircleMain.adapter.CommentAdapter;
+import com.punuo.sys.app.home.friendCircle.adapter.CommentAdapter;
 import com.app.model.MessageEvent;
 import com.punuo.sys.app.message.model.PostNewCommentModel;
 import com.punuo.sys.app.message.request.GetNewCommentRequest;
@@ -52,11 +52,7 @@ public class CommentActivity extends BaseSwipeBackActivity {
         back.setOnClickListener(v -> {
             scrollToFinishActivity();
         });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.newbackground));
-        }
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvComments.setLayoutManager(layoutManager);

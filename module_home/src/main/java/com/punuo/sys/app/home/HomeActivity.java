@@ -220,12 +220,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             case Constant.COMMUNITY:
                 StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, true); //单独处理顶部状态栏颜色
                 bundle.putString("url", "http://pet.qinqingonline.com:8889?user_id="+ AccountManager.getUserId());
+                bundle.putBoolean("showTopBar", false);
                 mMyFragmentManager.switchFragmentWithCache(WebViewFragment.class.getName(), bundle);
                 break;
             case Constant.MESSAGE:
+                StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, true); //单独处理顶部状态栏颜色
                 mMyFragmentManager.switchFragmentWithCache(MessageFragment.class.getName(), bundle);
                 break;
             case Constant.PERSON:
+                StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, true); //单独处理顶部状态栏颜色
                 mMyFragmentManager.switchFragmentWithCache(MemberFragment.class.getName(), bundle);
                 break;
             default:

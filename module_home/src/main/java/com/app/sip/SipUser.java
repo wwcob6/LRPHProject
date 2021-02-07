@@ -2,16 +2,12 @@ package com.app.sip;
 
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.util.Log;
 
 import com.app.R;
 import com.app.groupvoice.GroupInfo;
-import com.app.model.Device;
 import com.app.model.MessageEvent;
-import com.app.model.Msg;
-import com.app.model.MyFile;
 import com.app.video.VideoInfo;
 import com.punuo.sys.sdk.sercet.SHA1;
 
@@ -53,30 +49,10 @@ public class SipUser extends SipProvider {
     public static String[] PROTOCOLS = {"udp"};
     //线程池
     private ExecutorService pool = Executors.newFixedThreadPool(3);
-    //用户或设备上线监听
-    private LoginNotifyListener loginNotifyListener;
-    //密码修改监听
-    private ChangePWDListener changePWDListener;
-    //消息监听
-    private MessageListener messageListener;
-    //总监听
-    private TotalListener totalListener;
-    //主界面底部消息数量监听
-    private BottomListener bottomListener;
-    //app图标路径
-    private String sdPath;
-    private ClusterNotifyListener clusterNotifyListener;
-
-//    private QinliaoUpdateListener qinliaoUpdateListener;
-
-
-
 
     public SipUser(String via_addr, int host_port, Context context) {
         super(via_addr, host_port, PROTOCOLS, null);
         this.context = context;
-        sdPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PNS9/download/icon/";
-
     }
 
     public TransportConnId sendMessage(Message msg) {
@@ -101,10 +77,6 @@ public class SipUser extends SipProvider {
         return id;
     }
 
-    //结束线程池
-    public void shutdown(){
-        pool.shutdown();
-    }
     public synchronized void onReceivedMessage(Transport transport, Message msg) {
         Log.i(TAG, "<----------received sip message---------->");
         Log.i(TAG, msg.toString());
@@ -152,58 +124,59 @@ public class SipUser extends SipProvider {
                 final String type = root.getTagName();
                 switch (type) {
                     case "dev_notify"://设备列表
-                        Element devsElement = (Element) root.getElementsByTagName("devs").item(0);
-                        Element loginElement = (Element) root.getElementsByTagName("login").item(0);
-                        if (devsElement != null) {
-                            NodeList devs = devsElement.getElementsByTagName("dev");
-                            for (int i = 0; i < devs.getLength(); i++) {
-                                Device device = new Device();
-                                Element devElement = (Element) devs.item(i);
-                                Element devIdElement = (Element) devElement.getElementsByTagName("devid").item(0);
-                                Element nameElement = (Element) devElement.getElementsByTagName("name").item(0);
-                                Element phoneElement = (Element) devElement.getElementsByTagName("phone").item(0);
-                                Element devTypeElement = (Element) devElement.getElementsByTagName("dev_type").item(0);
-                                Element liveElement = (Element) devElement.getElementsByTagName("live").item(0);
-                                device.setDevId(devIdElement.getFirstChild().getNodeValue());
-                                device.setName(nameElement.getFirstChild().getNodeValue());
-                                device.setPhoneNum(phoneElement.getFirstChild().getNodeValue());
-                                device.setDevType(devTypeElement.getFirstChild().getNodeValue());
-                                if (liveElement.getFirstChild().getNodeValue().equals("1")) {
-                                    device.setLive(true);
-                                } else {
-                                    device.setLive(false);
-                                }
-                                if (!device.getDevId().equals(SipInfo.devId)) {
-                                    SipInfo.devList.add(device);
-                                }
-                            }
-                            if (loginNotifyListener != null) {
-                                loginNotifyListener.onDevNotify();
-                            }
-                            Log.i(TAG, "当前设备数：" + SipInfo.devList.size());
-                            SipInfo.sipUser.sendMessage(SipMessageFactory.createResponse(msg, 200, "OK", ""));
-                            return true;
-                        } else {
-                            Element devIdElement = (Element) loginElement.getElementsByTagName("devid").item(0);
-                            Element liveElement = (Element) loginElement.getElementsByTagName("live").item(0);
-                            String devid = devIdElement.getFirstChild().getNodeValue();
-                            if (!devid.equals(SipInfo.devId)) {
-                                Device device = new Device();
-                                device.setDevId(devid);
-                                int index = SipInfo.devList.indexOf(device);
-                                if (index != -1) {
-                                    if (liveElement.getFirstChild().getNodeValue().equals("1")) {
-                                        SipInfo.devList.get(index).setLive(true);
-                                    } else {
-                                        SipInfo.devList.get(index).setLive(false);
-                                    }
-                                }
-                                if (loginNotifyListener != null) {
-                                    loginNotifyListener.onDevNotify();
-                                }
-                            }
-                            return true;
-                        }
+//                        Element devsElement = (Element) root.getElementsByTagName("devs").item(0);
+//                        Element loginElement = (Element) root.getElementsByTagName("login").item(0);
+//                        if (devsElement != null) {
+//                            NodeList devs = devsElement.getElementsByTagName("dev");
+//                            for (int i = 0; i < devs.getLength(); i++) {
+//                                Device device = new Device();
+//                                Element devElement = (Element) devs.item(i);
+//                                Element devIdElement = (Element) devElement.getElementsByTagName("devid").item(0);
+//                                Element nameElement = (Element) devElement.getElementsByTagName("name").item(0);
+//                                Element phoneElement = (Element) devElement.getElementsByTagName("phone").item(0);
+//                                Element devTypeElement = (Element) devElement.getElementsByTagName("dev_type").item(0);
+//                                Element liveElement = (Element) devElement.getElementsByTagName("live").item(0);
+//                                device.setDevId(devIdElement.getFirstChild().getNodeValue());
+//                                device.setName(nameElement.getFirstChild().getNodeValue());
+//                                device.setPhoneNum(phoneElement.getFirstChild().getNodeValue());
+//                                device.setDevType(devTypeElement.getFirstChild().getNodeValue());
+//                                if (liveElement.getFirstChild().getNodeValue().equals("1")) {
+//                                    device.setLive(true);
+//                                } else {
+//                                    device.setLive(false);
+//                                }
+//                                if (!device.getDevId().equals(SipInfo.devId)) {
+//                                    SipInfo.devList.add(device);
+//                                }
+//                            }
+//                            if (loginNotifyListener != null) {
+//                                loginNotifyListener.onDevNotify();
+//                            }
+//                            Log.i(TAG, "当前设备数：" + SipInfo.devList.size());
+//                            SipInfo.sipUser.sendMessage(SipMessageFactory.createResponse(msg, 200, "OK", ""));
+//                            return true;
+//                        } else {
+//                            Element devIdElement = (Element) loginElement.getElementsByTagName("devid").item(0);
+//                            Element liveElement = (Element) loginElement.getElementsByTagName("live").item(0);
+//                            String devid = devIdElement.getFirstChild().getNodeValue();
+//                            if (!devid.equals(SipInfo.devId)) {
+//                                Device device = new Device();
+//                                device.setDevId(devid);
+//                                int index = SipInfo.devList.indexOf(device);
+//                                if (index != -1) {
+//                                    if (liveElement.getFirstChild().getNodeValue().equals("1")) {
+//                                        SipInfo.devList.get(index).setLive(true);
+//                                    } else {
+//                                        SipInfo.devList.get(index).setLive(false);
+//                                    }
+//                                }
+//                                if (loginNotifyListener != null) {
+//                                    loginNotifyListener.onDevNotify();
+//                                }
+//                            }
+//                            return true;
+//                        }
+                        return true;
                         //亲聊新成员上线
                     case"user_online":
                         Element liveElement=(Element)root.getElementsByTagName("live").item(0);
@@ -219,7 +192,6 @@ public class SipUser extends SipProvider {
                                 list.add(userid1Element.getFirstChild().getNodeValue());
                                 Log.i(TAG, "qinliao" + list.get(i));
                             }
-                            qinliaoUpdateListener.stausOnUpdate();
                         }else
                             if(islive.equals("False")) {
                                 NodeList users = root.getElementsByTagName("login");
@@ -232,7 +204,6 @@ public class SipUser extends SipProvider {
                                     list.add(userid1Element.getFirstChild().getNodeValue());
                                     Log.i(TAG, "qinliao" + list.get(i));
                                 }
-                                qinliaoUpdateListener.stausOffUpdate();
                             }
 
 
@@ -251,8 +222,6 @@ public class SipUser extends SipProvider {
                                 Log.i(TAG, "qinliao" + list.get(i));
                             }
                             list.add(SipInfo.userId);
-
-                        qinliaoUpdateListener.stausOnUpdate();
                         break;
                     case "alarm":{
                         Log.i("maomaomao","111");
@@ -395,15 +364,6 @@ public class SipUser extends SipProvider {
                     case "update_password_response":
                         Element resultElement = (Element) root.getElementsByTagName("result").item(0);
                         String result = resultElement.getFirstChild().getNodeValue();
-                        if (result.equals("0")) {
-                            if (changePWDListener != null) {
-                                changePWDListener.onChangePWD(1);
-                            }
-                        } else {
-                            if (changePWDListener != null) {
-                                changePWDListener.onChangePWD(0);
-                            }
-                        }
                         return true;
                     case "query_response":
                         Element resolutionElement = (Element) root.getElementsByTagName("resolution").item(0);
@@ -469,90 +429,6 @@ public class SipUser extends SipProvider {
         return false;
     }
 
-
-    public void setLoginNotifyListener(LoginNotifyListener loginNotifyListener) {
-        this.loginNotifyListener = loginNotifyListener;
-    }
-
-    public interface LoginNotifyListener {
-        void onDevNotify();
-
-        void onUserNotify();
-    }
-
-    public void setChangePWDListener(ChangePWDListener changePWDListener) {
-        this.changePWDListener = changePWDListener;
-    }
-
-    public interface ChangePWDListener {
-        void onChangePWD(int i);
-    }
-
-
-    public void setMessageListener(MessageListener messageListener) {
-        this.messageListener = messageListener;
-    }
-
-    public interface MessageListener {
-        void onReceivedMessage(Msg msg);
-    }
-
-    public interface TotalListener {
-//        void onReceivedTotalNotice(Notice notice);
-
-        void onReceivedTotalMessage(Msg msg);
-
-        void onReceivedTotalFileshare(MyFile myfile);
-    }
-
-    public void setTotalListener(TotalListener totalListener) {
-        this.totalListener = totalListener;
-    }
-
-    public interface BottomListener {
-//        void onReceivedBottomNotice(Notice notice);
-
-        void onReceivedBottomMessage(Msg msg);
-
-        void onReceivedBottomFileshare(MyFile myfile);
-    }
-
-    public void setBottomListener(BottomListener bottomListener) {
-        this.bottomListener = bottomListener;
-    }
-    public interface StopMonitor{
-        void stopVideo();
-    }
-
-    public StopMonitor monitor=new StopMonitor() {
-        @Override
-        public void stopVideo() {
-        }
-    };
-    public void setMonitor(StopMonitor monitor){
-        this.monitor = monitor;
-    }
-
-//    public static String[] qinliaouserid=new String[8];
     public static List<String> list=new ArrayList<>();
-
-    public interface ClusterNotifyListener{
-        void onNotify();
-    }
-
-    //定义一个接口
-    public interface QinliaoUpdateListener{
-        void stausOnUpdate();
-        void stausOffUpdate();
-    }
-
-    //创建接口类型变量
-    public QinliaoUpdateListener qinliaoUpdateListener;
-
-
-    //暴露接口设置得方法
-    public void setQinliaoUpdateListener(QinliaoUpdateListener qinliaoUpdateListener){
-        this.qinliaoUpdateListener=qinliaoUpdateListener;
-    }
 
 }

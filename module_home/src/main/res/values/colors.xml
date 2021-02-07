@@ -24,7 +24,6 @@
     <color name="ll_background">#ADADAD</color>
     <color name="bantouming">#7fffffff</color>
     <color name="touming">#00000000</color>
-    <color name="gold">#b89766</color>
     <color name="micro_list_ignore">#8593B0</color>
     <color name="Gray">#eeeeee</color>
 </resources>

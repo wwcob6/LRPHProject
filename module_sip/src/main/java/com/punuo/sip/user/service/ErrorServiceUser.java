@@ -3,6 +3,7 @@ package com.punuo.sip.user.service;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.request.BaseUserSipRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.ErrorTipException;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
 import com.punuo.sys.sdk.util.ToastUtils;
@@ -30,7 +31,9 @@ public class ErrorServiceUser extends NormalUserRequestService<String> {
 
         } else if (code == 401) {
             EventBus.getDefault().post(new UnauthorizedEvent());
-            ToastUtils.showToast("账号密码错误");
+            if (!AccountManager.isLogin()) {
+                ToastUtils.showToast("账号密码错误");
+            }
         } else if (code == 400) {
 
         } else {

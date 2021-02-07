@@ -31,7 +31,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.punuo.sys.sdk.account.UserInfoManager;
-import com.app.friendCircleMain.domain.UserDevModel;
+import com.punuo.sys.app.home.friendCircle.domain.UserDevModel;
 import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.app.request.GetDevIdFromIdRequest;
 import com.app.sip.SipInfo;

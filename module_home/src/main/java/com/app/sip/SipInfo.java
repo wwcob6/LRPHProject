@@ -3,20 +3,10 @@ package com.app.sip;
 import android.net.sip.SipAudioCall;
 import android.os.Handler;
 
-import com.app.model.AddressItem;
-import com.app.model.App;
-import com.app.model.Device;
-import com.app.model.Device1;
-import com.app.model.Friend;
-import com.app.model.MessageNotify;
 import com.app.service.SipService;
 
 import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.message.Message;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Author chzjy
@@ -26,10 +16,6 @@ import java.util.List;
 public class SipInfo {
     //心跳线程开启与否
     public static boolean running = false;
-    //服务器名
-    public static String SERVER_NAME = "rvsup";
-    //服务器ID
-    public static String SERVER_ID = "330100000010000090";
     //用户端口
     public static int SERVER_PORT_USER = 6061;
     //设备端口
@@ -43,23 +29,21 @@ public class SipInfo {
     public static String code;
     //用户账号
     public static String userAccount;
-    public static String userAccount2;
+
     //用户密码
     public static String passWord;
-    public static String passWord2;
+
     //设备id
     public static String devId;
 
-    //设备用户id
-    public static String paduserid;
+
 
     public static String paddevId;
     //用户id
     public static String userId;
     //用户真实姓名
     public static String userRealname;
-    //中心号码
-    public static String centerPhoneNumber;
+
     //网络是否连接
     public static boolean isNetworkConnected;
     //用户账号是否存在
@@ -76,10 +60,10 @@ public class SipInfo {
     public static boolean dev_loginTimeout;
     //sip消息From地址
     public static NameAddress user_from;
-    public static NameAddress user_from2;
+
     //sip消息To地址
     public static NameAddress user_to;
-    public static NameAddress user_to2;
+
     //sip消息(聊天消息)To好友地址
     public static NameAddress toUser;
     //sip消息(设备)To地址
@@ -102,36 +86,16 @@ public class SipInfo {
     public static boolean user_heartbeatResponse;
     //设备心跳回复
     public static boolean dev_heartbeatResponse;
-    //好友列表
-    public static ArrayList<Friend> friends = new ArrayList<>();
     //好友数量
     public static int friendCount;
-    //分组列表
-    public static HashMap<String, List<Friend>> friendList = new HashMap<String, List<Friend>>();
-    //设备名
-    public static String devName;
     //设备数量
     public static int devCount;
-    //设备列表
-    public static ArrayList<Device> devList = new ArrayList<>();
-
-    //地址列表
-    public static List<AddressItem> addressList = new ArrayList<>();
-
-    public static ArrayList<Friend> friendsList = new ArrayList<>();
-    //设备列表
-    public static ArrayList<Device1> devList1 = new ArrayList<>();
-
-    //消息列表
-    public static ArrayList<MessageNotify> messageNotifys=new ArrayList<>();
     //sip电话服务对象
     public static SipService sipService;
     //上一个电话对象
     public static SipAudioCall lastCall;
 
     public static Handler Phone = new Handler();
-    //第三方应用
-    public static ArrayList<App> applist = new ArrayList<>();
     //视频信息请求回复
     public static boolean queryResponse;
     //视频请求回复
@@ -140,45 +104,21 @@ public class SipInfo {
     public static boolean decoding = false;
     //根目录
     public static String localSdCard;
-    //群组用户id
-    public static String groupid;
-    //异地登录
-    public static Handler loginReplace;
 
     //是否允许调用摄像头
     public static boolean flag = true;
 
-    public static int messageCount;
-
     public static Message msg;
 
     public static Handler notifymedia;
-
-    public static boolean Recording = false;
-
     public static boolean isWaitingFeedback = false;
-    public static boolean IsVideoOn=false;
     public static boolean finish=false;
     public static boolean  single=false;
-    public static String port;
+
 
     public static float  bitErrorRate;
-    public static int previewWidth;
-    public static int previewHeight;
-    public static String phoneType;
-    public static boolean isEditor=false;
 
-    //添加收货地址相关
-    public static String userAddress;
-    public static String detailAddress;
-    public static String userName;
-    public static String userPhoneNum;
-    //编辑的地址在手机列表的位置
-    public static int listPosition;
-    //编辑的地址在数据库中的position
-    public static int addressPosition;
-    //是否为默认地址；1-默认、0-非默认
-    public static int  isDefault;
+    public static String phoneType;
 
     public static int width;
     public static int height;

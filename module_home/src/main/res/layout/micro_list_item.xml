@@ -57,7 +57,7 @@
                 android:textColor="@color/gary"
                 android:textSize="10sp" />
 
-            <com.app.friendCircleMain.adapter.NineGridTestLayout
+            <com.punuo.sys.app.home.friendCircle.adapter.NineGridTestLayout
                 android:id="@+id/layout_nine_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

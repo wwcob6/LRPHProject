@@ -1,12 +1,11 @@
 package com.punuo.sys.app.home.account;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +20,7 @@ import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.model.PNBaseModel;
 import com.punuo.sys.sdk.router.HomeRouter;
+import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 
 import butterknife.BindView;
@@ -60,10 +60,12 @@ public class RegisterAccountActivity extends BaseSwipeBackLoginActivity {
         ButterKnife.bind(this);
         passwordSet.setTransformationMethod(PasswordTransformationMethod.getInstance());
         targetView = getVerificode;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.newbackground));
+        StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
+        View statusBar = findViewById(R.id.status_bar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            statusBar.setVisibility(View.VISIBLE);
+            statusBar.getLayoutParams().height = StatusBarUtil.getStatusBarHeight(this);
+            statusBar.requestLayout();
         }
     }
 

@@ -18,7 +18,6 @@ import com.app.R2;
 import com.app.adapter.AddressItemAdapter;
 import com.app.model.AddressResult;
 import com.app.request.GetAddressListRequest;
-import com.app.sip.SipInfo;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
@@ -106,8 +105,6 @@ public class AddressManagerActivity extends BaseSwipeBackActivity {
                     tvNoAddress.setVisibility(View.INVISIBLE);
                     rvAddressDispaly.setVisibility(View.VISIBLE);
                     mAddressItemAdapter.appendData(result.mAddressItems);
-
-                    SipInfo.addressList = result.mAddressItems;
                 }
             }
 

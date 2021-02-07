@@ -1,6 +1,6 @@
 package com.app.request;
 
-import com.app.friendCircleMain.domain.UserDevModel;
+import com.punuo.sys.app.home.friendCircle.domain.UserDevModel;
 import com.punuo.sys.sdk.httplib.BaseRequest;
 
 /**

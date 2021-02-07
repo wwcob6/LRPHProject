@@ -12,9 +12,9 @@ import android.widget.RelativeLayout;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.app.friendCircleMain.domain.UserList;
+import com.punuo.sys.app.home.friendCircle.domain.UserList;
 import com.app.sip.SipInfo;
-import com.punuo.sys.app.home.activity.FamilyCircleActivity;
+import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
 import com.punuo.sys.app.home.activity.FriendCallActivity;
 import com.app.ui.VideoDial;
 import com.punuo.sys.app.linphone.LinphoneHelper;

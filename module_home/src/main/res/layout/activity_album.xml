@@ -11,6 +11,6 @@
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/diseqian" />
+        android:padding="3dp" />
 
 </LinearLayout>

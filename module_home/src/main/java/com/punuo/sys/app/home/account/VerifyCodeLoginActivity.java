@@ -1,12 +1,11 @@
 package com.punuo.sys.app.home.account;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.friendCircleMain.domain.UserDevModel;
 import com.app.request.GetDevIdFromIdRequest;
 import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;
@@ -29,6 +27,7 @@ import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
+import com.punuo.sys.app.home.friendCircle.domain.UserDevModel;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.account.model.PNUserInfo;
@@ -36,6 +35,7 @@ import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.RegexUtils;
+import com.punuo.sys.sdk.util.StatusBarUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,10 +75,12 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
         setContentView(R.layout.activity_verificode_login);
         ButterKnife.bind(this);
         targetView = getVerificode;
+        StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, false);
+        View statusBar = findViewById(R.id.status_bar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.newbackground));
+            statusBar.setVisibility(View.VISIBLE);
+            statusBar.getLayoutParams().height = StatusBarUtil.getStatusBarHeight(this);
+            statusBar.requestLayout();
         }
         initData();
         EventBus.getDefault().register(this);

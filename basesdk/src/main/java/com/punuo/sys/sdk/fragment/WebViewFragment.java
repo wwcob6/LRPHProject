@@ -34,6 +34,7 @@ public class WebViewFragment extends BaseFragment {
     private BaseHandler mBaseHandler;
     private String mUrl = "";
     private String mTitle = "";
+    private boolean showTopBar = true;
 
     @Nullable
     @Override
@@ -55,6 +56,13 @@ public class WebViewFragment extends BaseFragment {
         }
         mUrl = getArguments().getString("url", "");
         mTitle = getArguments().getString("title", "");
+        showTopBar = getArguments().getBoolean("showTopBar", true);
+        View topBarContainer = mFragmentView.findViewById(R.id.top_bar_container);
+        if (showTopBar) {
+            topBarContainer.setVisibility(View.VISIBLE);
+        } else {
+            topBarContainer.setVisibility(View.GONE);
+        }
         title.setText(mTitle);
         mWebView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         WebSettings settings = mWebView.getSettings();

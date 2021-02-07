@@ -14,7 +14,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
 import com.punuo.sys.sdk.account.UserInfoManager;
-import com.app.friendCircleMain.adapter.CommentAdapter;
+import com.punuo.sys.app.home.friendCircle.adapter.CommentAdapter;
 import com.app.model.MessageEvent;
 import com.punuo.sys.app.message.model.PostNewLikeModel;
 import com.punuo.sys.app.message.request.GetNewLikeRequest;

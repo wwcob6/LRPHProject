@@ -36,4 +36,5 @@ public class HomeRouter {
 
     public static final String ROUTER_CONTRACT_MANAGER_ACTIVITY = PREFIX + "/ContractManagerActivity";
     public static final String ROUTER_ADDRESS_DETAIL_ACTIVITY = PREFIX + "/AddressDetailActivity";
+    public static final String ROUTER_PUBLISH_ACTIVITY = PREFIX + "/PublishActivity";
 }

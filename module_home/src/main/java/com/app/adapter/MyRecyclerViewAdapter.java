@@ -43,7 +43,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public void onBindViewHolder(final MyViewHolder myViewHolder, final int i) {
-        myViewHolder.imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ViewGroup.LayoutParams parm = myViewHolder.imageView.getLayoutParams();
         parm.height = glm.getWidth() / glm.getSpanCount()
                 - 2 * myViewHolder.imageView.getPaddingLeft() - 2 * ((ViewGroup.MarginLayoutParams) parm).leftMargin;

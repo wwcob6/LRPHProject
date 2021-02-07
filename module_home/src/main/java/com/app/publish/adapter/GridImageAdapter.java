@@ -9,6 +9,7 @@ import com.app.publish.ICallBack;
 import com.app.publish.holder.ImageHolder;
 import com.punuo.sys.sdk.recyclerview.BaseRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,13 +18,16 @@ import java.util.List;
  **/
 public class GridImageAdapter extends BaseRecyclerViewAdapter<String> {
     private ICallBack mCallBack;
-    public GridImageAdapter(Context context, List<String> data, ICallBack callBack) {
-        super(context, data);
+    private List<String> images = new ArrayList<>();
+    public GridImageAdapter(Context context, ICallBack callBack) {
+        super(context, new ArrayList<>());
         mCallBack = callBack;
         mData.add("add");
     }
 
     public void resetData(List<String> list) {
+        images.clear();
+        images.addAll(list);
         mData.clear();
         mData.addAll(list);
         if (list.size() < 9) {
@@ -33,10 +37,15 @@ public class GridImageAdapter extends BaseRecyclerViewAdapter<String> {
     }
 
     public void addData(String image) {
-        if (getBasicItemCount() < 8) {
+        int imageSize = images.size();
+        if (imageSize < 8) {
+            images.add(0, image);
             mData.add(0, image);
+        } else if (imageSize == 8) {
+            images.add(0, image);
+            mData.add(0, image);
+            mData.remove(9);
         }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -59,5 +68,9 @@ public class GridImageAdapter extends BaseRecyclerViewAdapter<String> {
     @Override
     public int getBasicItemCount() {
         return mData == null ? 0 : mData.size();
+    }
+
+    public int size() {
+        return images.size();
     }
 }

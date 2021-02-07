@@ -7,13 +7,8 @@
     <string name="community">社区</string><![CDATA[string>
     ]]>
     <string name="alirtc_permission">请先给予权限</string>
-    <string name="str_recorder_normal">按住说话</string>
-    <string name="str_recorder_recording">松开结束</string>
-    <string name="str_recorder_want_cancel">松开手指，取消发送</string>
     <!-- 存储文件文件夹 -->
-    <string name="Files">Files</string>
     <!-- 图像文件夹 -->
-    <string name="Image">Image</string>
     <!-- 缩略图文件夹 -->
     <string name="Thumbnail">Thumbnail</string>
     <!-- 视频文件夹 -->
@@ -30,17 +25,8 @@
 
 
     <!-- 上拉刷新，下来加载更多 -->
-    <string name="p2refresh_head_load_more">加载更多</string>
-    <string name="p2refresh_end_load_more">更    多</string>
-    <string name="p2refresh_end_click_load_more">没有更多</string>
-    <string name="p2refresh_release_refresh">松开刷新</string>
-    <string name="p2refresh_pull_to_refresh">下拉刷新</string>
-    <string name="p2refresh_doing_head_refresh">正在刷新&#8230;</string>
-    <string name="p2refresh_doing_end_refresh">加载中&#8230;</string>
-    <string name="p2refresh_refresh_lasttime">最近更新&#160;&#058;&#160;</string>
 
 
     <string name="viewpager_indicator">%1$d/%2$d</string>
-    <string name="cloudPhotoTips">记录身边的美好</string>
 
 </resources>

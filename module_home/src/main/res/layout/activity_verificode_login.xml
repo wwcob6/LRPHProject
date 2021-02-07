@@ -5,14 +5,21 @@
     android:background="#f8f8f8"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:visibility="visible" />
+
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="245dp"
-        android:scaleType="fitXY"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
         android:src="@drawable/signbackground"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_below="@+id/status_bar"
         android:layout_height="44dp">
 
         <ImageView

@@ -1,11 +1,8 @@
 package com.punuo.sys.app.home.account;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,11 +14,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.sip.SipInfo;
-import com.punuo.sys.app.home.activity.MessageNotifyActivity;
 import com.app.ui.SoftwareInstructActivity;
+import com.punuo.sip.AccountUtil;
+import com.punuo.sys.app.home.activity.MessageNotifyActivity;
 import com.punuo.sys.app.home.activity.UserInfoActivity;
 import com.punuo.sys.app.home.address.AddressManagerActivity;
-import com.punuo.sip.AccountUtil;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.router.HomeRouter;
@@ -67,11 +64,6 @@ public class SettingActivity extends BaseSwipeBackLoginActivity {
         ButterKnife.bind(this);
         title.setText("设置");
         tvBuff.setText(DataClearUtil.getTotalCacheSize(this));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//因为不是所有的系统都可以设置颜色的，在4.4以下就不可以。。有的说4.1，所以在设置的时候要检查一下系统版本是否是4.1以上
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(getResources().getColor(R.color.image_bar));
-        }
     }
 
 
