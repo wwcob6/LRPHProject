@@ -32,12 +32,15 @@ import com.app.video.H264SendingManager;
 import com.app.video.VideoInfo;
 import com.punuo.sip.H264Config;
 import com.punuo.sip.dev.H264ConfigDev;
+import com.punuo.sip.dev.event.StopVideoEvent;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipByeRequest;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -146,7 +149,7 @@ public class VideoCallActivity extends BaseActivity {
                 isSpeakerMode = true;
             }
         });
-
+        EventBus.getDefault().register(this);
     }
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -312,6 +315,12 @@ public class VideoCallActivity extends BaseActivity {
         }
         SipUserManager.getInstance().addRequest(request);
         finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(StopVideoEvent event) {
+        VideoInfo.endView = true;
+        closeVideo();
     }
 
 
