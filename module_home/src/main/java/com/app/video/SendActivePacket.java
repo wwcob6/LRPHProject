@@ -26,7 +26,7 @@ public class SendActivePacket extends Thread {
             try {
                 Log.d("SendActivePacket", "run: "+ Thread.currentThread().getId());
                 VideoInfo.rtpVideo.sendActivePacket(msg);
-                sleep(20000);
+                sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

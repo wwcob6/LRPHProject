@@ -18,14 +18,13 @@ import com.app.sip.SipInfo;
 import com.app.tools.AECManager;
 import com.app.tools.AvcEncoder;
 import com.app.tools.AvcEncoder1;
+import com.punuo.sip.dev.H264ConfigDev;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Timer;
-
-import static com.app.sip.SipInfo.phoneType;
 
 
 /**
@@ -124,7 +123,7 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
         holder.addCallback(H264SendingManager.this);   //添加回调接口
         //设置风格
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        long Ssrc = (VideoInfo.media_info_magic[15] & 0x000000ff) | ((VideoInfo.media_info_magic[14] << 8) & 0x0000ff00) | ((VideoInfo.media_info_magic[13] << 16) & 0x00ff0000) | ((VideoInfo.media_info_magic[12] << 24) & 0xff000000);
+        long Ssrc = (H264ConfigDev.magic[15] & 0x000000ff) | ((H264ConfigDev.magic[14] << 8) & 0x0000ff00) | ((H264ConfigDev.magic[13] << 16) & 0x00ff0000) | ((H264ConfigDev.magic[12] << 24) & 0xff000000);
         rtpsending.rtpSession2.setSsrc(Ssrc);
         G711Running = true;
         G711_recored();
@@ -136,11 +135,11 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
             }
         };
         Log.d(TAG, "创建成功");
-        if(phoneType.equals("BKL-AL20")||phoneType.equals("PN-IP4G-S6")){
-            avcEncoder1=new AvcEncoder1();
-        }else{
+//        if(phoneType.equals("BKL-AL20")||phoneType.equals("PN-IP4G-S6")){
+//            avcEncoder1=new AvcEncoder1();
+//        }else{
             avcEncoder = new AvcEncoder();
-        }
+//        }
         SipInfo.flag = false;
 
     }
@@ -379,16 +378,17 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
         msg[2] = 0x00;
         msg[3] = 0x10;
         try {
-            System.arraycopy(VideoInfo.media_info_magic, 0, msg, 4, 16);  //生成RTP心跳保活包，即在Info.media_info_megic之前再加上0x00 0x01 0x00 0x10
+            System.arraycopy(H264ConfigDev.magic, 0, msg, 4, 16);  //生成RTP心跳保活包，即在Info.media_info_megic之前再加上0x00 0x01 0x00 0x10
         } catch (Exception e) {
             Log.d("ZR", "System.arraycopy failed!");
         }
         rtpsending.rtpSession1.payloadType(0x7a);    //设置RTP包的负载类型为0x7a
         //取Info.media_info_megic的后四组设为RTP的同步源码（Ssrc）
-        Ssrc = (VideoInfo.media_info_magic[15] & 0x000000ff) | ((VideoInfo.media_info_magic[14] << 8) & 0x0000ff00) | ((VideoInfo.media_info_magic[13] << 16) & 0x00ff0000) | ((VideoInfo.media_info_magic[12] << 24) & 0xff000000);
+        Ssrc = (H264ConfigDev.magic[15] & 0x000000ff) | ((H264ConfigDev.magic[14] << 8) & 0x0000ff00) | ((H264ConfigDev.magic[13] << 16) & 0x00ff0000) | ((H264ConfigDev.magic[12] << 24) & 0xff000000);
         rtpsending.rtpSession1.setSsrc(Ssrc);
         for (int i = 0; i < 2; i++) {
             rtpsending.rtpSession1.sendData(msg);
+            Log.i(TAG, "视频心跳包 ");
 }
     }
 

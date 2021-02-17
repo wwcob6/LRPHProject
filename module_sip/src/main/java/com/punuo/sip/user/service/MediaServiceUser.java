@@ -28,6 +28,7 @@ public class MediaServiceUser extends NormalUserRequestService<MediaData> {
 
     @Override
     protected void onSuccess(Message msg, MediaData result) {
+        onResponse(msg);
         H264ConfigUser.initMediaData(result);
         Log.v(TAG, "没错,你已经拿到视频通道的ip和port了");
         if (H264Config.monitorType == H264Config.DOUBLE_MONITOR_NEGATIVE) {
