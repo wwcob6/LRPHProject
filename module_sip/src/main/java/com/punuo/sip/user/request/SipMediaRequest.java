@@ -39,9 +39,9 @@ public class SipMediaRequest extends BaseUserSipRequest {
             value.put("video", "H264");
             value.put("audio", "G.711");
             value.put("kbps", "800");
-            value.put("self", "2");
-            value.put("mode", "2");
-            value.put("magic", "2");
+            value.put("self", "192.168.1.129 UDP 5200");
+            value.put("mode", "active");
+            value.put("magic", "01234567890123456789012345678901");
             value.put("dev_type", "2");
             body.put("media", value);
         } catch (JSONException e) {

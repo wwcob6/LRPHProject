@@ -155,11 +155,12 @@ public class SipUserManager extends SipProvider {
             String method = message.getMethodId().toString();
             switch (method) { //不需要解析的可以加这里
                 case SipMethods.ACK:
+                    break;
                 case SipMethods.BYE:
-                    return;
+                    break;
                 default:
                     SipUserServiceManager.getInstance().handleRequest(method.toLowerCase(), "{}", message);
-                    return;
+                    break;
             }
         }
     }

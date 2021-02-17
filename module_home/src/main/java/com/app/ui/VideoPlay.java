@@ -2,11 +2,6 @@ package com.app.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -16,8 +11,6 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,6 +21,7 @@ import com.app.model.MessageEvent;
 import com.app.sip.SipInfo;
 import com.app.tools.H264decoder;
 import com.app.video.VideoInfo;
+import com.punuo.sip.dev.event.SuspendMonitorEvent;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipByeRequest;
 import com.punuo.sip.user.request.SipDirectionControlRequest;
@@ -76,7 +70,8 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
     AlertDialog dialog;
     @BindView(R2.id.surfaceView)
     SurfaceView surfaceView;
-    int time=0;
+    int time = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,13 +79,12 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         ButterKnife.bind(this);
 
 
-
         surfaceHolder = surfaceView.getHolder();
         surfaceHolder.addCallback(this);
-        h264decoder=new H264decoder();
-        ImageView left=(ImageView)findViewById(R.id.left);
-        ImageView right=(ImageView)findViewById(R.id.right);
-        ImageView stop=(ImageView)findViewById(R.id.stop);
+        h264decoder = new H264decoder();
+        ImageView left = (ImageView) findViewById(R.id.left);
+        ImageView right = (ImageView) findViewById(R.id.right);
+        ImageView stop = (ImageView) findViewById(R.id.stop);
         EventBus.getDefault().register(this);
 //        left.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -103,10 +97,10 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         right.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     SipDirectionControlRequest request = new SipDirectionControlRequest("right");
                     SipUserManager.getInstance().addRequest(request);
-                } else if(event.getAction()==MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     SipDirectionControlRequest request = new SipDirectionControlRequest("stop");
                     SipUserManager.getInstance().addRequest(request);
                 }
@@ -116,17 +110,17 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         left.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     SipDirectionControlRequest request = new SipDirectionControlRequest("left");
                     SipUserManager.getInstance().addRequest(request);
-                } else if(event.getAction()==MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     SipDirectionControlRequest request = new SipDirectionControlRequest("stop");
                     SipUserManager.getInstance().addRequest(request);
                 }
                 return true;
             }
         });
-        ImageView back1=(ImageView)findViewById(R.id.back1);
+        ImageView back1 = (ImageView) findViewById(R.id.back1);
         back1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,15 +131,15 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         playVideo();
         timer.schedule(task, 0, 10000);
     }
+
     TimerTask task = new TimerTask() {
         @Override
         public void run() {
             if (VideoInfo.isrec == 0) {
-                if (time==6){
+                if (time == 6) {
                     closeVideo();
-                    time=0;
-                }
-                else {
+                    time = 0;
+                } else {
                     new Handler(VideoPlay.this.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
@@ -157,16 +151,18 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
                 }
             } else if (VideoInfo.isrec == 2) {
                 VideoInfo.isrec = 0;
-                time=0;
+                time = 0;
             }
         }
     };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         timer.cancel();
-        if(dialog!=null){
-        dialog.dismiss();}
+        if (dialog != null) {
+            dialog.dismiss();
+        }
         VideoInfo.isrec = 1;
         SipInfo.decoding = false;
         VideoInfo.rtpVideo.removeParticipant();
@@ -192,41 +188,22 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
     private void playVideo() {
         new Thread(Video).start();
     }
+
     long a;
     Runnable Video = new Runnable() {
         @Override
         public void run() {
-            //软解码设置
-//            mFFmpeg.init(VideoInfo.width, VideoInfo.height);
-//            switch (VideoInfo.videoType) {
-//                case 2:
-//                    mFFmpeg.DecoderNal(SPS_DM365_CIF, 78, mPixel);
-//                    mFFmpeg.DecoderNal(PPS_DM365_CIF, 8, mPixel);
-//                    break;
-//                case 3:
-//                    mFFmpeg.DecoderNal(SPS_MOBILE_QCIF, 13, mPixel);
-//                    mFFmpeg.DecoderNal(PPS_MOBILE_QCIF, 9, mPixel);
-//                    break;
-//                case 4:
-//                    mFFmpeg.DecoderNal(SPS_MOBILE_S6, 13, mPixel);
-//                    mFFmpeg.DecoderNal(PPS_MOBILE_S6, 9, mPixel);
-//                    break;
-//                case 5:
-//                    mFFmpeg.DecoderNal(SPS_MOBILE_S9, 13, mPixel);
-//                    mFFmpeg.DecoderNal(PPS_MOBILE_S9, 9, mPixel);
-//                    break;
-//                default:
-//                    break;
-//            }
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Surface surface=surfaceHolder.getSurface();
+            Surface surface = surfaceHolder.getSurface();
             System.out.println(surface);
-            if (surface!=null) {
+            if (surface != null) {
                 h264decoder.initDecoder(surface);
+                Log.i(TAG, "run: SipInfo.decoding = " + SipInfo.decoding);
+                Log.i(TAG, "run: SipInfo.isNetworkConnected = " + SipInfo.isNetworkConnected);
                 while (SipInfo.decoding) {
                     if (SipInfo.isNetworkConnected) {
                         byte[] nal = VideoInfo.nalBuffers[getNum].getReadableNalBuf();
@@ -259,13 +236,14 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         }
     };
     private BufferedOutputStream mH264DataFile;
+
     private void saveH264DataToFile(byte[] dataToWrite) {
         File f = new File(Environment.getExternalStorageDirectory(), "DCM/video_encoded.264");
 
         try {
             mH264DataFile = new BufferedOutputStream(new FileOutputStream(f));
             Log.i("AvcEncoder", "outputStream initialized");
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         try {
@@ -273,59 +251,6 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
         }
-    }
-
-
-
-
-//      软解码呈现画面
-//    private void doSurfaceDraw() {
-//        videoBit.copyPixelsFromBuffer(buffer);
-//        buffer.position(0);
-//        Log.i(TAG, "doSurfaceDraw");
-//
-//        int surfaceViewWidth = surfaceView.getWidth();
-//        int surfaceViewHeight = surfaceView.getHeight();
-//        int bmpWidth = videoBit.getWidth();
-//        int bmpHeight = videoBit.getHeight();
-//        System.out.println("bmpHeight = " + bmpHeight);
-//        System.out.println("bmpWidth = " + bmpWidth);
-//        System.out.println("surfaceViewHeight = " + surfaceViewHeight);
-//        System.out.println("surfaceViewWidth = " + surfaceViewWidth);
-//        Matrix matrix = new Matrix();
-//        matrix.postScale(4.3f, 4.3f);
-//        Bitmap resizeBmp = Bitmap.createBitmap(videoBit, 0, 0, bmpWidth, bmpHeight, matrix, true);
-//        if (VideoInfo.videoType==4||VideoInfo.videoType==5) {
-//            resizeBmp = adjustPhotoRotation(resizeBmp, 90);
-//        }
-//        if (surfaceHolder!=null) {
-//            Canvas canvas = surfaceHolder.lockCanvas();
-//            canvas.drawBitmap(resizeBmp, 0, 0, null);
-//            surfaceHolder.unlockCanvasAndPost(canvas);
-//        }
-//    }
-
-    Bitmap adjustPhotoRotation(Bitmap bm, final int orientationDegree) {
-        Matrix m = new Matrix();
-        m.setRotate(orientationDegree, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-        float targetX, targetY;
-        if (orientationDegree == 90) {
-            targetX = bm.getHeight();
-            targetY = 0;
-        } else {
-            targetX = bm.getHeight();
-            targetY = bm.getWidth();
-        }
-        final float[] values = new float[9];
-        m.getValues(values);
-        float x1 = values[Matrix.MTRANS_X];
-        float y1 = values[Matrix.MTRANS_Y];
-        m.postTranslate(targetX - x1, targetY - y1);
-        Bitmap bm1 = Bitmap.createBitmap(bm.getHeight(), bm.getWidth(), Bitmap.Config.ARGB_8888);
-        Paint paint = new Paint();
-        Canvas canvas = new Canvas(bm1);
-        canvas.drawBitmap(bm, m, paint);
-        return bm1;
     }
 
     @Override
@@ -357,12 +282,21 @@ public class VideoPlay extends BaseActivity implements SurfaceHolder.Callback {
         if (event.getMessage().equals("关闭视频")) {
             Log.i(TAG, "message is " + event.getMessage());
             closeVideo();
-        }else
-            if(event.getMessage().equals("停止浏览")){
-                closeVideo();
-            }
+        } else if (event.getMessage().equals("停止浏览")) {
+            closeVideo();
+        }
     }
-    private  void closeVideo() {
+
+    /**
+     * 停止浏览
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(SuspendMonitorEvent event) {
+        closeVideo();
+    }
+
+    private void closeVideo() {
         SipByeRequest request = new SipByeRequest(AccountManager.getBindDevId());
         SipUserManager.getInstance().addRequest(request);
         finish();

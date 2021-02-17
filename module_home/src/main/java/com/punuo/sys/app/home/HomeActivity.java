@@ -440,37 +440,53 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     public void onMessageEvent(MonitorEvent event) {
         switch (event.monitorType) {
             case H264Config.SINGLE_MONITOR:
-                try {
-                    SipInfo.decoding = true;
-                    VideoInfo.rtpVideo = new RtpVideo(VideoInfo.rtpIp, VideoInfo.rtpPort);
-                    VideoInfo.sendActivePacket = new SendActivePacket();
-                    VideoInfo.sendActivePacket.startThread();
-                    startActivity(new Intent(this, VideoPlay.class));
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            SipInfo.decoding = true;
+                            VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
+                            VideoInfo.sendActivePacket = new SendActivePacket();
+                            VideoInfo.sendActivePacket.startThread();
+                            startActivity(new Intent(HomeActivity.this, VideoPlay.class));
+                        } catch (SocketException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 break;
             case H264Config.DOUBLE_MONITOR_NEGATIVE:
-                try {
-                    SipInfo.decoding = true;
-                    VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
-                    VideoInfo.sendActivePacket = new SendActivePacket();
-                    VideoInfo.sendActivePacket.startThread();
-                    startActivity(new Intent(this, VideoCallActivity.class));
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            SipInfo.decoding = true;
+                            VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
+                            VideoInfo.sendActivePacket = new SendActivePacket();
+                            VideoInfo.sendActivePacket.startThread();
+                            startActivity(new Intent(HomeActivity.this, VideoCallActivity.class));
+                        } catch (SocketException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
                 break;
             case H264Config.DOUBLE_MONITOR_POSITIVE:
-                try {
-                    SipInfo.decoding = true;
-                    VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
-                    VideoInfo.sendActivePacket = new SendActivePacket();
-                    VideoInfo.sendActivePacket.startThread();
-                    startActivity(new Intent(this, VideoCallActivity.class));
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            SipInfo.decoding = true;
+                            VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
+                            VideoInfo.sendActivePacket = new SendActivePacket();
+                            VideoInfo.sendActivePacket.startThread();
+                            startActivity(new Intent(HomeActivity.this, VideoCallActivity.class));
+                        } catch (SocketException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 break;
             default:
                 break;

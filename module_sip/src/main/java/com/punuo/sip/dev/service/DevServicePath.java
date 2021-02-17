@@ -14,8 +14,9 @@ public class DevServicePath {
     public static final String PATH_REGISTER = "/dev/negotiate_response";
     public static final String PATH_LOGIN = "/dev/login_response";
     public static final String PATH_ERROR = "/dev/error";
-    public static final String PATH_CALL_RESPONSE = "/user/call_response";
-    public static final String PATH_OPERATION = "/user/operation";
+    public static final String PATH_CALL_RESPONSE = "/dev/call_response";
+    public static final String PATH_OPERATION = "/dev/operation";
+    public static final String PATH_SUSPEND_MONITOR = "/dev/suspend_monitor";
 
     public static final HashSet<String> sMapping = new HashSet<>();
 
@@ -27,5 +28,6 @@ public class DevServicePath {
         sMapping.add(PATH_LOGIN);
         sMapping.add(PATH_ERROR);
         sMapping.add(PATH_CALL_RESPONSE);
+        sMapping.add(PATH_SUSPEND_MONITOR);
     }
 }

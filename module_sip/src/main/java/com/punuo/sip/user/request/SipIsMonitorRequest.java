@@ -28,7 +28,7 @@ public class SipIsMonitorRequest extends BaseUserSipRequest {
         JSONObject value = new JSONObject();
         try {
             value.put("ismonitor", isMonitor);
-            value.put("devid", AccountManager.getBindDevId());
+            value.put("devid", AccountManager.getDevId());
             value.put("userid", AccountManager.getUserId());
             body.put("is_monitor", value);
         } catch (JSONException e) {
