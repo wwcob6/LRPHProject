@@ -28,6 +28,7 @@ public class DevServicePath {
         sMapping.add(PATH_LOGIN);
         sMapping.add(PATH_ERROR);
         sMapping.add(PATH_CALL_RESPONSE);
+        sMapping.add(PATH_OPERATION);
         sMapping.add(PATH_SUSPEND_MONITOR);
     }
 }
