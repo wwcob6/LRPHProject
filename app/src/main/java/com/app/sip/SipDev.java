@@ -1,5 +1,6 @@
 package com.app.sip;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
@@ -7,8 +8,8 @@ import android.util.Log;
 
 import com.app.groupvoice.GroupInfo;
 import com.app.model.MessageEvent;
-import com.app.ui.VideoDial;
-import com.app.ui.VideoPlay;
+import com.app.receiver.VideoConnectReceiver;
+import com.app.receiver.VideoStartReceiver;
 import com.app.video.VideoInfo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -240,6 +241,7 @@ public class SipDev extends SipProvider {
                         if(operate.equals("agree")){
 //                            SipInfo.IsVideoOn=true;
                             Intent intent = new Intent("com.example.broadcast.CALL_AGREE");
+                            intent.setComponent(new ComponentName(context, VideoStartReceiver.class));
 //                        context.getApplicationContext().sendBroadcast(intent);
                             context.sendBroadcast(intent);
 //                        Intent intent=new Intent(SipUser.class,VideoConnect.class);
@@ -269,6 +271,7 @@ public class SipDev extends SipProvider {
 //                        Element useridElement = (Element) root.getElementsByTagName("operate").item(0);
 //                        final String operate = useridElement.getFirstChild().getNodeValue();
                         Intent intent = new Intent("com.example.broadcast.CALL_REQUEST");
+                        intent.setComponent(new ComponentName(context, VideoConnectReceiver.class));
 //                        context.getApplicationContext().sendBroadcast(intent);
                         context.sendBroadcast(intent);
 //                        Intent intent=new Intent(SipUser.class,VideoConnect.class);
