@@ -1,53 +1,20 @@
 package com.punuo.sys.app.home.friendCircle.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by 林逸磊 on 2018/1/9.
  */
 
-public class UserList extends MyBaseBean {
+public class UserList {
+    @SerializedName("name")
     private String name;
+    @SerializedName("id")
     private String id;
+    @SerializedName("userid")
     private String userid;
+    @SerializedName("nickname")
     private String nickname;
+    @SerializedName("avatar")
     private String avatar;
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
 }

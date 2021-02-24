@@ -213,7 +213,7 @@ public class SipDev extends SipProvider {
                             SipInfo.notifymedia.sendEmptyMessage(0x1111);
                             Log.e(TAG + "_echo" , "SipInfo.notifymedia.sendEmptyMessage(0x1111)");
 //                        }
-                        EventBus.getDefault().post(new MessageEvent("关闭")); //关闭 VideoDial
+                        EventBus.getDefault().post(new MessageEvent("关闭")); //关闭 VideoRequestActivity
                         return true;
                     case "recvaddr":
                         VideoInfo.endView = true;
@@ -227,7 +227,7 @@ public class SipDev extends SipProvider {
                             Intent intent = new Intent("com.example.broadcast.CALL_AGREE");
 //                        context.getApplicationContext().sendBroadcast(intent);
                             context.sendBroadcast(intent);
-//                        Intent intent=new Intent(SipUser.class,VideoConnect.class);
+//                        Intent intent=new Intent(SipUser.class,VideoReplyActivity.class);
 
                         }else if(operate.equals("refuse")){
                             EventBus.getDefault().post(new MessageEvent("取消"));

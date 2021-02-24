@@ -3,8 +3,6 @@ package com.app.sip;
 import android.net.sip.SipAudioCall;
 import android.os.Handler;
 
-import com.app.service.SipService;
-
 import org.zoolu.sip.address.NameAddress;
 import org.zoolu.sip.message.Message;
 
@@ -90,8 +88,6 @@ public class SipInfo {
     public static int friendCount;
     //设备数量
     public static int devCount;
-    //sip电话服务对象
-    public static SipService sipService;
     //上一个电话对象
     public static SipAudioCall lastCall;
 

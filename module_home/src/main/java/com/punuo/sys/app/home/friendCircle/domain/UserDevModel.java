@@ -8,7 +8,7 @@ import java.util.List;
  * Created by 林逸磊 on 2018/1/31.
  */
 
-public class UserDevModel extends MyBaseBean{
+public class UserDevModel{
     @SerializedName("devid")
     public List<String> devList;
 }

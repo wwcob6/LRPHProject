@@ -20,7 +20,7 @@ import com.punuo.sys.app.home.friendCircle.PraiseConst;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendComment;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendPraise;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendPraiseType;
-import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListDatas;
+import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListData;
 import com.punuo.sys.app.home.friendCircle.event.FriendRefreshEvent;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
@@ -55,7 +55,7 @@ public class PopupWindowUtil {
 
     private PopupWindow mPopupWindow;
     private View mView;
-    private FriendMicroListDatas bean;
+    private FriendMicroListData bean;
     private int position; //bean 在列表中的位置
     private Context mContext;
     private MyCustomDialog mCommentDialog;
@@ -83,7 +83,7 @@ public class PopupWindowUtil {
                     return;
                 }
                 mCommentDialog = new MyCustomDialog(mContext, R.style.add_dialog, "评论" +
-                        bean.getNickname() + "的说说", new MyCustomDialog.OnCustomDialogListener() {
+                        bean.nickName + "的说说", new MyCustomDialog.OnCustomDialogListener() {
                     //点击对话框'提交'以后
                     public void back(String content) {
                         if (!TextUtils.isEmpty(content)) {
@@ -127,7 +127,7 @@ public class PopupWindowUtil {
         });
     }
 
-    public void setFriendMicroListDatas(FriendMicroListDatas bean, int position) {
+    public void setFriendMicroListDatas(FriendMicroListData bean, int position) {
         this.bean = bean;
         this.position = position;
     }
@@ -140,28 +140,28 @@ public class PopupWindowUtil {
      * @param praiseType 点击的类型
      */
     private void submitPraise(String praiseType) {
-        friendPraise = bean.getAddlike_nickname();
+        friendPraise = bean.addLikeNickname;
         if (friendPraise == null) {
             friendPraise = new ArrayList<>();
-            bean.setAddlike_nickname(friendPraise);
+            bean.addLikeNickname = friendPraise;
         }
-        ownType = bean.getOwntype();
+        ownType = bean.ownType;
         if (ownType == null) {
             ownType = new ArrayList<>();
-            bean.setOwntype(ownType);
+            bean.ownType = ownType;
         }
         String prePraiseType = "N";
         if (!ownType.isEmpty()) {
             own = ownType.get(0);
-            prePraiseType = own.getPraisetype();
+            prePraiseType = own.praiseType;
         } else {
             own = new FirstMicroListFriendPraiseType();
         }
         FirstMicroListFriendPraise praise = new FirstMicroListFriendPraise();
-        praise.setNickname(UserInfoManager.getUserInfo().nickname);
-        if ("N".equals(bean.getPraiseflag())) {
+        praise.nickName = UserInfoManager.getUserInfo().nickname;
+        if ("N".equals(bean.praiseFlag)) {
             addLike(praiseType);
-        } else if ("Y".equals(bean.getPraiseflag())) {
+        } else if ("Y".equals(bean.praiseFlag)) {
             if (praiseType.equals(prePraiseType)) {
                 deleteLike(praiseType);
             } else {
@@ -177,7 +177,7 @@ public class PopupWindowUtil {
             return;
         }
         mAddLikeRequest = new AddLikeRequest();
-        mAddLikeRequest.addUrlParam("postid", bean.getPostid());
+        mAddLikeRequest.addUrlParam("postid", bean.postId);
         mAddLikeRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
         mAddLikeRequest.addUrlParam("praisetype", praiseType);
         mAddLikeRequest.setRequestListener(new RequestListener<String>() {
@@ -192,13 +192,13 @@ public class PopupWindowUtil {
                     return;
                 }
                 FirstMicroListFriendPraise praise = new FirstMicroListFriendPraise();
-                praise.setId(UserInfoManager.getUserInfo().id);
-                praise.setNickname(UserInfoManager.getUserInfo().nickname);
-                praise.setPraisetype(praiseType);
-                own.setPraisetype(praiseType);
+                praise.id = UserInfoManager.getUserInfo().id;
+                praise.nickName = UserInfoManager.getUserInfo().nickname;
+                praise.praiseType = praiseType;
+                own.praiseType = praiseType;
                 ownType.add(own);
                 friendPraise.add(praise);
-                bean.setPraiseflag("Y");
+                bean.praiseFlag = "Y";
                 EventBus.getDefault().post(new FriendRefreshEvent());
                 mPopupWindow.dismiss();
             }
@@ -218,7 +218,7 @@ public class PopupWindowUtil {
             return;
         }
         mDeleteLikeRequest = new DeleteLikeRequest();
-        mDeleteLikeRequest.addUrlParam("postid", bean.getPostid());
+        mDeleteLikeRequest.addUrlParam("postid", bean.postId);
         mDeleteLikeRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
         mDeleteLikeRequest.addUrlParam("praisetype", praiseType);
         mDeleteLikeRequest.setRequestListener(new RequestListener<String>() {
@@ -233,13 +233,13 @@ public class PopupWindowUtil {
                     return;
                 }
                 FirstMicroListFriendPraise praise = new FirstMicroListFriendPraise();
-                praise.setId(UserInfoManager.getUserInfo().id);
-                praise.setNickname(UserInfoManager.getUserInfo().nickname);
+                praise.id = UserInfoManager.getUserInfo().id;
+                praise.nickName = UserInfoManager.getUserInfo().nickname;
                 int index = friendPraise.indexOf(praise);
                 if (index != -1) {
                     friendPraise.remove(index);
                 }
-                bean.setPraiseflag("N");
+                bean.praiseFlag = "N";
                 ownType.clear();
                 EventBus.getDefault().post(new FriendRefreshEvent());
                 mPopupWindow.dismiss();
@@ -260,7 +260,7 @@ public class PopupWindowUtil {
             return;
         }
         mUpdateLikeRequest = new UpdateLikeRequest();
-        mUpdateLikeRequest.addUrlParam("postid", bean.getPostid());
+        mUpdateLikeRequest.addUrlParam("postid", bean.postId);
         mUpdateLikeRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
         mUpdateLikeRequest.addUrlParam("praisetype", praiseType);
         mUpdateLikeRequest.setRequestListener(new RequestListener<String>() {
@@ -275,15 +275,15 @@ public class PopupWindowUtil {
                     return;
                 }
                 FirstMicroListFriendPraise praise = new FirstMicroListFriendPraise();
-                praise.setId(UserInfoManager.getUserInfo().id);
-                praise.setNickname(UserInfoManager.getUserInfo().nickname);
+                praise.id = UserInfoManager.getUserInfo().id;
+                praise.nickName = UserInfoManager.getUserInfo().nickname;
                 int index = friendPraise.indexOf(praise);
                 if (index != -1) {
                     FirstMicroListFriendPraise firstMicroListFriendPraise = friendPraise.get(index);
-                    firstMicroListFriendPraise.setPraisetype(praiseType);
-                    own.setPraisetype(praiseType);
+                    firstMicroListFriendPraise.praiseType = praiseType;
+                    own.praiseType = praiseType;
                 }
-                bean.setPraiseflag("Y");
+                bean.praiseFlag = "Y";
                 EventBus.getDefault().post(new FriendRefreshEvent());
                 mPopupWindow.dismiss();
             }
@@ -304,7 +304,7 @@ public class PopupWindowUtil {
         }
         mAddCommentRequest = new AddCommentRequest();
         mAddCommentRequest.addUrlParam("id", UserInfoManager.getUserInfo().id);
-        mAddCommentRequest.addUrlParam("postid", bean.getPostid());
+        mAddCommentRequest.addUrlParam("postid", bean.postId);
         mAddCommentRequest.addUrlParam("content", content);
         mAddCommentRequest.setRequestListener(new RequestListener<String>() {
             @Override
@@ -314,15 +314,15 @@ public class PopupWindowUtil {
 
             @Override
             public void onSuccess(String result) {
-                List<FirstMicroListFriendComment> firendcomments = bean.getFriendComment();
+                List<FirstMicroListFriendComment> firendcomments = bean.friendComment;
                 if (null == firendcomments) {
                     firendcomments = new ArrayList<>();
-                    bean.setFriendcomment(firendcomments);
+                    bean.friendComment = firendcomments;
                 }
                 FirstMicroListFriendComment comments = new FirstMicroListFriendComment();
-                comments.setId(UserInfoManager.getUserInfo().id);
-                comments.setReplyName(UserInfoManager.getUserInfo().nickname);
-                comments.setComment(content);
+                comments.id = UserInfoManager.getUserInfo().id;
+                comments.replyName = UserInfoManager.getUserInfo().nickname;
+                comments.comment = content;
                 firendcomments.add(comments);
                 EventBus.getDefault().post(new FriendRefreshEvent());
             }

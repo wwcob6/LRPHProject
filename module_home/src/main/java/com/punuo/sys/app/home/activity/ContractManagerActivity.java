@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -95,9 +94,11 @@ public class ContractManagerActivity extends BaseSwipeBackActivity {
             mContractPhoneNumber = edit_number.getText().toString();
 
             if (TextUtils.isEmpty(mContractName)) {
-                Toast.makeText(this, "联系人为空", Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast("联系人为空");
+                return;
             } else if (TextUtils.isEmpty(mContractPhoneNumber)) {
-                Toast.makeText(this, "电话号码为空", Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast("电话号码为空");
+                return;
             } else {
                 if (mContractPerson == null) {
                     ContractPerson person = new ContractPerson();

@@ -23,7 +23,7 @@
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.VideoDial"
+            android:name=".ui.VideoRequestActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
@@ -61,9 +61,6 @@
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.PhoneCall"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.VideoPlay"
             android:screenOrientation="portrait" />
         <activity
@@ -73,7 +70,7 @@
             android:name=".ui.ServiceManagerActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.VideoConnect"
+            android:name=".ui.VideoReplyActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.VideoCallActivity"
@@ -130,26 +127,10 @@
         <activity
             android:name="com.punuo.sys.app.home.address.AddressManagerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.punuo.sys.app.home.album.CloudAlbumActivity" />
-        <activity android:name="com.punuo.sys.app.home.album.AlbumActivity" />
-
-        <receiver
-            android:name=".receiver.VideoConnectReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.broadcast.CALL_REQUEST" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".receiver.VideoStartReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.example.broadcast.CALL_AGREE" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".receiver.IncomingCallReceiver" />
+        <activity android:name="com.punuo.sys.app.home.album.CloudAlbumActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.punuo.sys.app.home.album.AlbumActivity"
+            android:screenOrientation="portrait"/>
         <receiver android:name=".receiver.NetworkConnectChangedReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -157,9 +138,6 @@
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
-
-        <service android:name="com.amap.api.location.APSService" />
-        <service android:name=".service.SipService" />
     </application>
 
 </manifest>

@@ -32,7 +32,7 @@ public class HomeRouter {
     public static final String ROUTER_DEV_BIND_SUCCESS_ACTIVITY = PREFIX + "/DevBindSuccessActivity";
     public static final String ROUTER_BIND_DEV_ACTIVITY = PREFIX + "/BinDevActivity";
 
-    public static final String ROUTER_VIDEO_CONNECT = PREFIX + "/VideoConnect";
+    public static final String ROUTER_VIDEO_REPLY_ACTIVITY = PREFIX + "/VideoReplyActivity";
 
     public static final String ROUTER_CONTRACT_MANAGER_ACTIVITY = PREFIX + "/ContractManagerActivity";
     public static final String ROUTER_ADDRESS_DETAIL_ACTIVITY = PREFIX + "/AddressDetailActivity";

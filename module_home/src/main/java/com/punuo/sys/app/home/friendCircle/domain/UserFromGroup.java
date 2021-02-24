@@ -1,5 +1,7 @@
 package com.punuo.sys.app.home.friendCircle.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,14 +9,7 @@ import java.util.List;
  */
 
 public class UserFromGroup {
+    @SerializedName("userList")
     public List<UserList> userList;
-
-    public void setUserList(List<UserList> userList) {
-        this.userList = userList;
-    }
-
-    public List<UserList> getUserList() {
-        return userList;
-    }
 
 }

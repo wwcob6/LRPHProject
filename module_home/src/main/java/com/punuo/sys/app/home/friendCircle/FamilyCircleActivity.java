@@ -21,7 +21,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshRecyclerView;
 import com.punuo.sys.app.home.friendCircle.adapter.FriendCircleAdapter;
 import com.punuo.sys.app.home.friendCircle.domain.FriendMicroList;
-import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListDatas;
+import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListData;
 import com.punuo.sys.app.home.friendCircle.domain.FriendsMicro;
 import com.punuo.sys.app.home.friendCircle.event.FriendReLoadEvent;
 import com.punuo.sys.app.home.friendCircle.event.FriendRefreshEvent;
@@ -92,18 +92,18 @@ public class FamilyCircleActivity extends BaseSwipeBackActivity {
                 if (result == null) {
                     return;
                 }
-                FriendMicroList friendMicroList = result.getPostList();
+                FriendMicroList friendMicroList = result.postList;
                 if (friendMicroList == null) {
                     return;
                 }
-                List<FriendMicroListDatas> list = friendMicroList.data;
+                List<FriendMicroListData> list = friendMicroList.data;
                 if (isFirstPage) {
                     mFriendCircleAdapter.resetData(list);
                 } else {
                     mFriendCircleAdapter.addAll(list);
                 }
-                hasMore = (friendMicroList.total - friendMicroList.per_page * friendMicroList.current_page) > 0;
-                pageNum = friendMicroList.current_page + 1;
+                hasMore = (friendMicroList.total - friendMicroList.perPage * friendMicroList.currentPage) > 0;
+                pageNum = friendMicroList.currentPage + 1;
             }
 
             @Override

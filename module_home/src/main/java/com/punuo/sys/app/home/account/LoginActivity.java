@@ -22,7 +22,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -30,9 +29,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
-import com.punuo.sys.app.home.friendCircle.domain.UserDevModel;
-import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.app.request.GetDevIdFromIdRequest;
 import com.app.sip.SipInfo;
 import com.app.tools.PermissionUtils;
@@ -47,7 +43,10 @@ import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
+import com.punuo.sys.app.home.friendCircle.domain.UserDevModel;
 import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
@@ -322,8 +321,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
 
         @Override
         public void onPermissionCancel() {
-            Toast.makeText(LoginActivity.this, getString(R.string.alirtc_permission), Toast.LENGTH_SHORT).show();
-            finish();
+            ToastUtils.showToast(getString(R.string.alirtc_permission));
         }
     };
 
@@ -393,6 +391,7 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         if (AccountManager.isLogin()) {
             return;
         }
+        dismissLoadingDialog();
         AccountManager.setLogin(true);
         ARouter.getInstance().build(HomeRouter.ROUTER_HOME_ACTIVITY)
                 .navigation();

@@ -31,7 +31,7 @@ public class FriendCommentViewHolder extends BaseViewHolder<FirstMicroListFriend
 
     @Override
     protected void bindData(FirstMicroListFriendComment data, int position) {
-        ViewUtil.setText(mFriendName, data.getReplyName() + ":");
-        ViewUtil.setText(mFriendComment, data.getComment());
+        ViewUtil.setText(mFriendName, data.replyName + ":");
+        ViewUtil.setText(mFriendComment, data.comment);
     }
 }

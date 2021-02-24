@@ -10,9 +10,6 @@ import com.punuo.sys.sdk.R;
 import com.punuo.sys.sdk.util.BaseHandler;
 import com.punuo.sys.sdk.view.PNLoadingDialog;
 
-/**
- * Created by Wxcily on 16/1/5.
- */
 public class BaseActivity extends AppCompatActivity implements BaseHandler.MessageHandler {
     private PNLoadingDialog mLoadingDialog;
     protected BaseHandler mBaseHandler;

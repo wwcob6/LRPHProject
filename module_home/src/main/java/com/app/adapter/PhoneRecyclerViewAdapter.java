@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -36,9 +37,11 @@ public class PhoneRecyclerViewAdapter extends RecyclerView.Adapter<PhoneRecycler
     }
 
     public void addAllData(List<ContractPerson> list) {
+        clear();
         if (list != null) {
             mContractPersonList.addAll(list);
         }
+        notifyDataSetChanged();
     }
 
     public void clear() {
@@ -46,7 +49,7 @@ public class PhoneRecyclerViewAdapter extends RecyclerView.Adapter<PhoneRecycler
     }
 
     @Override
-    public PhoneRecyclerViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public PhoneRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.rv_item_layout, viewGroup, false);
         return new MyViewHolder(view);
     }

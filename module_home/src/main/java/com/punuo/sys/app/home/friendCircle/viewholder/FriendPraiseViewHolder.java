@@ -43,8 +43,8 @@ public class FriendPraiseViewHolder extends BaseViewHolder<FirstMicroListFriendP
 
     @Override
     protected void bindData(FirstMicroListFriendPraise data, int position) {
-        ViewUtil.setText(mNickName, data.getNickname());
-        switch (data.getPraisetype()) {
+        ViewUtil.setText(mNickName, data.nickName);
+        switch (data.praiseType) {
             case PraiseConst.TYPE_DIANZAN:
                 mIcon.setImageResource(drawables[0]);
                 mDesc.setText(PraiseConst.DESC_LIST[0]);

@@ -4,14 +4,10 @@ package com.punuo.sys.app.home.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,13 +20,10 @@ import com.punuo.sys.app.home.db.ContractPerson;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 
 public class FriendCallActivity extends BaseActivity {
@@ -58,17 +51,11 @@ public class FriendCallActivity extends BaseActivity {
     }
 
     private void getData() {
-        adapter.clear();
         SQLite.select()
                 .from(ContractPerson.class)
                 .async()
-                .queryListResultCallback(new QueryTransaction.QueryResultListCallback<ContractPerson>() {
-                    @Override
-                    public void onListQueryResult(QueryTransaction transaction, @NonNull List<ContractPerson> tResult) {
-                        adapter.addAllData(tResult);
-                        adapter.notifyDataSetChanged();
-                    }
-                }).execute();
+                .queryListResultCallback((transaction, tResult) -> adapter.addAllData(tResult))
+                .execute();
     }
 
     private void initView() {

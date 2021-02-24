@@ -23,6 +23,8 @@ import androidx.core.app.ActivityCompat;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
+import com.punuo.sip.user.SipUserManager;
+import com.punuo.sip.user.request.SipListUpdateRequest;
 import com.punuo.sys.app.member.request.BindDevRequest;
 import com.punuo.sys.app.member.request.IsDevBindRequest;
 import com.punuo.sys.app.member.request.JoinDevRequest;
@@ -149,6 +151,9 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
             public void onSuccess(PNBaseModel result) {
                 if (result != null) {
                     if (result.isSuccess()) {
+                        AccountManager.setBindDevId(devId);
+                        SipListUpdateRequest sipListUpdateRequest = new SipListUpdateRequest();
+                        SipUserManager.getInstance().addRequest(sipListUpdateRequest);
                         ToastUtils.showToast("绑定成功");
                         AccountManager.getBindDevInfo();
                     } else {
@@ -179,6 +184,9 @@ public class BindDevActivity extends BaseSwipeBackActivity implements View.OnCli
             public void onSuccess(PNBaseModel result) {
                 if (result != null) {
                     if (result.isSuccess()) {
+                        AccountManager.setBindDevId(devId);
+                        SipListUpdateRequest sipListUpdateRequest = new SipListUpdateRequest();
+                        SipUserManager.getInstance().addRequest(sipListUpdateRequest);
                         ToastUtils.showToast("绑定成功");
                         AccountManager.getBindDevInfo();
                     } else {

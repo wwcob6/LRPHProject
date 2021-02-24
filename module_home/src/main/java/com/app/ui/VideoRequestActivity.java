@@ -4,24 +4,25 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.R;
 import com.app.model.MessageEvent;
 import com.app.sip.SipInfo;
+import com.punuo.sip.dev.model.CallResponse;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipCallReplyRequest;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,7 +35,7 @@ import org.zoolu.sip.address.SipURL;
  * 双向视频第一个页面
  */
 
-public class VideoDial extends BaseActivity implements View.OnClickListener{
+public class VideoRequestActivity extends BaseActivity implements View.OnClickListener{
     private SoundPool soundPool;
     private SharedPreferences.Editor editor;
     private SharedPreferences pref;
@@ -121,6 +122,15 @@ public class VideoDial extends BaseActivity implements View.OnClickListener{
             dialog.show();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(CallResponse event) {
+        if (TextUtils.equals(event.operate, "refuse")){
+            ToastUtils.showToast("对方已拒绝");
+            finish();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         stopSound(streamId);

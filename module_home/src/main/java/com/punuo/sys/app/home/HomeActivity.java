@@ -422,7 +422,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(OperationData data) {
-        ARouter.getInstance().build(HomeRouter.ROUTER_VIDEO_CONNECT).navigation();
+        ARouter.getInstance().build(HomeRouter.ROUTER_VIDEO_REPLY_ACTIVITY).navigation();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

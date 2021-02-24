@@ -21,7 +21,7 @@ import com.punuo.sys.app.home.friendCircle.adapter.NineGridTestLayout;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendComment;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendImage;
 import com.punuo.sys.app.home.friendCircle.domain.FirstMicroListFriendPraise;
-import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListDatas;
+import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListData;
 import com.punuo.sys.app.home.friendCircle.util.PopupWindowUtil;
 import com.punuo.sys.sdk.recyclerview.BaseViewHolder;
 import com.punuo.sys.sdk.util.TimeUtils;
@@ -37,7 +37,7 @@ import java.util.Locale;
  * Created by han.chen.
  * Date on 2019-06-05.
  **/
-public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas> {
+public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListData> {
     private NineGridTestLayout layout9;
     private TextView mTime;
     private ImageView mAvatar;
@@ -87,9 +87,9 @@ public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas>
     }
 
     @Override
-    protected void bindData(FriendMicroListDatas bean, int position) {
+    protected void bindData(FriendMicroListData bean, int position) {
         //头像
-        String avatarPath = Util.getImageUrl(bean.getId(), bean.getAvatar());
+        String avatarPath = Util.getImageUrl(bean.id, bean.avatar);
         RequestOptions options = new RequestOptions().error(R.drawable.empty_photo);
         Glide.with(mContext).load(avatarPath).apply(options).into(mAvatar);
 
@@ -97,7 +97,7 @@ public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas>
          * 显示时间
          * 服务器返回的时间是：年-月-日 时：分，所以获取的时候应该是yyyy-MM-dd HH:mm
          */
-        String strTime = bean.getCreate_time().trim();
+        String strTime = bean.createTime.trim();
         if (!TextUtils.isEmpty(strTime)) {
             SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             String date = sDateFormat.format(new Date());
@@ -107,21 +107,21 @@ public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas>
         /*
          * 显示姓名和内容
          */
-        ViewUtil.setText(mName, bean.getNickname());
-        List<FirstMicroListFriendImage> postPic = bean.getPost_pic();
+        ViewUtil.setText(mName, bean.nickName);
+        List<FirstMicroListFriendImage> postPic = bean.postPic;
         List<String> urls = new ArrayList<>();
         if (postPic != null && !postPic.isEmpty()) {
             for (int i = 0; i < postPic.size(); i++) {
-                urls.add(Util.getImageUrl(bean.getId(), postPic.get(i).getPic_name()));
+                urls.add(Util.getImageUrl(bean.id, postPic.get(i).picName));
             }
         }
 
         layout9.setIsShowAll(true);
         layout9.setUrlList(urls);
 
-        ViewUtil.setText(mContent, bean.getContent());
+        ViewUtil.setText(mContent, bean.content);
 
-        List<FirstMicroListFriendPraise> friendpraise = bean.getAddlike_nickname();
+        List<FirstMicroListFriendPraise> friendpraise = bean.addLikeNickname;
         //显示点赞holder.layoutPraise   friendpraise
         if (friendpraise != null && !friendpraise.isEmpty()) {
             mFriendPraiseAdapter.getData().clear();
@@ -131,7 +131,7 @@ public class FriendCircleViewHolder extends BaseViewHolder<FriendMicroListDatas>
             mPariseList.setVisibility(View.GONE);
         }
 
-        List<FirstMicroListFriendComment> friendComment = bean.getFriendComment();
+        List<FirstMicroListFriendComment> friendComment = bean.friendComment;
         if (friendComment != null && !friendComment.isEmpty()) {
             mFriendCommentAdapter.getData().clear();
             mFriendCommentAdapter.addAll(friendComment);

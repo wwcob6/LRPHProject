@@ -3,7 +3,6 @@ package com.punuo.sys.app.home;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,30 +11,23 @@ import android.widget.RelativeLayout;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.punuo.sys.app.home.friendCircle.domain.UserList;
 import com.app.sip.SipInfo;
-import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
-import com.punuo.sys.app.home.activity.FriendCallActivity;
-import com.app.ui.VideoDial;
-import com.punuo.sys.app.linphone.LinphoneHelper;
+import com.app.ui.VideoRequestActivity;
 import com.punuo.sip.H264Config;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipIsMonitorRequest;
 import com.punuo.sip.user.request.SipOperationRequest;
+import com.punuo.sys.app.home.activity.FriendCallActivity;
+import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
+import com.punuo.sys.app.linphone.LinphoneHelper;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class HomeFragment extends BaseFragment implements View.OnClickListener {
 
-    private Handler handlervideo = new Handler();
-    private static final String TAG = "LaoRenFragment";
-    private List<UserList> userList = new ArrayList<UserList>();
     private ImageView alarm;
     private ImageView camera;
     private RelativeLayout re_background;
@@ -102,7 +94,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
             SipInfo.single = false;
             SipOperationRequest request = new SipOperationRequest();
             SipUserManager.getInstance().addRequest(request);
-            startActivity(new Intent(getActivity(), VideoDial.class));
+            startActivity(new Intent(getActivity(), VideoRequestActivity.class));
         }
     }
 }

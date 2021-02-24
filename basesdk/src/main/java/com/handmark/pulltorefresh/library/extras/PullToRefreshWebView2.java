@@ -17,6 +17,7 @@ package com.handmark.pulltorefresh.library.extras;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
@@ -120,11 +121,11 @@ public class PullToRefreshWebView2 extends PullToRefreshWebView {
 	 * @author Chris Banes
 	 */
 	final class JsValueCallback {
-
+		@JavascriptInterface
 		public void isReadyForPullUpResponse(boolean response) {
 			mIsReadyForPullUp.set(response);
 		}
-
+		@JavascriptInterface
 		public void isReadyForPullDownResponse(boolean response) {
 			mIsReadyForPullDown.set(response);
 		}

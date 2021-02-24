@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListDatas;
+import com.punuo.sys.app.home.friendCircle.domain.FriendMicroListData;
 import com.punuo.sys.app.home.friendCircle.viewholder.FriendCircleViewHolder;
 import com.punuo.sys.sdk.recyclerview.PageRecyclerViewAdapter;
 
@@ -15,12 +15,12 @@ import java.util.List;
  * Created by han.chen.
  * Date on 2019-06-05.
  **/
-public class FriendCircleAdapter extends PageRecyclerViewAdapter<FriendMicroListDatas> {
-    public FriendCircleAdapter(Context context, List<FriendMicroListDatas> data) {
+public class FriendCircleAdapter extends PageRecyclerViewAdapter<FriendMicroListData> {
+    public FriendCircleAdapter(Context context, List<FriendMicroListData> data) {
         super(context, data);
     }
 
-    public void resetData(List<FriendMicroListDatas> list) {
+    public void resetData(List<FriendMicroListData> list) {
         manuaRemoveFooterView();
         mData.clear();
         if (list != null) {
