@@ -2,9 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:background="#000">
-
+    android:background="#000000"
+    android:gravity="center">
 
     <SurfaceView
         android:id="@+id/surfaceView"
@@ -15,11 +14,11 @@
         android:id="@+id/back1"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
         android:layout_alignStart="@+id/surfaceView"
         android:layout_alignTop="@+id/surfaceView"
-        android:src="@drawable/ic_tuichu"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_tuichu" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,30 +30,13 @@
             android:id="@+id/left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_left"/>
-
-        <ImageView
-            android:id="@+id/stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_stop"
-            android:visibility="gone"/>
-
+            android:src="@drawable/ic_left" />
 
         <ImageView
             android:id="@+id/right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_right"/>
+            android:src="@drawable/ic_right" />
     </RelativeLayout>
-
-    <!--<SurfaceView-->
-    <!--android:id="@+id/surfaceView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-
-
-
 </RelativeLayout>

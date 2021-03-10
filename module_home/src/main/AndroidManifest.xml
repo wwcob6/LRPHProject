@@ -61,7 +61,7 @@
             android:theme="@style/Theme.Pn.Translucent"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.VideoPlay"
+            android:name=".ui.VideoPlayActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.VideoShow"

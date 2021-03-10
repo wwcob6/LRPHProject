@@ -15,8 +15,8 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.adapter.PhoneRecyclerViewAdapter;
 import com.app.model.MessageEvent;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.punuo.sys.app.home.db.ContractPerson;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -62,7 +62,7 @@ public class FriendCallActivity extends BaseActivity {
         View back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
         TextView title = findViewById(R.id.title);
-        title.setText("通讯录");
+        title.setText("通讯录（本机号码：" + UserInfoManager.getUserInfo().ipNumber + ")");
         rv = findViewById(R.id.rv);
         GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
         rv.setLayoutManager(glm);
@@ -70,8 +70,8 @@ public class FriendCallActivity extends BaseActivity {
         adapter = new PhoneRecyclerViewAdapter(mContext);
         rv.setAdapter(adapter);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add);
-        fab.setOnClickListener(v -> ARouter.getInstance().build(HomeRouter.ROUTER_CONTRACT_MANAGER_ACTIVITY).navigation());
+        View addView = findViewById(R.id.add);
+        addView.setOnClickListener(v -> ARouter.getInstance().build(HomeRouter.ROUTER_CONTRACT_MANAGER_ACTIVITY).navigation());
     }
 
     public static class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration {

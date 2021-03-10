@@ -11,7 +11,7 @@ import com.app.sip.BodyFactory;
 import com.app.sip.SipInfo;
 import com.app.sip.SipMessageFactory;
 import com.app.ui.VideoCallActivity;
-import com.app.ui.VideoPlay;
+import com.app.ui.VideoPlayActivity;
 import com.app.video.RtpVideo;
 import com.app.video.SendActivePacket;
 import com.app.video.VideoInfo;
@@ -53,7 +53,7 @@ public class SipCallManager {
     }
 
     public void callVideoPlay(final Context mContext) {
-        call(mContext, false, VideoPlay.class);
+        call(mContext, false, VideoPlayActivity.class);
     }
 
     private void call(final Context mContext, final boolean isIntiative, final Class<?> activityClass) {

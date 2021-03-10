@@ -25,15 +25,6 @@ public class AccountManager {
     private static String bindUserId; //绑定设备的userId
     private static String groupId;
     private static boolean login = false;
-    private static String userIpPhoneNum; //网络IP电话
-
-    public static void setUserIpPhoneNum(String userIpPhoneNum) {
-        AccountManager.userIpPhoneNum = userIpPhoneNum;
-    }
-
-    public static String getUserIpPhoneNum() {
-        return userIpPhoneNum;
-    }
 
     public static void setBindUserId(String bindUserId) {
         AccountManager.bindUserId = bindUserId;

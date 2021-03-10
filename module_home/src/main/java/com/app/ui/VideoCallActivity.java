@@ -27,7 +27,7 @@ import com.app.R2;
 import com.app.audio.AudioRecordManager;
 import com.app.model.MessageEvent;
 import com.app.sip.SipInfo;
-import com.app.tools.H264decoder;
+import com.app.tools.H264VideoDecoder;
 import com.app.video.H264SendingManager;
 import com.app.video.VideoInfo;
 import com.punuo.sip.H264Config;
@@ -65,7 +65,7 @@ public class VideoCallActivity extends BaseActivity {
     private SurfaceHolder shBack;
     private int getNum = 0;
     Timer timer = new Timer();
-    private H264decoder h264decoder;
+    private H264VideoDecoder mH264VideoDecoder;
     AlertDialog dialog;
     @BindView(R2.id.sv_back)
     SurfaceView svBack;
@@ -98,7 +98,7 @@ public class VideoCallActivity extends BaseActivity {
 
         sendingManager = new H264SendingManager(svFront);
         sendingManager.init();
-        h264decoder = new H264decoder();
+        mH264VideoDecoder = new H264VideoDecoder();
 
         playVideo();
         timer.schedule(task, 0, 10000);
@@ -248,7 +248,7 @@ public class VideoCallActivity extends BaseActivity {
             System.out.println(surface);
 
             if (surface != null) {
-                h264decoder.initDecoder(surface);
+                mH264VideoDecoder.initDecoder(surface);
                 while (SipInfo.decoding) {
                     if (SipInfo.isNetworkConnected) {
                         byte[] nal = VideoInfo.nalBuffers[getNum].getReadableNalBuf();
@@ -268,7 +268,7 @@ public class VideoCallActivity extends BaseActivity {
 
                             try {
                                 //硬解码
-                                h264decoder.onFrame(nal, 0, nal.length);
+                                mH264VideoDecoder.onFrame(nal, 0, nal.length);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

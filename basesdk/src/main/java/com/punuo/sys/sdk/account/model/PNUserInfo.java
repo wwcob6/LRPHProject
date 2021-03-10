@@ -73,6 +73,8 @@ public class PNUserInfo extends PNBaseModel implements Parcelable {
         public String gender = "";
         @SerializedName("notify")
         public String isNotify = "";
+        @SerializedName("ip_num")
+        public String ipNumber;
 
         public UserInfo() {
 
@@ -87,6 +89,7 @@ public class PNUserInfo extends PNBaseModel implements Parcelable {
             nickname = in.readString();
             gender = in.readString();
             isNotify = in.readString();
+            ipNumber = in.readString();
         }
 
         public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
@@ -116,6 +119,7 @@ public class PNUserInfo extends PNBaseModel implements Parcelable {
             dest.writeString(nickname);
             dest.writeString(gender);
             dest.writeString(isNotify);
+            dest.writeString(ipNumber);
         }
     }
 

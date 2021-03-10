@@ -17,6 +17,7 @@ import com.app.R2;
 import com.app.model.MessageEvent;
 import com.app.views.CleanEditText;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -79,7 +80,8 @@ public class ContractManagerActivity extends BaseSwipeBackActivity {
         if (mContractPerson != null) {
             edit_name.setText(mContractPerson.name);
             edit_number.setText(mContractPerson.phoneNumber);
-            Glide.with(this).load(mContractPerson.avatarUrl).into(selectavator);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.default_avatar);
+            Glide.with(this).load(mContractPerson.avatarUrl).apply(requestOptions).into(selectavator);
 
             add.setText("修改");
             delete.setVisibility(View.VISIBLE);

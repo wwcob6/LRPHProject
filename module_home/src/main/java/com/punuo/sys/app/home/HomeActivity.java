@@ -20,7 +20,7 @@ import com.app.R2;
 import com.app.model.Constant;
 import com.app.sip.SipInfo;
 import com.app.ui.VideoCallActivity;
-import com.app.ui.VideoPlay;
+import com.app.ui.VideoPlayActivity;
 import com.app.video.RtpVideo;
 import com.app.video.SendActivePacket;
 import com.app.video.VideoInfo;
@@ -157,9 +157,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         Log.i(TAG, "startLinphone: ");
         LinphoneHelper.getInstance().setDebug(DeviceHelper.isApkInDebug());
         LinphoneHelper.getInstance().startVoip(this);
-        if (!TextUtils.isEmpty(AccountManager.getUserIpPhoneNum())) {
-            LinphoneHelper.getInstance().register(AccountManager.getUserIpPhoneNum(), "123456", SipConfig.getServerIp() + ":5000");
-        }
+        mBaseHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!TextUtils.isEmpty(UserInfoManager.getUserInfo().ipNumber)) {
+                    LinphoneHelper.getInstance().register(UserInfoManager.getUserInfo().ipNumber, "123456", SipConfig.getServerIp() + ":5000");
+                }
+            }
+        }, 500);
     }
 
     private void initTabBars() {
@@ -448,7 +453,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                             VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
                             VideoInfo.sendActivePacket = new SendActivePacket();
                             VideoInfo.sendActivePacket.startThread();
-                            startActivity(new Intent(HomeActivity.this, VideoPlay.class));
+                            startActivity(new Intent(HomeActivity.this, VideoPlayActivity.class));
                         } catch (SocketException e) {
                             e.printStackTrace();
                         }

@@ -16,14 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <ImageView
             android:id="@+id/add"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="bottom|end"
             android:layout_margin="20dp"
-            android:src="@drawable/ic_plus"
-            app:backgroundTint="@color/titile" />
-
+            android:src="@drawable/ic_plus" />
     </FrameLayout>
 </LinearLayout>

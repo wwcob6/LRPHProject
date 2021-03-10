@@ -17,7 +17,6 @@ import com.app.groupvoice.G711;
 import com.app.sip.SipInfo;
 import com.app.tools.AECManager;
 import com.app.tools.AvcEncoder;
-import com.app.tools.AvcEncoder1;
 import com.punuo.sip.dev.H264ConfigDev;
 
 import java.io.File;
@@ -46,7 +45,6 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
 //    private final int previewWidth = 720;     //水平像素
 //    private final int previewHeight = 480;     //垂直像素
     private AvcEncoder avcEncoder;
-    private AvcEncoder1 avcEncoder1;
     Camera mCamera;
     private int numCamera;
     private int cameraId_front = -1;
@@ -200,9 +198,6 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
         AECManager.getInstance().release();
         if(avcEncoder!=null){
             avcEncoder.close();
-        }else
-            if(avcEncoder1!=null){
-            avcEncoder1.close();
         }
         rtpsending = null;
         SipInfo.flag = true;
@@ -293,9 +288,6 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
             if(avcEncoder!=null){
                 parame.setPreviewFormat(ImageFormat.NV21);
             }else
-                if(avcEncoder1!=null){
-                    parame.setPreviewFormat(ImageFormat.YV12);
-                }
 //            parame.setPictureSize(previewWidth,previewHeight);
             parame.setPreviewSize(previewWidth1, previewHeight1);    //设置屏幕分辨率
 //            if(isadapter(previewWidth,previewHeight)){
@@ -343,10 +335,6 @@ public class H264SendingManager implements SurfaceHolder.Callback, Camera.Previe
                 if(avcEncoder!=null){
                      encodeResult = avcEncoder.offerEncoder(data); //进行编码，将编码结果存放进数组
                 }else
-                    if(avcEncoder1!=null){
-                        encodeResult = avcEncoder1.offerEncoder(data);
-                    }
-
                 if (encodeResult != null && encodeResult.length > 0) {
                     Log.e(TAG, "encode len:" + encodeResult.length);//打印编码结果的长度
                     setSSRC_PAYLOAD();
