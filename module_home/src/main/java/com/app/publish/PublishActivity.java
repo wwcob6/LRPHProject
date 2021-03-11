@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.publish.adapter.PublishImageAdapter;
 import com.app.request.UploadPostRequest;
@@ -70,10 +71,10 @@ public class PublishActivity extends BaseSwipeBackActivity {
                             .imageFormat(PictureMimeType.JPEG)
                             .forResult(PictureConfig.CHOOSE_REQUEST);
                 } else {
-                    Intent intent = new Intent(PublishActivity.this, ImagePagerActivity.class);
-                    intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) mPublishImageAdapter.getImages());
-                    intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
-                    startActivity(intent);
+                    ARouter.getInstance().build(HomeRouter.ROUTER_IMAGE_PAGER_ACTIVITY)
+                            .withStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) mPublishImageAdapter.getImages())
+                            .withInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position)
+                            .navigation();
                 }
             }
         });

@@ -33,8 +33,23 @@ public class HomeRouter {
     public static final String ROUTER_BIND_DEV_ACTIVITY = PREFIX + "/BinDevActivity";
 
     public static final String ROUTER_VIDEO_REPLY_ACTIVITY = PREFIX + "/VideoReplyActivity";
+    public static final String ROUTER_VIDEO_REQUEST_ACTIVITY = PREFIX + "/VideoRequestActivity";
 
     public static final String ROUTER_CONTRACT_MANAGER_ACTIVITY = PREFIX + "/ContractManagerActivity";
     public static final String ROUTER_ADDRESS_DETAIL_ACTIVITY = PREFIX + "/AddressDetailActivity";
     public static final String ROUTER_PUBLISH_ACTIVITY = PREFIX + "/PublishActivity";
+    public static final String ROUTER_FRIEND_CALL_ACTIVITY = PREFIX + "/FriendCallActivity";
+    public static final String ROUTER_SOFTWARE_INSTRUCT_ACTIVITY = PREFIX + "/SoftwareInstructActivity";
+    public static final String ROUTER_MESSAGE_NOTIFY_ACTIVITY = PREFIX + "/MessageNotifyActivity";
+    public static final String ROUTER_SERVICE_MANAGER_ACTIVITY = PREFIX + "/ServiceManagerActivity";
+    public static final String ROUTER_PRIVATE_ACTIVITY = PREFIX + "/PrivateActivity";
+    public static final String ROUTER_USER_INFO_ACTIVITY = PREFIX + "/UserInfoActivity";
+    public static final String ROUTER_CHANGE_PASSWORD_ACTIVITY = PREFIX + "/ChangePasswordActivity";
+    public static final String ROUTER_BIND_PHONE_ACTIVITY = PREFIX + "/BindPhoneActivity";
+    public static final String ROUTER_SETTING_ACTIVITY = PREFIX + "/SettingActivity";
+    public static final String ROUTER_UPDATE_NICK_ACTIVITY = PREFIX + "/UpdateNickActivity";
+    public static final String ROUTER_ADDRESS_MANAGER_ACTIVITY = PREFIX + "/AddressManagerActivity";
+    public static final String ROUTER_VIDEO_PLAY_ACTIVITY = PREFIX + "/VideoPlayActivity";
+    public static final String ROUTER_VIDEO_CALL_ACTIVITY = PREFIX + "/VideoCallActivity";
+    public static final String ROUTER_IMAGE_PAGER_ACTIVITY = PREFIX + "/ImagePagerActivity";
 }

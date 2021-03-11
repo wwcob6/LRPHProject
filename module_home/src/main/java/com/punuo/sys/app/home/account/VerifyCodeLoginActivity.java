@@ -15,7 +15,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.request.GetDevIdFromIdRequest;
-import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;
 import com.punuo.sip.dev.SipDevManager;
 import com.punuo.sip.dev.event.DevLoginFailEvent;
@@ -106,15 +105,14 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
         if (id == R.id.get_verificode) {
             getVerifyCode(phone);
         } else if (id == R.id.password_login) {
-            startActivity(new Intent(this, LoginActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY).navigation();
         } else if (id == R.id.btn_login2) {
-            SipInfo.passWord = null;//验证码登录没有设置密码，将密码设置为空
             final String code = vericodeinput.getText().toString().trim();
             if (checkInput(phone, code)) {
                 SMSSDK.submitVerificationCode("86", phone, code);
             }
         } else if (id == R.id.newAccount_register) {
-            startActivity(new Intent(this, RegisterAccountActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_REGISTER_ACTIVITY).navigation();
         } else if (id == R.id.iv_back5) {
             scrollToFinishActivity();
         }
@@ -127,7 +125,6 @@ public class VerifyCodeLoginActivity extends BaseSwipeBackLoginActivity {
             AccountManager.setUserAccount(userAccount);
             AccountManager.setPassword("pass");
             showLoadingDialog();
-            SipInfo.isVericodeLogin = true;
             getUserId();
         }
     }

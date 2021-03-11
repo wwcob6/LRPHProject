@@ -1,29 +1,28 @@
 package com.punuo.sys.app.home.activity;
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.request.UpdateNickRequest;
-import com.app.sip.SipInfo;
 import com.app.views.CleanEditText;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipListUpdateRequest;
+import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.model.PNBaseModel;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.ToastUtils;
 
-
+@Route(path = HomeRouter.ROUTER_UPDATE_NICK_ACTIVITY)
 public class UpdateNickActivity extends BaseActivity {
 
     @Override
@@ -37,7 +36,7 @@ public class UpdateNickActivity extends BaseActivity {
         back.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UpdateNickActivity.this, UserInfoActivity.class));
+                ARouter.getInstance().build(HomeRouter.ROUTER_USER_INFO_ACTIVITY).navigation();
                 finish();
             }
         });
@@ -64,7 +63,7 @@ public class UpdateNickActivity extends BaseActivity {
         }
         showLoadingDialog("正在更新...");
         mUpdateNickRequest = new UpdateNickRequest();
-        mUpdateNickRequest.addUrlParam("userid", SipInfo.userId);
+        mUpdateNickRequest.addUrlParam("userid", AccountManager.getUserId());
         mUpdateNickRequest.addUrlParam("name", newNick);
         mUpdateNickRequest.setRequestListener(new RequestListener<PNBaseModel>() {
             @Override

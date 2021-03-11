@@ -1,4 +1,4 @@
-package com.app.groupvoice;
+package com.app.audio;
 
 /**
  * G.711 codec. This class provides methods for u-law, A-law and linear PCM

@@ -1,17 +1,15 @@
 package com.punuo.sys.app.home.account;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
@@ -31,6 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.smssdk.SMSSDK;
 
+@Route(path = HomeRouter.ROUTER_BIND_PHONE_ACTIVITY)
 public class BindPhoneActivity extends BaseSwipeBackLoginActivity {
     @BindView(R2.id.back)
     ImageView ivBack1;

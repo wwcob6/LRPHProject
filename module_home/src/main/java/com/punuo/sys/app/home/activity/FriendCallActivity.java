@@ -11,10 +11,11 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.adapter.PhoneRecyclerViewAdapter;
-import com.app.model.MessageEvent;
+import com.app.model.ContractUpdateEvent;
 import com.punuo.sys.app.home.db.ContractPerson;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
@@ -25,7 +26,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-
+@Route(path = HomeRouter.ROUTER_FRIEND_CALL_ACTIVITY)
 public class FriendCallActivity extends BaseActivity {
     private String TAG = "FriendCallActivity";
     private RecyclerView rv;
@@ -44,10 +45,8 @@ public class FriendCallActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
-        if (event.getMessage().equals("addcompelete")) {
-            getData();
-        }
+    public void onMessageEvent(ContractUpdateEvent event) {
+        getData();
     }
 
     private void getData() {
@@ -66,7 +65,7 @@ public class FriendCallActivity extends BaseActivity {
         rv = findViewById(R.id.rv);
         GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
         rv.setLayoutManager(glm);
-        rv.addItemDecoration(new FriendCallActivity.RecyclerViewItemDecoration(2, 3));//初始化子项距离和列数
+        rv.addItemDecoration(new RecyclerViewItemDecoration(2, 3));//初始化子项距离和列数
         adapter = new PhoneRecyclerViewAdapter(mContext);
         rv.setAdapter(adapter);
 

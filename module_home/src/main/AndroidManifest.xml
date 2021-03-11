@@ -27,9 +27,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".ui.VideoStartActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="com.punuo.sys.app.home.account.LoginActivity"
             android:theme="@style/Theme.Pn.Translucent"
             android:launchMode="singleTask"
@@ -62,9 +59,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.VideoPlayActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.VideoShow"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ServiceManagerActivity"

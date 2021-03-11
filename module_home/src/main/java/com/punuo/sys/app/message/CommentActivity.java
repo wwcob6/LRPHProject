@@ -1,10 +1,7 @@
 package com.punuo.sys.app.message;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,18 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.app.home.friendCircle.adapter.CommentAdapter;
-import com.app.model.MessageEvent;
 import com.punuo.sys.app.message.model.PostNewCommentModel;
 import com.punuo.sys.app.message.request.GetNewCommentRequest;
+import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -78,7 +72,6 @@ public class CommentActivity extends BaseSwipeBackActivity {
                     tvNoNewMessage.setVisibility(View.INVISIBLE);
                     CommentAdapter adapter = new CommentAdapter(result.mCommentModels);
                     rvComments.setAdapter(adapter);
-                    EventBus.getDefault().post(new MessageEvent("取消新评论提示"));
                 } else {
                     tvNoNewMessage.setVisibility(View.VISIBLE);
                 }

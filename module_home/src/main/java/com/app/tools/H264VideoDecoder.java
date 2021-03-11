@@ -16,10 +16,11 @@ public class H264VideoDecoder {
     private static final String TAG = "H264VideoDecoder";
     private MediaCodec mCodec;
     private final static String MIME_TYPE = "video/avc";
-    private final static int VIDEO_WIDTH = 648;
+    private final static int VIDEO_WIDTH = 640;
     private final static int VIDEO_HEIGHT = 480;
-    private final static int TIME_INTERNAL = 10;
-    private int mCount = 0;
+    private final static int TIME_INTERNAL = 15;
+    long pts = 0;
+    long generateIndex = 0;
 
     private static H264VideoDecoder sH264VideoDecoder;
     public static H264VideoDecoder getInstance() {
@@ -39,6 +40,9 @@ public class H264VideoDecoder {
         }
         MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, VIDEO_WIDTH, VIDEO_HEIGHT);
         mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);
+        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, VIDEO_WIDTH * VIDEO_HEIGHT * 5);
+        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, TIME_INTERNAL);
+        mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
         mCodec.configure(mediaFormat, surface, null, 0);
         mCodec.start();
         Log.i(TAG, "MediaCodec init success");
@@ -48,11 +52,12 @@ public class H264VideoDecoder {
         ByteBuffer[] inputBuffers = mCodec.getInputBuffers();
         int inputBufferIndex = mCodec.dequeueInputBuffer(-1);
         if (inputBufferIndex >= 0) {
+            pts = computePresentationTime(generateIndex);
             ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
             inputBuffer.clear();
             inputBuffer.put(buf, offset, length);
-            mCodec.queueInputBuffer(inputBufferIndex, 0, length, mCount * TIME_INTERNAL, 0);
-            mCount++;
+            mCodec.queueInputBuffer(inputBufferIndex, 0, length, pts, 0);
+            generateIndex++;
         } else {
             return false;
         }
@@ -75,5 +80,9 @@ public class H264VideoDecoder {
         mCodec = null;
         sH264VideoDecoder = null;
         Log.i(TAG, "MediaCodec release success");
+    }
+
+    private long computePresentationTime(long frameIndex) {
+        return 132 + frameIndex * 1000000 / TIME_INTERNAL;
     }
 }

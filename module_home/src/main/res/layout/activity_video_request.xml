@@ -11,8 +11,8 @@
 
         <ImageView
             android:id="@+id/logo1"
-            android:layout_width="93dp"
-            android:layout_height="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="140dp"
             android:src="@drawable/logo2" />
@@ -25,8 +25,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:textColor="#474646"
-            android:textSize="15sp"
-            android:visibility="visible" />
+            android:textSize="18sp"
+            android:text="正在等待对方接受邀请..."/>
 
 
         <ImageView
@@ -36,17 +36,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="430dp"
             android:src="@drawable/ic_hangup" />
-
-        <TextView
-            android:id="@+id/quxiao"
-            android:layout_width="65dp"
-            android:layout_height="35dp"
-            android:layout_below="@+id/iv_hangup"
-            android:layout_alignStart="@+id/iv_hangup"
-            android:layout_alignEnd="@id/iv_hangup"
-            android:gravity="center"
-            android:text="取消"
-            android:visibility="gone" />
 
     </RelativeLayout>
 

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
-import com.app.model.MessageEvent;
 import com.punuo.sys.app.home.friendCircle.adapter.CommentAdapter;
 import com.punuo.sys.app.message.model.PostNewLikeModel;
 import com.punuo.sys.app.message.request.GetNewLikeRequest;
@@ -20,8 +19,6 @@ import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.HandlerExceptionUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,7 +73,6 @@ public class AddLikeActivity extends BaseSwipeBackActivity {
                     tvNoAddlikes.setVisibility(View.INVISIBLE);
                     CommentAdapter adapter = new CommentAdapter(result.mCommentModels);
                     rvAddlikes.setAdapter(adapter);
-                    EventBus.getDefault().post(new MessageEvent("取消新点赞提示"));
                 } else {
                     tvNoAddlikes.setVisibility(View.VISIBLE);
                 }

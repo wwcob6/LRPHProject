@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
 import com.app.model.CallModel;
@@ -17,6 +18,7 @@ import com.punuo.sys.sdk.activity.BaseActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.model.PNBaseModel;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.ToastUtils;
 
 import java.util.List;
@@ -28,7 +30,7 @@ import butterknife.OnClick;
 /**
  * Created by maojianhui on 2018/6/26.
  */
-
+@Route(path = HomeRouter.ROUTER_SERVICE_MANAGER_ACTIVITY)
 public class ServiceManagerActivity extends BaseActivity {
 
     @BindView(R2.id.et_call1)

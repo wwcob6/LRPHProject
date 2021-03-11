@@ -14,7 +14,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.model.MessageEvent;
+import com.app.model.ContractUpdateEvent;
 import com.app.views.CleanEditText;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -125,7 +125,7 @@ public class ContractManagerActivity extends BaseSwipeBackActivity {
                         ToastUtils.showToast("修改成功");
                     }
                 }
-                EventBus.getDefault().post(new MessageEvent("addcompelete"));
+                EventBus.getDefault().post(new ContractUpdateEvent());
                 scrollToFinishActivity();
             }
         });
@@ -134,7 +134,7 @@ public class ContractManagerActivity extends BaseSwipeBackActivity {
             SQLite.delete().from(ContractPerson.class)
                     .where(ContractPerson_Table.id.eq(mContractPerson.id))
                     .execute();
-            EventBus.getDefault().post(new MessageEvent("addcompelete"));
+            EventBus.getDefault().post(new ContractUpdateEvent());
             ToastUtils.showToast("删除成功");
             scrollToFinishActivity();
         });

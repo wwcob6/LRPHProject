@@ -1,6 +1,5 @@
 package com.punuo.sys.app.home.album;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,9 +13,9 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.adapter.MyRecyclerViewAdapter;
-import com.punuo.sys.app.home.friendCircle.adapter.ImagePagerActivity;
 import com.app.request.GetImagesRequest;
 import com.punuo.sys.app.home.album.model.CloudPhoto;
+import com.punuo.sys.app.home.friendCircle.adapter.ImagePagerActivity;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
@@ -52,10 +51,10 @@ public class AlbumActivity extends BaseSwipeBackActivity {
      */
     private void setEvent() {
         adapter.setmOnItemClickListener((view, position) -> {
-            Intent intent = new Intent(this, ImagePagerActivity.class);
-            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) images);
-            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
-            startActivity(intent);
+            ARouter.getInstance().build(HomeRouter.ROUTER_IMAGE_PAGER_ACTIVITY)
+                    .withStringArrayList(ImagePagerActivity.EXTRA_IMAGE_URLS, (ArrayList<String>) images)
+                    .withInt(ImagePagerActivity.EXTRA_IMAGE_INDEX, position)
+                    .navigation();
         });
     }
 

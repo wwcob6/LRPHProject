@@ -13,17 +13,14 @@ import android.widget.TextView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.punuo.sys.sdk.account.UserInfoManager;
 import com.app.Util;
-import com.punuo.sys.sdk.account.model.PNUserInfo;
-import com.punuo.sys.app.home.album.CloudAlbumActivity;
-import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
-import com.punuo.sys.app.home.activity.PrivateActivity;
-import com.app.ui.ServiceManagerActivity;
-import com.punuo.sys.app.home.account.SettingActivity;
 import com.bumptech.glide.Glide;
+import com.punuo.sys.app.home.activity.PrivateActivity;
+import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
 import com.punuo.sys.sdk.PnApplication;
 import com.punuo.sys.sdk.account.AccountManager;
+import com.punuo.sys.sdk.account.UserInfoManager;
+import com.punuo.sys.sdk.account.model.PNUserInfo;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.StatusBarUtil;
@@ -87,15 +84,15 @@ public class MemberFragment extends BaseFragment implements View.OnClickListener
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.re_xiangce) {
-            startActivity(new Intent(getActivity(), CloudAlbumActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_CLOUD_ALBUM_ACTIVITY).navigation();
         } else if (id == R.id.re_adddev) {
             ARouter.getInstance().build(HomeRouter.ROUTER_BIND_DEV_ACTIVITY).navigation();
         } else if (id == R.id.re_servicecall) {
-            startActivity(new Intent(getActivity(), ServiceManagerActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_SERVICE_MANAGER_ACTIVITY).navigation();
         } else if (id == R.id.re_settings) {
-            startActivity(new Intent(getActivity(), SettingActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_SETTING_ACTIVITY).navigation();
         } else if (id == R.id.re_private) {
-            startActivity(new Intent(getActivity(), PrivateActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_PRIVATE_ACTIVITY).navigation();
         }
     }
 

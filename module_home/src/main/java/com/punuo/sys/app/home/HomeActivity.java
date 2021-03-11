@@ -18,12 +18,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.model.Constant;
-import com.app.sip.SipInfo;
-import com.app.ui.VideoCallActivity;
-import com.app.ui.VideoPlayActivity;
-import com.app.video.RtpVideo;
-import com.app.video.SendActivePacket;
-import com.app.video.VideoInfo;
 import com.punuo.sip.AccountUtil;
 import com.punuo.sip.H264Config;
 import com.punuo.sip.SipConfig;
@@ -35,7 +29,6 @@ import com.punuo.sip.dev.event.ReRegisterDevEvent;
 import com.punuo.sip.dev.model.LoginResponseDev;
 import com.punuo.sip.dev.model.OperationData;
 import com.punuo.sip.dev.request.SipDevRegisterRequest;
-import com.punuo.sip.user.H264ConfigUser;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.UserHeartBeatHelper;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
@@ -65,13 +58,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.net.SocketException;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.app.sip.SipInfo.running;
-
 
 
 /**
@@ -80,7 +68,7 @@ import static com.app.sip.SipInfo.running;
  * 主界面
  */
 @Route(path = HomeRouter.ROUTER_HOME_ACTIVITY)
-public class HomeActivity extends BaseActivity implements View.OnClickListener{
+public class HomeActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "HomeActivity";
     @BindView(R2.id.content_frame)
     FrameLayout contentFrame;
@@ -177,6 +165,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             mTabBars[i].setOnClickListener(this);
         }
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -186,15 +175,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         mBaseHandler.removeMessages(UserHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         mBaseHandler.removeMessages(DevHeartBeatHelper.MSG_HEART_BEAR_VALUE);
         mBaseHandler.removeMessages(BadgeHelper.MSG_BADGE_VALUE);
-        SipInfo.userLogined = false;
-        SipInfo.devLogined = false;
         //停止语音电话服务
         LinphoneHelper.getInstance().unRegister();
         LinphoneHelper.getInstance().stopVoip(this);
-//        //关闭监听服务
-//        stopService(new Intent(HomeActivity.this, NewsService.class));
-        //关闭线程池
-        running = false;
     }
 
     public void releaseHeartBeat() {
@@ -205,7 +188,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
             mHeartBeatTaskResumeProcessorUser.onDestroy();
         }
     }
-
 
 
     /**
@@ -224,7 +206,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case Constant.COMMUNITY:
                 StatusBarUtil.translucentStatusBar(this, Color.TRANSPARENT, true); //单独处理顶部状态栏颜色
-                bundle.putString("url", "http://pet.qinqingonline.com:8889?user_id="+ AccountManager.getUserId());
+                bundle.putString("url", "http://pet.qinqingonline.com:8889?user_id=" + AccountManager.getUserId());
                 bundle.putBoolean("showTopBar", false);
                 mMyFragmentManager.switchFragmentWithCache(WebViewFragment.class.getName(), bundle);
                 break;
@@ -285,6 +267,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     }
 
     /* sip注册相关该页面启动心跳包 并且在异常断开之后重新进行sip的注册*/
+
     /**
      * 用户注册第一步
      */
@@ -292,6 +275,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         SipGetUserIdRequest getUserIdRequest = new SipGetUserIdRequest();
         SipUserManager.getInstance().addRequest(getUserIdRequest);
     }
+
     /**
      * 设备注册第一步
      */
@@ -302,6 +286,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 设备Sip服务重新注册事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -316,6 +301,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 设备Sip服务注册失败事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -326,6 +312,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 用户Sip服务重新注册事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -340,6 +327,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 用户Sip服务注册失败事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -350,6 +338,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 用户Sip服务注册成功事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -362,6 +351,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 设备Sip服务注册成功事件
+     *
      * @param event event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -401,7 +391,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
         loginReplace.setCanceledOnTouchOutside(false);
         loginReplace.show();
         UserInfoManager.clearUserData();
-        SipInfo.running = false;
         AccountUtil.logout();
         ARouter.getInstance().build(HomeRouter.ROUTER_LOGIN_ACTIVITY).navigation();
         finish();
@@ -423,6 +412,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     /**
      * 收到设备发来的双向视频请求
+     *
      * @param data
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -445,53 +435,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     public void onMessageEvent(MonitorEvent event) {
         switch (event.monitorType) {
             case H264Config.SINGLE_MONITOR:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            SipInfo.decoding = true;
-                            VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
-                            VideoInfo.sendActivePacket = new SendActivePacket();
-                            VideoInfo.sendActivePacket.startThread();
-                            startActivity(new Intent(HomeActivity.this, VideoPlayActivity.class));
-                        } catch (SocketException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                ARouter.getInstance().build(HomeRouter.ROUTER_VIDEO_PLAY_ACTIVITY).navigation();
                 break;
             case H264Config.DOUBLE_MONITOR_NEGATIVE:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            SipInfo.decoding = true;
-                            VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
-                            VideoInfo.sendActivePacket = new SendActivePacket();
-                            VideoInfo.sendActivePacket.startThread();
-                            startActivity(new Intent(HomeActivity.this, VideoCallActivity.class));
-                        } catch (SocketException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-                break;
             case H264Config.DOUBLE_MONITOR_POSITIVE:
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            SipInfo.decoding = true;
-                            VideoInfo.rtpVideo = new RtpVideo(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
-                            VideoInfo.sendActivePacket = new SendActivePacket();
-                            VideoInfo.sendActivePacket.startThread();
-                            startActivity(new Intent(HomeActivity.this, VideoCallActivity.class));
-                        } catch (SocketException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                ARouter.getInstance().build(HomeRouter.ROUTER_VIDEO_CALL_ACTIVITY).navigation();
                 break;
             default:
                 break;

@@ -85,5 +85,6 @@ dependencies {
     api ('org.permissionsdispatcher:permissionsdispatcher:4.6.0') {
         exclude module: 'support-v4'
     }
+    api 'com.github.hanreality-organization:EzCameraKit:1.0.02'
 
 }

@@ -3,15 +3,14 @@ package com.app.ui;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
-import com.app.model.MessageEvent;
 import com.punuo.sip.dev.H264ConfigDev;
+import com.punuo.sip.dev.event.StartVideoEvent;
 import com.punuo.sip.dev.model.CallResponse;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipCallReplyRequest;
@@ -24,7 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 /**
- * Created by maojianhui on 2018/6/27.
+ *
  */
 @Route(path = HomeRouter.ROUTER_VIDEO_REPLY_ACTIVITY)
 public class VideoReplyActivity extends BaseActivity implements View.OnClickListener {
@@ -34,7 +33,7 @@ public class VideoReplyActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         EventBus.getDefault().register(this);  //注册
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_call);
+        setContentView(R.layout.activity_video_reply);
         try {
             mMediaPlayer = MediaPlayer.create(this, R.raw.videowait);
             mMediaPlayer.setLooping(true);
@@ -53,17 +52,10 @@ public class VideoReplyActivity extends BaseActivity implements View.OnClickList
         TextView tv_videostaus= findViewById(R.id.tv_videostaus1);
         tv_videostaus.setText("对方邀请您视频通话...");
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(MessageEvent event) {
-        if(event.getMessage().equals("开始视频")) {
-            Log.i(TAG, "111message is " + event.getMessage());
-            // 更新界面
-            finish();
-            Log.d(TAG,"关闭connect");
-        }
-        else if(event.getMessage().equals("取消")){
-            finish();
-        }
+    public void onMessageEvent(StartVideoEvent event) {
+        finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

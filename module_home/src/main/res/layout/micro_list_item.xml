@@ -7,6 +7,7 @@
     android:layout_marginTop="3dp"
     android:layout_marginRight="12dp"
     android:layout_marginBottom="3dp"
+    android:descendantFocusability="blocksDescendants"
     android:background="@drawable/friend_circle_bg"
     android:orientation="vertical"
     android:padding="6dp">
@@ -50,21 +51,24 @@
                 android:layout_marginTop="6dp"
                 tools:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"/>
 
-            <com.punuo.sys.app.home.friendCircle.adapter.NineGridTestLayout
-                android:id="@+id/layout_nine_grid"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/picture_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/content"
                 android:layout_toRightOf="@+id/avator"
+                android:layout_below="@+id/content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="6dp"
-                app:sapcing="4dp" />
+                android:layout_marginTop="12dp"
+                tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:spanCount="3"
+                tools:itemCount="1"
+                tools:listitem="@layout/friend_picture_item"/>
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/layout_nine_grid"
+                android:layout_below="@+id/picture_recycler"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="6dp"
                 android:layout_toRightOf="@+id/avator"
@@ -75,7 +79,7 @@
                 android:id="@+id/btnIgnore"
                 android:layout_width="30dp"
                 android:layout_height="20dp"
-                android:layout_below="@id/layout_nine_grid"
+                android:layout_below="@id/picture_recycler"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="12dp"
                 android:src="@drawable/micro_comment" />
@@ -88,7 +92,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="48dp"
             android:layout_marginTop="6dp"
-            android:background="@color/lightgary" />
+            android:background="@color/lightgary"
+            tools:listitem="@layout/friend_praise_item"
+            tools:itemCount="2"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friend_comment_list"
@@ -96,6 +102,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="48dp"
             android:layout_marginTop="6dp"
-            android:background="@color/lightgary" />
+            android:background="@color/lightgary"
+            tools:listitem="@layout/friend_commit_item"
+            tools:itemCount="2"/>
     </LinearLayout>
 </LinearLayout>

@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.punuo.sys.app.home.album.model.CloudPhotoCover;
 import com.bumptech.glide.Glide;
+import com.punuo.sys.app.home.album.model.CloudPhotoCover;
 import com.punuo.sys.sdk.PnApplication;
+import com.punuo.sys.sdk.httplib.HttpConfig;
 import com.punuo.sys.sdk.router.HomeRouter;
 
 import java.util.List;
-
-import static com.app.sip.SipInfo.serverIp;
 
 public class CloudAlbumAdapter extends RecyclerView.Adapter<CloudAlbumAdapter.ViewHolder> {
     private List<CloudPhotoCover> mCloudPhotoCoverList;
@@ -60,7 +59,7 @@ public class CloudAlbumAdapter extends RecyclerView.Adapter<CloudAlbumAdapter.Vi
     public void onBindViewHolder(CloudAlbumAdapter.ViewHolder holder, int position) {
         CloudPhotoCover cloudPhotoCover = mCloudPhotoCoverList.get(position);
         holder.tv_photoDate.setText(cloudPhotoCover.month + "月");
-        Glide.with(PnApplication.getInstance()).load("http://" + serverIp +
+        Glide.with(PnApplication.getInstance()).load("http://" + HttpConfig.getHost() +
                 ":8000/static/ftp/" + mCloudPhotoCoverList.get(position).pic).into(holder.iv_photoCover);
         holder.rl_cloudPhoto.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,25 +10,24 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
-import com.app.sip.SipInfo;
-import com.app.ui.SoftwareInstructActivity;
 import com.punuo.sip.AccountUtil;
-import com.punuo.sys.app.home.activity.MessageNotifyActivity;
-import com.punuo.sys.app.home.activity.UserInfoActivity;
 import com.punuo.sys.app.home.address.AddressManagerActivity;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.account.UserInfoManager;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.DataClearUtil;
+import com.punuo.sys.sdk.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
+@Route(path = HomeRouter.ROUTER_SETTING_ACTIVITY)
 public class SettingActivity extends BaseSwipeBackLoginActivity {
 
 
@@ -72,23 +71,23 @@ public class SettingActivity extends BaseSwipeBackLoginActivity {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.re_phonenumber) {
-            startActivity(new Intent(this, BindPhoneActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_BIND_PHONE_ACTIVITY).navigation();
         } else if (id == R.id.re_personal) {
-            startActivity(new Intent(this, UserInfoActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_USER_INFO_ACTIVITY).navigation();
         } else if (id == R.id.logout) {
             logout();
         } else if (id == R.id.re_psds) {
-            startActivity(new Intent(this, ChangePasswordActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_CHANGE_PASSWORD_ACTIVITY).navigation();
         } else if (id == R.id.re_address) {
-            startActivity(new Intent(this, AddressManagerActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_ADDRESS_MANAGER_ACTIVITY).navigation();
         } else if (id == R.id.re_introduction) {
-            startActivity(new Intent(this, SoftwareInstructActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_SOFTWARE_INSTRUCT_ACTIVITY).navigation();
         } else if (id == R.id.re_buffer) {//清除缓存
             DataClearUtil.cleanAllCache(this);
-            Toast.makeText(this, "清除缓存成功", Toast.LENGTH_SHORT).show();
+            ToastUtils.showToast("清除缓存成功");
             tvBuff.setText(DataClearUtil.getTotalCacheSize(this));
         } else if (id == R.id.re_message) {
-            startActivity(new Intent(this, MessageNotifyActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_MESSAGE_NOTIFY_ACTIVITY).navigation();
         } else if (id == R.id.back) {
             scrollToFinishActivity();
         }
@@ -105,7 +104,6 @@ public class SettingActivity extends BaseSwipeBackLoginActivity {
                 .setPositiveButton("是", (dialog12, which) -> {
                     AccountManager.setLogin(false);
                     UserInfoManager.clearUserData();
-                    SipInfo.running = false;
                     AccountUtil.logout();
                     Bundle bundle = new Bundle();
                     bundle.putInt("logout", 1);

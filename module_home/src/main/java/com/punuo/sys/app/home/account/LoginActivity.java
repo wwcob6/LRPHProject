@@ -5,11 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.Html;
 import android.text.TextUtils;
@@ -30,7 +27,6 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
 import com.app.request.GetDevIdFromIdRequest;
-import com.app.sip.SipInfo;
 import com.app.tools.PermissionUtils;
 import com.app.views.CleanEditText;
 import com.punuo.sip.dev.SipDevManager;
@@ -131,18 +127,6 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
         mCompositeSubscription.add(splash);
     }
 
-    //检查网络是否连接
-    public boolean isNetworkReachable() {
-        ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getActiveNetworkInfo();
-        if (info == null) {
-            SipInfo.isNetworkConnected = false;
-        } else {
-            SipInfo.isNetworkConnected = info.getState() == NetworkInfo.State.CONNECTED;
-        }
-        return SipInfo.isNetworkConnected;
-    }
-
     public void showAboutDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         TextView title = new TextView(this);
@@ -194,8 +178,6 @@ public class LoginActivity extends BaseSwipeBackLoginActivity {
             return false;
         });
         passwordInput.setText(AccountManager.getPassword());
-        SipInfo.localSdCard = Environment.getExternalStorageDirectory().getAbsolutePath() + "/faxin/";
-        isNetworkReachable();
     }
 
     private void clickLogin() {

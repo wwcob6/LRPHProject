@@ -1,60 +1,58 @@
 package com.app.ui;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
 import com.app.audio.AudioRecordManager;
-import com.app.model.MessageEvent;
-import com.app.sip.SipInfo;
-import com.app.tools.H264VideoDecoder;
-import com.app.video.H264SendingManager;
-import com.app.video.VideoInfo;
+import com.app.audio.VoiceEncoderThread;
+import com.app.tools.CheckFrameTask;
+import com.app.tools.H264VideoEncoder;
+import com.app.video.RTPVideoReceiveImp;
+import com.app.video.VideoPlayThread;
+import com.glumes.ezcamerakit.CameraKitListener;
+import com.glumes.ezcamerakit.EzCamera;
+import com.glumes.ezcamerakit.EzCameraKit;
+import com.glumes.ezcamerakit.RequestOptions;
+import com.glumes.ezcamerakit.base.AspectRatio;
 import com.punuo.sip.H264Config;
 import com.punuo.sip.dev.H264ConfigDev;
+import com.punuo.sip.dev.event.StartVideoEvent;
 import com.punuo.sip.dev.event.StopVideoEvent;
+import com.punuo.sip.user.H264ConfigUser;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipByeRequest;
 import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.activity.BaseActivity;
+import com.punuo.sys.sdk.event.FrameTimeoutEvent;
+import com.punuo.sys.sdk.router.HomeRouter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.app.tools.H264VideoEncoder.YUVQueue;
 
 /**
  * Author chzjy
  * Date 2016/12/19.
  */
+@Route(path = HomeRouter.ROUTER_VIDEO_CALL_ACTIVITY)
 public class VideoCallActivity extends BaseActivity {
     public static final String TAG = "VideoCallActivity";
-//    private BufferedOutputStream outputStream;
     @BindView(R2.id.mute)
     ImageView mute;
     @BindView(R2.id.hangup)
@@ -63,66 +61,80 @@ public class VideoCallActivity extends BaseActivity {
     ImageView HF;
     private int currVolume = 0;
     private SurfaceHolder shBack;
-    private int getNum = 0;
-    Timer timer = new Timer();
-    private H264VideoDecoder mH264VideoDecoder;
-    AlertDialog dialog;
+    private Timer mTimer = new Timer();
     @BindView(R2.id.sv_back)
     SurfaceView svBack;
     @BindView(R2.id.sv_front)
     SurfaceView svFront;
-    int time = 0;
-    H264SendingManager sendingManager;
-
-    public static final String BROADCAST_ACTION = "BROADCAST_ACTION";
-    IntentFilter imIntentFilter;
-    LocalBroadcastManager mManager;
-    BroadcastReceiver mReceiver;
     private boolean isSpeakerMode = false;
     private boolean ismute=false;
-//    File f = new File(Environment.getExternalStorageDirectory(), "DCIM/video_encoded1.264");
-
+    private EzCamera engine;
+    private VideoPlayThread mVideoPlayThread;
+    private VoiceEncoderThread mVoiceEncoderThread;
+    private RTPVideoReceiveImp mRTPVideoReceiveImp;
+    private final int previewFrameRate = 15;  //演示帧率
+    private final int previewWidth = 640;     //水平像素
+    private final int previewHeight = 480;    //垂直像素
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_call);
         ButterKnife.bind(this);
-        //防止锁屏
+        EventBus.getDefault().register(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //监听视频流
+        mRTPVideoReceiveImp = new RTPVideoReceiveImp(H264ConfigUser.rtpIp, H264ConfigUser.rtpPort);
 
         shBack = svBack.getHolder();
+        shBack.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                //渲染视频
+                mVideoPlayThread = new VideoPlayThread(holder.getSurface());
+                mVideoPlayThread.startThread();
+                EventBus.getDefault().post(new StartVideoEvent());
+            }
 
-        //shFront.setFormat(PixelFormat.TRANSPARENT);
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                if (mVideoPlayThread != null) {
+                    mVideoPlayThread.stopThread();
+                }
+            }
+        });
         svFront.setZOrderOnTop(true);
         svFront.setZOrderMediaOverlay(true);
-
-        sendingManager = new H264SendingManager(svFront);
-        sendingManager.init();
-        mH264VideoDecoder = new H264VideoDecoder();
-
-        playVideo();
-        timer.schedule(task, 0, 10000);
-
-        imIntentFilter = new IntentFilter();
-        imIntentFilter.addAction(BROADCAST_ACTION);
-        mManager = LocalBroadcastManager.getInstance(VideoCallActivity.this);
-        mReceiver = new BroadcastReceiver() {
+        svFront.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                VideoCallActivity.this.finish();
-            }
-        };
+            public void surfaceCreated(SurfaceHolder holder) {
 
-// Check if we have write PermissionUtils
-        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have PermissionUtils so prompt the user
-            ActivityCompat.requestPermissions(
-                    this,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                startPreview(holder, previewWidth, previewHeight, previewFrameRate);
+                //编码发送
+                H264VideoEncoder.getInstance().initEncoder(previewWidth, previewHeight, previewFrameRate);
+                H264VideoEncoder.getInstance().startEncoderThread();
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                H264VideoEncoder.getInstance().close();
+                if (engine != null) {
+                    engine.stopPreview();
+                }
+            }
+        });
+        mTimer.schedule(new CheckFrameTask(), 0, 10000);
+        //开启音频采集线程
+        mVoiceEncoderThread = new VoiceEncoderThread(H264ConfigDev.rtpIp, H264ConfigDev.rtpPort);
+        mVoiceEncoderThread.startEncoding();
 
         mute.setOnClickListener(v->{
             if(ismute){
@@ -149,161 +161,77 @@ public class VideoCallActivity extends BaseActivity {
                 isSpeakerMode = true;
             }
         });
-        EventBus.getDefault().register(this);
+
     }
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
+    private void startPreview(SurfaceHolder holder, int previewWidth, int previewHeight, int previewFrameRate) {
+        RequestOptions requestOptions = RequestOptions
+                .openBackCamera()
+                .setAspectRatio(AspectRatio.of(4, 3))
+                .setFrameRate(previewFrameRate)
+                .size(previewWidth, previewHeight)
+                .setPixelFormat(ImageFormat.YV12)
+                .setListener(cameraKitListener)
+                .autoFocus(true);
+        engine = EzCameraKit.with(holder)
+                .apply(requestOptions)
+                .open();
+        engine.startPreview();
+    }
 
-
-
-    TimerTask task = new TimerTask() {
+    private final CameraKitListener cameraKitListener = new CameraKitListener() {
         @Override
-        public void run() {
-            if (VideoInfo.isrec == 0) {
-                if (time == 6) {
-                    closeVideo();
-                    time = 0;
-                } else {
-                    new Handler(VideoCallActivity.this.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(VideoCallActivity.this, "未收到消息!", Toast.LENGTH_SHORT).show();
+        public void onPictureTaken(byte[] data) {
 
-                        }
-                    });
-                    time++;
-                }
-            } else if (VideoInfo.isrec == 2) {
-                VideoInfo.isrec = 0;
-                time = 0;
-            }
+        }
+
+        @Override
+        public void onCameraOpened() {
+
+        }
+
+        @Override
+        public void onCameraClosed() {
+
+        }
+
+        @Override
+        public void onCameraPreview() {
+
+        }
+
+        @Override
+        public void onPreviewCallback(byte[] data) {
+            putYUVData(data, data.length);
         }
     };
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mManager.registerReceiver(mReceiver, imIntentFilter);
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mManager.unregisterReceiver(mReceiver);
+    private void putYUVData(byte[] data, int length) {
+        if (YUVQueue.size() >= 10) {
+            YUVQueue.poll();
+        }
+        YUVQueue.add(data);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        timer.cancel();
-
-        //重置免提
-//        serviceBinder.setSpeakerMode(false);
-        if (dialog != null) {
-            dialog.dismiss();
+        mTimer.cancel();
+        H264Config.frameReceived = H264Config.FRAME_UNSET;
+        if (mVoiceEncoderThread != null) {
+            mVoiceEncoderThread.stopEncoding();
         }
-        VideoInfo.isrec = 1;
-        SipInfo.decoding = false;
-        VideoInfo.rtpVideo.removeParticipant();
-        VideoInfo.sendActivePacket.stopThread();
-        sendingManager.deInit();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-        VideoInfo.rtpVideo.endSession();
+        if (mRTPVideoReceiveImp != null) {
+            mRTPVideoReceiveImp.release();
+        }
         AudioRecordManager.getInstance().stop();
-        System.gc();//系统垃圾回收
+        H264Config.monitorType = H264Config.IDLE;
+        EventBus.getDefault().unregister(this);
     }
-
-    private void playVideo() {
-        new Thread(Video).start();
-        EventBus.getDefault().post(new MessageEvent("开始视频"));
-    }
-
-    Runnable Video = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Surface surface = shBack.getSurface();
-            System.out.println(surface);
-
-            if (surface != null) {
-                mH264VideoDecoder.initDecoder(surface);
-                while (SipInfo.decoding) {
-                    if (SipInfo.isNetworkConnected) {
-                        byte[] nal = VideoInfo.nalBuffers[getNum].getReadableNalBuf();
-//                        try {
-//                            outputStream = new BufferedOutputStream(new FileOutputStream(f));
-//                            Log.i("AvcEncoder", "outputStream initialized");
-//                        } catch (Exception e){
-//                            e.printStackTrace();
-//                        }
-//                        try {
-//                            outputStream.write(nal,0,nal.length);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-                        if (nal != null) {
-                            Log.i(TAG, "nalLen:" + nal.length);
-
-                            try {
-                                //硬解码
-                                mH264VideoDecoder.onFrame(nal, 0, nal.length);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        VideoInfo.nalBuffers[getNum].readLock();
-                        VideoInfo.nalBuffers[getNum].cleanNalBuf();
-                        getNum++;
-                        if (getNum == 200) {
-                            getNum = 0;
-                        }
-                    }
-                }
-            }
-        }
-    };
 
     @Override
     public void onBackPressed() {
-        dialog = new AlertDialog.Builder(this)
-                .setTitle("是否结束聊天?")
-                .setPositiveButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        closeVideo();
-                    }
-                })
-                .setNegativeButton("否", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        dialog.show();
-        dialog.setCanceledOnTouchOutside(false);
+
     }
 
     private void closeVideo() {
@@ -319,11 +247,13 @@ public class VideoCallActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(StopVideoEvent event) {
-        VideoInfo.endView = true;
         closeVideo();
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(FrameTimeoutEvent event) {
+        closeVideo();
+    }
     /**
      * 打开扬声器
      */

@@ -11,18 +11,13 @@ import android.widget.RelativeLayout;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
-import com.app.sip.SipInfo;
-import com.app.ui.VideoRequestActivity;
 import com.punuo.sip.H264Config;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipIsMonitorRequest;
 import com.punuo.sip.user.request.SipOperationRequest;
-import com.punuo.sys.app.home.activity.FriendCallActivity;
 import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
-import com.punuo.sys.app.linphone.LinphoneHelper;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
-import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
 
 
@@ -34,11 +29,9 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     private RelativeLayout re_funcation;
     private View mStatusBar;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.micro_list_header1, container, false);
         mStatusBar = view.findViewById(R.id.status_bar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -69,7 +62,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         alarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinphoneHelper.getInstance().register("7001", "123456", "sip.qinqingonline.com:5000");
+
             }
         });
     }
@@ -81,20 +74,18 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
         } else if (id == R.id.browse) {
             if (checkDevBind()) {
                 H264Config.monitorType = H264Config.SINGLE_MONITOR;
-                SipInfo.single = true;
                 SipIsMonitorRequest request = new SipIsMonitorRequest(true);
                 SipUserManager.getInstance().addRequest(request);
             }
         } else if (id == R.id.chat) {
-            IntentUtil.jumpActivity(getActivity(), FriendCallActivity.class);
+            ARouter.getInstance().build(HomeRouter.ROUTER_FRIEND_CALL_ACTIVITY).navigation();
         } else if (id == R.id.application) {
             ARouter.getInstance().build(HomeRouter.ROUTER_WX_MINIPROGRAM_ENTRY_ACTIVITY).navigation();
         } else if (id == R.id.video) {
             H264Config.monitorType = H264Config.DOUBLE_MONITOR_POSITIVE;
-            SipInfo.single = false;
             SipOperationRequest request = new SipOperationRequest();
             SipUserManager.getInstance().addRequest(request);
-            startActivity(new Intent(getActivity(), VideoRequestActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_VIDEO_REQUEST_ACTIVITY).navigation();
         }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.R2;
 import com.app.request.ChangePwdRequest;
@@ -18,6 +19,7 @@ import com.punuo.sys.sdk.account.AccountManager;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.model.PNBaseModel;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.ToastUtils;
 
 import butterknife.BindView;
@@ -29,6 +31,7 @@ import butterknife.ButterKnife;
  * 修改密码页
  */
 
+@Route(path = HomeRouter.ROUTER_CHANGE_PASSWORD_ACTIVITY)
 public class ChangePasswordActivity extends BaseSwipeBackLoginActivity {
     @BindView(R2.id.back)
     ImageView back;

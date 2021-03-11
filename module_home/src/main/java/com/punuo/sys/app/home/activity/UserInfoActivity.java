@@ -30,6 +30,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.app.R;
 import com.app.Util;
 import com.app.model.UploadAvatarResult;
@@ -44,6 +45,7 @@ import com.punuo.sys.sdk.activity.BaseSwipeBackActivity;
 import com.punuo.sys.sdk.httplib.HttpManager;
 import com.punuo.sys.sdk.httplib.RequestListener;
 import com.punuo.sys.sdk.model.PNBaseModel;
+import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.ProviderUtil;
 import com.punuo.sys.sdk.util.ToastUtils;
 import com.punuo.sys.sdk.util.ViewUtil;
@@ -59,6 +61,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @SuppressLint("SdCardPath")
+@Route(path = HomeRouter.ROUTER_USER_INFO_ACTIVITY)
 public class UserInfoActivity extends BaseSwipeBackActivity implements View.OnClickListener {
 
     private static final int CAMERA_REQUEST_CODE = 1;
