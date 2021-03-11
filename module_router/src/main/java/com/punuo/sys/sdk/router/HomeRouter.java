@@ -52,4 +52,5 @@ public class HomeRouter {
     public static final String ROUTER_VIDEO_PLAY_ACTIVITY = PREFIX + "/VideoPlayActivity";
     public static final String ROUTER_VIDEO_CALL_ACTIVITY = PREFIX + "/VideoCallActivity";
     public static final String ROUTER_IMAGE_PAGER_ACTIVITY = PREFIX + "/ImagePagerActivity";
+    public static final String ROUTER_FAMILY_CIRCLE_ACTIVITY = PREFIX + "/FamilyCircleActivity";
 }

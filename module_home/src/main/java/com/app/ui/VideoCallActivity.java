@@ -166,11 +166,11 @@ public class VideoCallActivity extends BaseActivity {
 
     private void startPreview(SurfaceHolder holder, int previewWidth, int previewHeight, int previewFrameRate) {
         RequestOptions requestOptions = RequestOptions
-                .openBackCamera()
+                .openFrontCamera()
                 .setAspectRatio(AspectRatio.of(4, 3))
                 .setFrameRate(previewFrameRate)
                 .size(previewWidth, previewHeight)
-                .setPixelFormat(ImageFormat.YV12)
+                .setPixelFormat(ImageFormat.NV21)
                 .setListener(cameraKitListener)
                 .autoFocus(true);
         engine = EzCameraKit.with(holder)

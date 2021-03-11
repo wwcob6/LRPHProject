@@ -54,8 +54,8 @@ public class H264VideoEncoder {
         mFrameRate = frameRate;
         mRTPVideoSendSession = new RTPVideoSendSession(H264ConfigDev.rtpIp, H264ConfigDev.rtpPort);
         mSendActivePacketThread = new SendActivePacketThread(mRTPVideoSendSession, H264ConfigDev.magic);
-        MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", width, height);
-        mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
+        MediaFormat mediaFormat = MediaFormat.createVideoFormat("video/avc", height, width);
+        mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, width * height * 5);
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate);
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
@@ -83,21 +83,22 @@ public class H264VideoEncoder {
         }
     }
 
-    public boolean isRuning = false;
+    public boolean isRunning = false;
 
     public void startEncoderThread() {
         Thread EncoderThread = new Thread(() -> {
-            isRuning = true;
+            isRunning = true;
             byte[] input = null;
 
-            while (isRuning) {
+            while (isRunning) {
                 //访问MainActivity用来缓冲待解码数据的队列
                 if (YUVQueue.size() > 0) {
                     //从缓冲队列中取出一帧
                     input = YUVQueue.poll();
                     byte[] yuv420sp = new byte[mWidth * mHeight * 3 / 2];
+                    input = rotateYUVDegree270AndMirror(input, mWidth, mHeight);
                     //把待编码的视频帧转换为YUV420格式
-                    swapYV12toI420(input,yuv420sp, mWidth, mHeight);
+                    NV21ToNV12(input, yuv420sp, mWidth, mHeight);
                     input = yuv420sp;
                 }
                 if (input != null) {
@@ -165,7 +166,7 @@ public class H264VideoEncoder {
 
     public void close() {
         YUVQueue.clear();
-        isRuning = false;
+        isRunning = false;
         try {
             mediaCodec.stop();
             mediaCodec.release();
@@ -206,6 +207,34 @@ public class H264VideoEncoder {
         for (int i = size; i < width*height + 2*(width/2*height/2); i++)
             i420bytes[i] = yv12bytes[i - (width/2*height/2)];
         return i420bytes;
+    }
+
+    private byte[] rotateYUVDegree270AndMirror(byte[] data, int imageWidth, int imageHeight) {
+        byte[] yuv = new byte[imageWidth * imageHeight * 3 / 2];
+        // Rotate and mirror the Y luma
+        int i = 0;
+        int maxY = 0;
+        for (int x = imageWidth - 1; x >= 0; x--) {
+            maxY = imageWidth * (imageHeight - 1) + x * 2;
+            for (int y = 0; y < imageHeight; y++) {
+                yuv[i] = data[maxY - (y * imageWidth + x)];
+                i++;
+            }
+        }
+        // Rotate and mirror the U and V color components
+        int uvSize = imageWidth * imageHeight;
+        i = uvSize;
+        int maxUV = 0;
+        for (int x = imageWidth - 1; x > 0; x = x - 2) {
+            maxUV = imageWidth * (imageHeight / 2 - 1) + x * 2 + uvSize;
+            for (int y = 0; y < imageHeight / 2; y++) {
+                yuv[i] = data[maxUV - 2 - (y * imageWidth + x - 1)];
+                i++;
+                yuv[i] = data[maxUV - (y * imageWidth + x)];
+                i++;
+            }
+        }
+        return yuv;
     }
 
     private long computePresentationTime(long frameIndex) {

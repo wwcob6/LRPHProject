@@ -1,6 +1,5 @@
 package com.punuo.sys.app.home;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import com.punuo.sip.H264Config;
 import com.punuo.sip.user.SipUserManager;
 import com.punuo.sip.user.request.SipIsMonitorRequest;
 import com.punuo.sip.user.request.SipOperationRequest;
-import com.punuo.sys.app.home.friendCircle.FamilyCircleActivity;
 import com.punuo.sys.sdk.fragment.BaseFragment;
 import com.punuo.sys.sdk.router.HomeRouter;
 import com.punuo.sys.sdk.util.StatusBarUtil;
@@ -70,7 +68,7 @@ public class HomeFragment extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_camera) {
-            startActivity(new Intent(getActivity(), FamilyCircleActivity.class));
+            ARouter.getInstance().build(HomeRouter.ROUTER_FAMILY_CIRCLE_ACTIVITY).navigation();
         } else if (id == R.id.browse) {
             if (checkDevBind()) {
                 H264Config.monitorType = H264Config.SINGLE_MONITOR;

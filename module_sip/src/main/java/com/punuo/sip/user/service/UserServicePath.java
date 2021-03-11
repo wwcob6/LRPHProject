@@ -18,6 +18,7 @@ public class UserServicePath {
     public static final String PATH_ERROR = "/user/error";
     public static final String PATH_IMAGE_SHARE = "/user/image_share";
     public static final String PATH_IS_MONITOR = "/user/is_monitor";
+    public static final String PATH_ALARM = "/user/alarm";
 
     public static final HashSet<String> sMapping = new HashSet<>();
 
@@ -32,5 +33,6 @@ public class UserServicePath {
         sMapping.add(PATH_ERROR);
         sMapping.add(PATH_IMAGE_SHARE);
         sMapping.add(PATH_IS_MONITOR);
+        sMapping.add(PATH_ALARM);
     }
 }

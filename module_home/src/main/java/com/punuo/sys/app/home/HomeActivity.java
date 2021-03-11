@@ -34,6 +34,7 @@ import com.punuo.sip.user.UserHeartBeatHelper;
 import com.punuo.sip.user.event.ReRegisterUserEvent;
 import com.punuo.sip.user.event.UnauthorizedEvent;
 import com.punuo.sip.user.event.UserReplaceEvent;
+import com.punuo.sip.user.model.AlarmData;
 import com.punuo.sip.user.model.LoginResponseUser;
 import com.punuo.sip.user.request.SipGetUserIdRequest;
 import com.punuo.sys.app.home.process.HeartBeatTaskResumeProcessorDev;
@@ -53,6 +54,7 @@ import com.punuo.sys.sdk.update.AutoUpdateService;
 import com.punuo.sys.sdk.util.DeviceHelper;
 import com.punuo.sys.sdk.util.IntentUtil;
 import com.punuo.sys.sdk.util.StatusBarUtil;
+import com.punuo.sys.sdk.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -408,6 +410,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(NetworkInfo info) {
         getUserId();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(AlarmData alarmData) {
+        ToastUtils.showToast("收到警报");
     }
 
     /**

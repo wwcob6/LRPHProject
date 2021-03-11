@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.app.R;
 import com.app.R2;
@@ -45,6 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Route(path = HomeRouter.ROUTER_FAMILY_CIRCLE_ACTIVITY)
 public class FamilyCircleActivity extends BaseSwipeBackActivity {
     private static final String TAG = "FamilyCircleActivity";
 
