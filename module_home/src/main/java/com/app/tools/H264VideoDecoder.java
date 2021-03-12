@@ -6,6 +6,8 @@ import android.media.MediaFormat;
 import android.util.Log;
 import android.view.Surface;
 
+import com.punuo.sip.user.H264ConfigUser;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -16,11 +18,8 @@ public class H264VideoDecoder {
     private static final String TAG = "H264VideoDecoder";
     private MediaCodec mCodec;
     private final static String MIME_TYPE = "video/avc";
-    private final static int VIDEO_WIDTH = 640;
-    private final static int VIDEO_HEIGHT = 480;
-    private final static int TIME_INTERNAL = 15;
-    long pts = 0;
-    long generateIndex = 0;
+    private long pts = 0;
+    private long generateIndex = 0;
 
     private static H264VideoDecoder sH264VideoDecoder;
     public static H264VideoDecoder getInstance() {
@@ -38,10 +37,10 @@ public class H264VideoDecoder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, VIDEO_WIDTH, VIDEO_HEIGHT);
+        MediaFormat mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, H264ConfigUser.VIDEO_WIDTH, H264ConfigUser.VIDEO_HEIGHT);
         mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible);
-        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, VIDEO_WIDTH * VIDEO_HEIGHT * 5);
-        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, TIME_INTERNAL);
+        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, H264ConfigUser.VIDEO_WIDTH * H264ConfigUser.VIDEO_HEIGHT * 5);
+        mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, H264ConfigUser.FRAME_RATE);
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
         mCodec.configure(mediaFormat, surface, null, 0);
         mCodec.start();
@@ -83,6 +82,6 @@ public class H264VideoDecoder {
     }
 
     private long computePresentationTime(long frameIndex) {
-        return 132 + frameIndex * 1000000 / TIME_INTERNAL;
+        return 132 + frameIndex * 1000000 / H264ConfigUser.VIDEO_HEIGHT;
     }
 }

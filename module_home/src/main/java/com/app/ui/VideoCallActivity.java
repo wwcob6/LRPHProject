@@ -59,22 +59,20 @@ public class VideoCallActivity extends BaseActivity {
     ImageView hangup;
     @BindView(R2.id.HF)
     ImageView HF;
-    private int currVolume = 0;
-    private SurfaceHolder shBack;
-    private Timer mTimer = new Timer();
     @BindView(R2.id.sv_back)
     SurfaceView svBack;
     @BindView(R2.id.sv_front)
     SurfaceView svFront;
+    private int currVolume = 0;
+    private SurfaceHolder shBack;
+    private final Timer mTimer = new Timer();
     private boolean isSpeakerMode = false;
-    private boolean ismute=false;
+    private boolean isMute = false;
     private EzCamera engine;
     private VideoPlayThread mVideoPlayThread;
     private VoiceEncoderThread mVoiceEncoderThread;
     private RTPVideoReceiveImp mRTPVideoReceiveImp;
-    private final int previewFrameRate = 15;  //演示帧率
-    private final int previewWidth = 640;     //水平像素
-    private final int previewHeight = 480;    //垂直像素
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,9 +115,9 @@ public class VideoCallActivity extends BaseActivity {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                startPreview(holder, previewWidth, previewHeight, previewFrameRate);
+                startPreview(holder, H264ConfigDev.VIDEO_WIDTH, H264ConfigDev.VIDEO_HEIGHT, H264ConfigDev.FRAME_RATE);
                 //编码发送
-                H264VideoEncoder.getInstance().initEncoder(previewWidth, previewHeight, previewFrameRate);
+                H264VideoEncoder.getInstance().initEncoder(H264ConfigDev.VIDEO_WIDTH, H264ConfigDev.VIDEO_HEIGHT, H264ConfigDev.FRAME_RATE);
                 H264VideoEncoder.getInstance().startEncoderThread();
             }
 
@@ -136,17 +134,17 @@ public class VideoCallActivity extends BaseActivity {
         mVoiceEncoderThread = new VoiceEncoderThread(H264ConfigDev.rtpIp, H264ConfigDev.rtpPort);
         mVoiceEncoderThread.startEncoding();
 
-        mute.setOnClickListener(v->{
-            if(ismute){
+        mute.setOnClickListener(v -> {
+            if (isMute) {
                 mute.setImageResource(R.drawable.jingyin);
-                ismute=false;
-            }else{
+                isMute = false;
+            } else {
                 mute.setImageResource(R.drawable.ic_mute);
-                ismute=true;
+                isMute = true;
             }
         });
 
-        hangup.setOnClickListener(v->{
+        hangup.setOnClickListener(v -> {
             closeVideo();
         });
 
@@ -254,36 +252,38 @@ public class VideoCallActivity extends BaseActivity {
     public void onMessageEvent(FrameTimeoutEvent event) {
         closeVideo();
     }
+
     /**
      * 打开扬声器
      */
     private void openSpeaker() {
-        try{
+        try {
             AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             audioManager.setMode(AudioManager.ROUTE_SPEAKER);
             currVolume = audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
-            if(!audioManager.isSpeakerphoneOn()) {
+            if (!audioManager.isSpeakerphoneOn()) {
                 //setSpeakerphoneOn() only work when audio mode set to MODE_IN_CALL.
                 audioManager.setMode(AudioManager.MODE_IN_CALL);
                 audioManager.setSpeakerphoneOn(true);
                 audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,
-                        audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL ),
+                        audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL),
                         AudioManager.STREAM_VOICE_CALL);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 关闭扬声器
      */
     public void closeSpeaker() {
         try {
             AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            if(audioManager != null) {
-                if(audioManager.isSpeakerphoneOn()) {
+            if (audioManager != null) {
+                if (audioManager.isSpeakerphoneOn()) {
                     audioManager.setSpeakerphoneOn(false);
-                    audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL,currVolume,
+                    audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, currVolume,
                             AudioManager.STREAM_VOICE_CALL);
                 }
             }
