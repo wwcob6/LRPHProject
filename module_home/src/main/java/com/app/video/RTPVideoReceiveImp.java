@@ -1,7 +1,6 @@
 package com.app.video;
 
 import android.os.StrictMode;
-import android.util.Log;
 
 import com.app.audio.AudioRecordManager;
 import com.app.audio.G711;
